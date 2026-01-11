@@ -13,7 +13,7 @@ struct ResultsView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading {
+                if viewModel.isLoading && viewModel.results.isEmpty {
                     ProgressView("Loading results...")
                 } else if viewModel.results.isEmpty {
                     ContentUnavailableView(
@@ -22,8 +22,17 @@ struct ResultsView: View {
                         description: Text("No results available yet")
                     )
                 } else {
-                    List(viewModel.results) { result in
-                        ResultCard(result: result)
+                    List {
+                        ForEach(viewModel.competitions, id: \.self) { competition in
+                            Section(competition) {
+                                ForEach(viewModel.groupedByCompetition[competition] ?? []) { result in
+                                    ResultCard(result: result)
+                                        .listRowInsets(EdgeInsets())
+                                        .listRowSeparator(.hidden)
+                                        .padding(.vertical, 4)
+                                }
+                            }
+                        }
                     }
                     .listStyle(.plain)
                 }

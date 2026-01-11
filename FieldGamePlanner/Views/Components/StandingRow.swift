@@ -8,38 +8,54 @@
 import SwiftUI
 
 struct StandingRow: View {
-    let standing: Standing
+    let standing: LeagueStanding
 
     var body: some View {
         HStack {
             // Position
-            Text("\(standing.position)")
+            Text("\(standing.position ?? 0)")
                 .font(.headline)
                 .fontWeight(.bold)
                 .frame(width: 30)
+                .foregroundColor(positionColor)
+
+            // Kit colors
+            KitColorIndicator(colors: standing.parsedColours)
 
             // Team name
             Text(standing.teamName)
                 .font(.subheadline)
+                .fontWeight(.medium)
 
             Spacer()
 
             // Stats
-            HStack(spacing: 16) {
-                StatView(label: "P", value: standing.played)
-                StatView(label: "W", value: standing.wins)
-                StatView(label: "D", value: standing.draws)
-                StatView(label: "L", value: standing.losses)
-                StatView(label: "Pts", value: standing.points, highlighted: true)
+            HStack(spacing: 12) {
+                StatColumn(label: "P", value: standing.played)
+                StatColumn(label: "W", value: standing.wins)
+                StatColumn(label: "D", value: standing.draws)
+                StatColumn(label: "L", value: standing.losses)
+                StatColumn(label: "GD", value: standing.goalDifference, showSign: true)
+                StatColumn(label: "Pts", value: standing.points, highlighted: true)
             }
         }
         .padding(.vertical, 4)
     }
+
+    private var positionColor: Color {
+        guard let position = standing.position else { return .primary }
+        switch position {
+        case 1: return .etonPrimary
+        case 2, 3: return .eton600
+        default: return .primary
+        }
+    }
 }
 
-struct StatView: View {
+struct StatColumn: View {
     let label: String
     let value: Int
+    var showSign: Bool = false
     var highlighted: Bool = false
 
     var body: some View {
@@ -47,17 +63,34 @@ struct StatView: View {
             Text(label)
                 .font(.caption2)
                 .foregroundColor(.secondary)
-            Text("\(value)")
+            Text(displayValue)
                 .font(.caption)
                 .fontWeight(highlighted ? .bold : .regular)
-                .foregroundColor(highlighted ? .etonGreen : .primary)
+                .foregroundColor(highlighted ? .etonPrimary : textColor)
         }
-        .frame(width: 24)
+        .frame(width: 28)
+    }
+
+    private var displayValue: String {
+        if showSign && value > 0 {
+            return "+\(value)"
+        }
+        return "\(value)"
+    }
+
+    private var textColor: Color {
+        if showSign {
+            if value > 0 { return .green }
+            if value < 0 { return .red }
+        }
+        return .primary
     }
 }
 
 #Preview {
     List {
-        StandingRow(standing: Standing.preview)
+        ForEach(LeagueStanding.previewList) { standing in
+            StandingRow(standing: standing)
+        }
     }
 }

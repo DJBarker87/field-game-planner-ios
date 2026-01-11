@@ -13,7 +13,7 @@ struct StandingsView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading {
+                if viewModel.isLoading && viewModel.standings.isEmpty {
                     ProgressView("Loading standings...")
                 } else if viewModel.standings.isEmpty {
                     ContentUnavailableView(
@@ -23,11 +23,33 @@ struct StandingsView: View {
                     )
                 } else {
                     List {
-                        ForEach(viewModel.groupedStandings.keys.sorted(), id: \.self) { competition in
-                            Section(competition) {
-                                ForEach(viewModel.groupedStandings[competition] ?? []) { standing in
+                        ForEach(viewModel.competitions, id: \.self) { competition in
+                            Section {
+                                // Header row
+                                HStack {
+                                    Text("#")
+                                        .frame(width: 30, alignment: .leading)
+                                    Text("Team")
+                                    Spacer()
+                                    HStack(spacing: 12) {
+                                        Text("P").frame(width: 28)
+                                        Text("W").frame(width: 28)
+                                        Text("D").frame(width: 28)
+                                        Text("L").frame(width: 28)
+                                        Text("GD").frame(width: 28)
+                                        Text("Pts").frame(width: 28)
+                                    }
+                                }
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                                ForEach(viewModel.standings(for: competition)) { standing in
                                     StandingRow(standing: standing)
                                 }
+                            } header: {
+                                Text(competition)
+                                    .font(.headline)
+                                    .foregroundColor(.etonPrimary)
                             }
                         }
                     }
@@ -35,6 +57,27 @@ struct StandingsView: View {
                 }
             }
             .navigationTitle("Standings")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("All Competitions") {
+                            Task {
+                                await viewModel.selectCompetition(nil)
+                            }
+                        }
+                        Divider()
+                        ForEach(viewModel.competitions, id: \.self) { competition in
+                            Button(competition) {
+                                Task {
+                                    await viewModel.selectCompetition(competition)
+                                }
+                            }
+                        }
+                    } label: {
+                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                    }
+                }
+            }
             .refreshable {
                 await viewModel.fetchStandings()
             }

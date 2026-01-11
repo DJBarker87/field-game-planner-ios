@@ -8,26 +8,27 @@
 import SwiftUI
 
 struct ResultCard: View {
-    let result: MatchResult
+    let result: MatchWithHouses
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Competition badge
-            Text(result.competition)
+            Text(result.competitionType)
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.white)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color.competitionColor(for: result.competition))
+                .background(result.competitionColor)
                 .cornerRadius(4)
 
             // Score
             HStack {
                 TeamScoreView(
-                    name: result.homeTeam,
-                    score: result.homeScore,
-                    isWinner: result.homeScore > result.awayScore
+                    name: result.homeTeamName,
+                    colors: result.homeKitColors,
+                    score: result.homeScore ?? 0,
+                    isWinner: (result.homeScore ?? 0) > (result.awayScore ?? 0)
                 )
                 Spacer()
                 Text("-")
@@ -35,16 +36,23 @@ struct ResultCard: View {
                     .fontWeight(.bold)
                 Spacer()
                 TeamScoreView(
-                    name: result.awayTeam,
-                    score: result.awayScore,
-                    isWinner: result.awayScore > result.homeScore
+                    name: result.awayTeamName,
+                    colors: result.awayKitColors,
+                    score: result.awayScore ?? 0,
+                    isWinner: (result.awayScore ?? 0) > (result.homeScore ?? 0)
                 )
             }
 
-            // Date
-            Text(result.formattedDate)
-                .font(.caption)
-                .foregroundColor(.secondary)
+            // Date and location
+            HStack {
+                Text(result.formattedDate)
+                if let location = result.fullLocationString {
+                    Spacer()
+                    Text(location)
+                }
+            }
+            .font(.caption)
+            .foregroundColor(.secondary)
         }
         .padding()
         .background(Color(.systemBackground))
@@ -55,25 +63,28 @@ struct ResultCard: View {
 
 struct TeamScoreView: View {
     let name: String
+    let colors: [Color]
     let score: Int
     let isWinner: Bool
 
     var body: some View {
         VStack(spacing: 4) {
+            KitColorIndicator(colors: colors)
             Text(name)
                 .font(.subheadline)
                 .fontWeight(isWinner ? .bold : .regular)
                 .multilineTextAlignment(.center)
+                .lineLimit(2)
             Text("\(score)")
                 .font(.title)
                 .fontWeight(.bold)
-                .foregroundColor(isWinner ? .etonGreen : .primary)
+                .foregroundColor(isWinner ? .etonPrimary : .primary)
         }
         .frame(maxWidth: .infinity)
     }
 }
 
 #Preview {
-    ResultCard(result: MatchResult.preview)
+    ResultCard(result: .completedPreview)
         .padding()
 }

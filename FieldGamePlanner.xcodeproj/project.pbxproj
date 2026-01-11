@@ -15,9 +15,10 @@
 
 		/* Models */
 		MOD001 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC010 /* Match.swift */; };
-		MOD002 /* MatchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC011 /* MatchResult.swift */; };
-		MOD003 /* Standing.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC012 /* Standing.swift */; };
+		MOD002 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC011 /* Enums.swift */; };
+		MOD003 /* LeagueStanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC012 /* LeagueStanding.swift */; };
 		MOD004 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC013 /* House.swift */; };
+		MOD005 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC014 /* UserProfile.swift */; };
 
 		/* ViewModels */
 		VML001 /* FixturesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC020 /* FixturesViewModel.swift */; };
@@ -55,6 +56,8 @@
 		SRV001 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC100 /* SupabaseService.swift */; };
 		SRV002 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC101 /* AuthService.swift */; };
 		SRV003 /* CacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC102 /* CacheService.swift */; };
+		SRV004 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC103 /* NetworkMonitor.swift */; };
+		SRV005 /* CalendarExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC104 /* CalendarExportService.swift */; };
 
 		/* Utilities */
 		UTL001 /* ColorSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC110 /* ColorSystem.swift */; };
@@ -104,9 +107,10 @@
 
 		/* Models */
 		SRC010 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
-		SRC011 /* MatchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchResult.swift; sourceTree = "<group>"; };
-		SRC012 /* Standing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Standing.swift; sourceTree = "<group>"; };
+		SRC011 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		SRC012 /* LeagueStanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueStanding.swift; sourceTree = "<group>"; };
 		SRC013 /* House.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = House.swift; sourceTree = "<group>"; };
+		SRC014 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 
 		/* ViewModels */
 		SRC020 /* FixturesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixturesViewModel.swift; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 		SRC100 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 		SRC101 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		SRC102 /* CacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
+		SRC103 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		SRC104 /* CalendarExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExportService.swift; sourceTree = "<group>"; };
 
 		/* Utilities */
 		SRC110 /* ColorSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSystem.swift; sourceTree = "<group>"; };
@@ -252,10 +258,11 @@
 		GRP011 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				SRC010 /* Match.swift */,
-				SRC011 /* MatchResult.swift */,
-				SRC012 /* Standing.swift */,
+				SRC011 /* Enums.swift */,
 				SRC013 /* House.swift */,
+				SRC012 /* LeagueStanding.swift */,
+				SRC010 /* Match.swift */,
+				SRC014 /* UserProfile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -339,9 +346,11 @@
 		GRP020 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				SRC100 /* SupabaseService.swift */,
 				SRC101 /* AuthService.swift */,
 				SRC102 /* CacheService.swift */,
+				SRC104 /* CalendarExportService.swift */,
+				SRC103 /* NetworkMonitor.swift */,
+				SRC100 /* SupabaseService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -514,9 +523,10 @@
 				APP003 /* ContentView.swift in Sources */,
 				APP004 /* Config.swift in Sources */,
 				MOD001 /* Match.swift in Sources */,
-				MOD002 /* MatchResult.swift in Sources */,
-				MOD003 /* Standing.swift in Sources */,
+				MOD002 /* Enums.swift in Sources */,
+				MOD003 /* LeagueStanding.swift in Sources */,
 				MOD004 /* House.swift in Sources */,
+				MOD005 /* UserProfile.swift in Sources */,
 				VML001 /* FixturesViewModel.swift in Sources */,
 				VML002 /* ResultsViewModel.swift in Sources */,
 				VML003 /* StandingsViewModel.swift in Sources */,
@@ -536,6 +546,8 @@
 				SRV001 /* SupabaseService.swift in Sources */,
 				SRV002 /* AuthService.swift in Sources */,
 				SRV003 /* CacheService.swift in Sources */,
+				SRV004 /* NetworkMonitor.swift in Sources */,
+				SRV005 /* CalendarExportService.swift in Sources */,
 				UTL001 /* ColorSystem.swift in Sources */,
 				UTL002 /* Constants.swift in Sources */,
 				UTL003 /* DateFormatters.swift in Sources */,

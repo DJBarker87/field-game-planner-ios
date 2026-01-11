@@ -8,37 +8,43 @@
 import SwiftUI
 
 struct MatchCard: View {
-    let match: Match
+    let match: MatchWithHouses
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Competition badge
-            Text(match.competition)
+            Text(match.competitionType)
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.white)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color.competitionColor(for: match.competition))
+                .background(match.competitionColor)
                 .cornerRadius(4)
 
             // Teams
             HStack {
-                TeamView(name: match.homeTeam, kitColors: match.homeKitColors)
-                Text("vs")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                TeamView(name: match.awayTeam, kitColors: match.awayKitColors)
+                TeamView(name: match.homeTeamName, kitColors: match.homeKitColors)
+                Spacer()
+                if match.isCompleted {
+                    ScoreView(homeScore: match.homeScore!, awayScore: match.awayScore!)
+                } else {
+                    Text("vs")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                TeamView(name: match.awayTeamName, kitColors: match.awayKitColors)
             }
 
             // Details
             HStack {
                 Label(match.formattedDate, systemImage: "calendar")
                 Spacer()
-                Label(match.time, systemImage: "clock")
-                if let pitch = match.pitch {
+                Label(match.formattedTime, systemImage: "clock")
+                if let location = match.fullLocationString {
                     Spacer()
-                    Label(pitch, systemImage: "mappin.circle")
+                    Label(location, systemImage: "mappin.circle")
                 }
             }
             .font(.caption)
@@ -61,6 +67,7 @@ struct TeamView: View {
             Text(name)
                 .font(.subheadline)
                 .fontWeight(.medium)
+                .lineLimit(1)
         }
     }
 }
@@ -84,7 +91,28 @@ struct KitColorIndicator: View {
     }
 }
 
+struct ScoreView: View {
+    let homeScore: Int
+    let awayScore: Int
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Text("\(homeScore)")
+                .fontWeight(homeScore > awayScore ? .bold : .regular)
+                .foregroundColor(homeScore > awayScore ? .etonPrimary : .primary)
+            Text("-")
+            Text("\(awayScore)")
+                .fontWeight(awayScore > homeScore ? .bold : .regular)
+                .foregroundColor(awayScore > homeScore ? .etonPrimary : .primary)
+        }
+        .font(.title3)
+    }
+}
+
 #Preview {
-    MatchCard(match: Match.preview)
-        .padding()
+    VStack(spacing: 16) {
+        MatchCard(match: .preview)
+        MatchCard(match: .completedPreview)
+    }
+    .padding()
 }
