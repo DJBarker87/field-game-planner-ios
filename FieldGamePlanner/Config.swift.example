@@ -1,0 +1,21 @@
+//
+//  Config.swift.example
+//  FieldGamePlanner
+//
+//  Created by Claude on 2026-01-11.
+//
+//  Copy this file to Config.swift and fill in your actual Supabase credentials.
+//  Config.swift is gitignored to protect your credentials.
+//
+
+import Foundation
+
+enum Config {
+    /// Supabase project URL
+    /// Format: https://your-project-id.supabase.co
+    static let supabaseURL = "https://your-project-id.supabase.co"
+
+    /// Supabase anonymous/public key
+    /// Found in: Supabase Dashboard > Settings > API > Project API keys > anon public
+    static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.your-anon-key-here"
+}
