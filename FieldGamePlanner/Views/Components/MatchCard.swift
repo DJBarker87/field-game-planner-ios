@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MatchCard: View {
     let match: MatchWithHouses
+    var showScoreEntry: Bool = false
+    var onScoreSubmitted: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -49,6 +51,16 @@ struct MatchCard: View {
             }
             .font(.caption)
             .foregroundColor(.secondary)
+
+            // Score entry (only for fixtures, not results)
+            if showScoreEntry && !match.isCompleted {
+                Divider()
+                    .padding(.vertical, 4)
+
+                ScoreEntryView(match: match) {
+                    onScoreSubmitted?()
+                }
+            }
         }
         .padding()
         .background(Color(.systemBackground))
@@ -112,6 +124,7 @@ struct ScoreView: View {
 #Preview {
     VStack(spacing: 16) {
         MatchCard(match: .preview)
+        MatchCard(match: .preview, showScoreEntry: true)
         MatchCard(match: .completedPreview)
     }
     .padding()
