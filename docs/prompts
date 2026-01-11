@@ -1,0 +1,1092 @@
+# Field Game Planner - iOS Implementation Prompts
+
+Use these prompts sequentially with Claude Code to build the iOS app step by step. Each prompt includes testing instructions.
+
+---
+
+## Phase 1: Project Setup
+
+### Prompt 1.1 - Create Xcode Project
+
+```
+Create a new iOS app in a SEPARATE REPOSITORY called "field-game-planner-ios".
+
+Repository setup:
+1. Create new GitHub repository: field-game-planner-ios
+2. Clone to local machine
+3. Create Xcode project inside it
+
+Xcode project specifications:
+- Product Name: FieldGamePlanner
+- SwiftUI lifecycle
+- Minimum deployment target iOS 16.0
+- Universal app (iPhone and iPad)
+- Bundle identifier: com.etonfieldgame.planner
+
+Copy the CLAUDE.md file from the web repo docs folder to the iOS repo root.
+
+Set up the folder structure:
+- App/
+- Models/
+- ViewModels/
+- Views/ (with subfolders: Fixtures, Results, Standings, PitchMaps, Settings, Admin, Components)
+- Services/
+- Utilities/
+- Resources/
+
+Add the Supabase Swift SDK via SPM:
+https://github.com/supabase/supabase-swift (version 2.0.0+)
+
+Create a Config.swift file (add to .gitignore) with placeholder Supabase credentials.
+
+Test: Project should build successfully on iOS Simulator.
+```
+
+### Prompt 1.2 - Color System
+
+```
+Create the color system for Field Game Planner in Utilities/ColorSystem.swift.
+
+Reference the web app file: /Users/path/to/field-game-fixtures/src/components/MatchCard.tsx
+
+Implement:
+1. Color extension with Eton palette:
+   - etonPrimary: #96c8a2
+   - eton50: #f4f9f5
+   - eton100: #e6f2e9
+   - eton500: #6aad7a
+   - eton600: #528c61
+   - eton700: #43714f
+
+2. Static function `competitionColor(for:)` that returns the correct color for each competition type (Senior Ties = Gold, Senior League = Navy, etc.)
+
+3. KitColorMapper struct with:
+   - Static colorMap dictionary (30+ colors: red, blue, navy, maroon, etc.)
+   - Static `parse(_:)` function that takes "red/white" string and returns [Color] array
+
+4. Color init from hex string
+
+Test: Create a SwiftUI preview that displays all competition colors and a sample kit color parsing.
+```
+
+### Prompt 1.3 - Data Models
+
+```
+Create Swift data models in the Models/ folder based on the web app types.
+
+Reference: /Users/path/to/field-game-fixtures/src/types/database.ts
+
+Create these files:
+
+1. Models/House.swift
+   - Codable struct with: id, name, colours, createdAt
+   - Computed property `isSchoolTeam` using regex to match "Field", "1st Field", etc.
+
+2. Models/Match.swift
+   - MatchStatus enum (scheduled, completed, cancelled)
+   - Match struct (base model)
+   - MatchWithHouses struct (with team names and colours)
+   - Use CodingKeys for snake_case to camelCase mapping
+
+3. Models/LeagueStanding.swift
+   - All stats fields: played, wins, draws, losses, goalsFor, goalsAgainst, goalDifference, points
+
+4. Models/UserProfile.swift
+   - UserRole enum (viewer, captain, admin)
+   - UserProfile struct with id, email, name, role, houseId
+
+5. Models/Enums.swift
+   - TimeFilter enum with cases: today, tomorrow, week, all
+   - ViewMode enum: list, calendar
+   - Add dateRange computed property to TimeFilter
+
+Test: Write unit tests that decode sample JSON into each model type.
+```
+
+---
+
+## Phase 2: Services Layer
+
+### Prompt 2.1 - Supabase Service
+
+```
+Create Services/SupabaseService.swift as an actor for thread-safe database access.
+
+Implement these async methods:
+
+1. fetchHouses() -> [House]
+   - Query: from("houses").select().order("name")
+
+2. fetchUpcomingMatches(startDate:endDate:teamId:) -> [MatchWithHouses]
+   - Query: from("upcoming_matches") with optional filters
+   - Apply date filters with gte/lte
+   - Apply team filter with or() for home_team_id and away_team_id
+   - Order by date, then time
+
+3. fetchRecentResults(teamId:year:) -> [MatchWithHouses]
+   - Query: from("recent_results")
+   - Filter to current calendar year
+   - Optional team filter
+
+4. fetchStandings(competitionType:) -> [LeagueStanding]
+   - Query: from("league_standings")
+   - Optional competition type filter
+
+5. updateScore(matchId:homeScore:awayScore:) async throws
+   - Update matches table
+   - Set status to "completed"
+
+Use the Supabase Swift SDK patterns. Handle errors appropriately.
+
+Test: Create a test target. Write tests that verify queries compile (mock the responses).
+```
+
+### Prompt 2.2 - Cache Service
+
+```
+Create Services/CacheService.swift as an actor for caching.
+
+Implement:
+
+1. Memory cache using NSCache with wrapper class for expiration
+   - get<T>(_:type:) -> T?
+   - set<T>(_:value:ttl:) where default TTL is 300 seconds
+
+2. Disk cache for offline support
+   - persistToDisk<T>(_:value:) async throws
+   - loadFromDisk<T>(_:type:) async throws -> T?
+   - Store in Caches directory as JSON files
+
+3. Clear methods
+   - clearMemory()
+   - clearDisk() async
+
+Test: Write unit tests for cache set/get with expiration, and disk persistence.
+```
+
+### Prompt 2.3 - Network Monitor
+
+```
+Create Services/NetworkMonitor.swift using NWPathMonitor.
+
+Implement:
+- ObservableObject class
+- @Published var isConnected: Bool
+- Start monitoring on init
+- Update isConnected on path changes
+
+Test: Verify the class compiles and publishes changes (manual test with airplane mode).
+```
+
+### Prompt 2.4 - Calendar Export Service
+
+```
+Create Services/CalendarExportService.swift as an actor.
+
+Implement:
+
+1. requestAccess() async throws -> Bool
+   - Use EKEventStore
+   - Handle iOS 17+ API differences
+
+2. exportMatches(_:) async throws -> Int
+   - Create EKEvent for each match
+   - Title: "Home v Away" or just team name
+   - Location: pitch name
+   - Time: match time or default 14:25
+   - Duration: 1 hour
+   - Notes: competition type, umpires
+   - Return count of saved events
+
+3. generateICSData(_:) -> Data
+   - Create ICS format string
+   - Proper escaping for special characters
+   - Return as Data for sharing
+
+Test: Write unit test for ICS generation. Manual test for EventKit (requires device/permission).
+```
+
+---
+
+## Phase 3: Core UI Components
+
+### Prompt 3.1 - Tab Navigation
+
+```
+Set up the main tab navigation in App/FieldGamePlannerApp.swift.
+
+Create:
+1. Tab enum with cases: fixtures, results, standings
+2. AppState ObservableObject with:
+   - @Published selectedTab
+   - @AppStorage("selectedHouseId") for My House preference
+   - @Published currentUser: UserProfile? for auth state
+
+3. Main TabView with three tabs:
+   - Fixtures (calendar icon)
+   - Results (list.clipboard icon)
+   - Standings (trophy icon)
+
+4. Apply .tint(Color.etonPrimary)
+
+5. Inject AppState as @EnvironmentObject
+
+Create placeholder views for each tab that just show the tab name.
+
+Test: Run on simulator, verify tabs switch correctly and tint color is Eton green.
+```
+
+### Prompt 3.2 - Reusable Components
+
+```
+Create reusable UI components in Views/Components/:
+
+1. KitColorDots.swift
+   - Takes colours: String?
+   - Parses and displays 1-2 color circles
+   - 10pt diameter with subtle border
+
+2. CompetitionBadge.swift
+   - Takes competitionType: String
+   - Shows colored dot + uppercase text
+   - Capsule background
+
+3. TimeSegmentedControl.swift
+   - Binding to TimeFilter
+   - Native iOS segmented control style
+   - Options: Today, Tomorrow, This Week, All
+
+4. FilterDropdown.swift
+   - Generic over Identifiable & Hashable
+   - Button that opens sheet with list selection
+   - Shows current selection or "All X"
+   - Search field for long lists
+
+All components should match Apple HIG styling with Eton green accents.
+
+Test: Create a preview file showing all components with sample data.
+```
+
+### Prompt 3.3 - Match Card
+
+```
+Create Views/Components/MatchCardView.swift - the main match display component.
+
+Reference: /Users/path/to/field-game-fixtures/src/components/MatchCard.tsx
+
+Implement:
+1. Props: match: MatchWithHouses, showScore: Bool, onPitchTap: ((String) -> Void)?
+
+2. Layout:
+   - Time banner at top (grey background)
+   - Team rows with kit color dots
+   - "FINAL" badge if completed
+   - Competition badge with color
+   - Pitch link (tappable, shows map pin icon)
+   - Umpires row (if present)
+
+3. Left accent bar matching competition color
+
+4. Bib indicators for house vs house matches:
+   - Home: "Light blue / Red bibs"
+   - Away: "Black / Yellow bibs"
+
+5. Format time as 12-hour (2:25pm) or "TBD"
+
+6. Card styling: rounded corners (16pt), subtle shadow, white background
+
+Test: Preview with various match types - vs match, single team, with/without score, different competitions.
+```
+
+---
+
+## Phase 4: Fixtures Feature
+
+### Prompt 4.1 - Fixtures ViewModel
+
+```
+Create ViewModels/FixturesViewModel.swift.
+
+Implement @MainActor ObservableObject with:
+
+Published state:
+- matches: [MatchWithHouses]
+- houses: [House]
+- isLoading: Bool
+- error: Error?
+- lastUpdated: Date?
+
+Filter state:
+- timeFilter: TimeFilter
+- selectedHouse: House?
+- selectedSchoolTeam: House?
+- selectedUmpire: String?
+- viewMode: ViewMode (list/calendar)
+
+UI state:
+- showingPitchMap: Bool
+- selectedPitch: String?
+
+Computed properties:
+- houseOptions: [House] (filtered to actual houses)
+- schoolTeamOptions: [House] (filtered to school teams)
+- umpireOptions: [String] (extracted from all matches)
+- filteredMatches: [MatchWithHouses] (applies umpire filter client-side)
+
+Methods:
+- loadInitialData() async
+- fetchMatches() async
+- setTimeFilter(_:)
+- selectHouse(_:), selectSchoolTeam(_:), selectUmpire(_:)
+- openPitchMap(for:)
+
+Integrate with SupabaseService and CacheService.
+
+Test: Unit tests for filter logic and umpire extraction.
+```
+
+### Prompt 4.2 - Match List View
+
+```
+Create Views/Fixtures/MatchListView.swift.
+
+Implement:
+1. Takes matches: [MatchWithHouses], onPitchTap callback
+
+2. Group matches by date using Dictionary(grouping:by:)
+
+3. LazyVStack with:
+   - Sticky date headers (formatted as "Monday 15 January")
+   - "Today" / "Tomorrow" labels where applicable
+   - MatchCardView for each match
+
+4. Empty state when no matches:
+   - SF Symbol icon
+   - "No fixtures found" message
+   - Subtext based on active filters
+
+5. Pull-to-refresh support
+
+Test: Preview with sample grouped data, empty state, and single day.
+```
+
+### Prompt 4.3 - Fixtures View (Main)
+
+```
+Create Views/Fixtures/FixturesView.swift - the main fixtures tab.
+
+Implement:
+1. @StateObject var viewModel = FixturesViewModel()
+
+2. NavigationStack with title "Fixtures"
+
+3. Toolbar items:
+   - Trailing: gear icon (settings sheet)
+   - Trailing: list/calendar toggle (when team selected)
+
+4. Content:
+   - TimeSegmentedControl
+   - Filter dropdowns row (House, School Team)
+   - Umpire filter (full width)
+   - Download/Export buttons row
+   - MatchListView or CalendarView based on viewMode
+
+5. Sheet presentations:
+   - .sheet for settings
+   - .sheet for pitch map (presentationDetents: [.medium, .large])
+
+6. Load data on appear, refresh on filter changes
+
+7. Show loading spinner and error states
+
+Test: Run on simulator, verify filters work, tab switches, pitch tap opens sheet.
+```
+
+### Prompt 4.4 - Calendar Views
+
+```
+Create calendar views in Views/Fixtures/:
+
+1. MonthCalendarView.swift
+   - Month/year header with navigation arrows
+   - Month tabs (Jan-Dec) scrollable
+   - "Today" button
+   - 7-column grid for days
+   - Day cells showing match indicators
+   - Tap day → callback with date
+   - Tap match indicator → callback with match
+
+2. WeekCalendarView.swift
+   - Week navigation
+   - 7-day horizontal layout
+   - Taller cells than month view
+   - More detail per match visible
+
+3. CalendarDayCell.swift (shared)
+   - Day number
+   - Today highlight (Eton green border)
+   - Match indicators (colored dots/pills)
+   - "+N more" for overflow
+
+4. MatchDetailSheet.swift
+   - Modal showing full match details
+   - Triggered from calendar match tap
+
+Reference: /Users/path/to/field-game-fixtures/src/components/MonthlyCalendar.tsx
+
+Test: Preview both calendar views with sample matches across multiple dates.
+```
+
+---
+
+## Phase 5: Pitch Maps
+
+### Prompt 5.1 - North Fields Map
+
+```
+Create Views/PitchMaps/NorthFieldsMapView.swift.
+
+Reference: /Users/path/to/field-game-fixtures/src/components/NorthFieldsMap.tsx
+
+Implement using SwiftUI Canvas:
+
+1. Pitch data dictionary with all 25 pitches:
+   - Agar's 1-7, Dutchman's 1-15, Austin's, O.E. Soccer, College Field
+   - Each with x, y, width, height
+
+2. Canvas drawing:
+   - Background rect
+   - Roads: Slough Road, Avenue, Footpath (dashed), Pocock's Lane
+   - Road labels (rotated text)
+   - Area labels (AGAR'S, DUTCHMAN'S)
+   - Pavilion rect
+   - Each pitch as rounded rect with label
+
+3. Pitch colors:
+   - Agar's: light green
+   - Dutchman's: slightly different green
+   - College Field: darker green
+   - Highlighted: Navy blue (#1E4D8C)
+
+4. Interaction:
+   - highlightedPitch prop to highlight specific pitch
+   - onPitchTap callback
+   - Overlay transparent tap regions on each pitch
+
+5. Scale to fit container while maintaining aspect ratio (520x480)
+
+Test: Preview with no highlight, with "Agar's 3" highlighted, verify tap works.
+```
+
+### Prompt 5.2 - South Fields Map
+
+```
+Create Views/PitchMaps/SouthFieldsMapView.swift.
+
+Reference: /Users/path/to/field-game-fixtures/src/components/SouthFieldsMap.tsx
+
+Implement using SwiftUI Canvas:
+
+1. Pitch data for 8 pitches:
+   - South Meadow 1-5, Warre's, Carter's, Square Close
+
+2. Canvas drawing:
+   - Background rect
+   - Roads: Eton Wick Road, S Meadow Lane (curved path), Meadow Lane
+   - Playground area
+   - Treeline with tree symbols
+   - Masters' tennis courts (different color)
+   - Each pitch as rounded rect
+
+3. Pitch colors:
+   - South Meadow: pale green
+   - Warre's, Carter's: medium green
+   - Square Close: similar green
+   - Highlighted: Navy blue
+
+4. Same interaction pattern as North map
+
+5. Aspect ratio: 450x470
+
+Test: Preview with various highlights, verify South Meadow layout matches web.
+```
+
+### Prompt 5.3 - Pitch Map Sheet
+
+```
+Create Views/PitchMaps/PitchMapSheet.swift.
+
+Implement:
+1. Props: highlightedPitch: String?, isPresented: Binding<Bool>
+
+2. Determine which map(s) to show:
+   - If highlightedPitch contains Agar's, Dutchman's, Austin's, College Field, O.E. Soccer → show North
+   - If contains South Meadow, Warre's, Carter's, Square Close → show South
+   - If nil → show both maps in ScrollView
+
+3. NavigationView with:
+   - Title: pitch name or "Playing Fields"
+   - Close button
+
+4. ScrollView containing appropriate map(s)
+
+5. If pitch highlighted, show pill badge at bottom with pitch name
+
+Test: Open sheet with nil (both maps), with "Agar's 5" (north only), with "South Meadow 2" (south only).
+```
+
+---
+
+## Phase 6: Results & Standings
+
+### Prompt 6.1 - Results Feature
+
+```
+Create the Results tab:
+
+1. ViewModels/ResultsViewModel.swift
+   - Similar to FixturesViewModel but for completed matches
+   - Filter to current calendar year
+   - Optional house/team filter
+   - Group by date (most recent first)
+
+2. Views/Results/ResultsView.swift
+   - NavigationStack with title "Results"
+   - Filter dropdown for house/team
+   - MatchListView with showScore: true
+   - Empty state for no results
+
+Reference: /Users/path/to/field-game-fixtures/src/app/results/page.tsx
+
+Test: Verify results show scores, most recent first, year filter works.
+```
+
+### Prompt 6.2 - Standings Feature
+
+```
+Create the Standings tab:
+
+1. ViewModels/StandingsViewModel.swift
+   - Fetch standings from league_standings view
+   - Group/filter by competition type
+   - Track selected competition
+
+2. Views/Standings/StandingsView.swift
+   - NavigationStack with title "Standings"
+   - Segmented control or picker for competition type
+   - Table layout: Pos, Team (with colors), P, W, D, L, GD, Pts
+   - Alternating row colors
+   - Tap team → could filter fixtures (optional)
+
+3. Views/Standings/StandingsRowView.swift
+   - Position number
+   - Kit color dots + team name
+   - Stats in columns
+   - Highlight for top positions
+
+Reference: /Users/path/to/field-game-fixtures/src/app/standings/page.tsx
+
+Test: Verify table displays correctly, competition filter switches data.
+```
+
+---
+
+## Phase 7: Settings & Authentication
+
+### Prompt 7.1 - Settings View
+
+```
+Create Views/Settings/SettingsView.swift.
+
+Implement:
+1. Presented as sheet from gear icon
+
+2. Sections:
+   - My House (NavigationLink to selection)
+   - Account (Login button OR user info + Logout)
+   - Admin (only if user.role == .admin)
+   - About (version, etc.)
+
+3. For logged-in users, show email and role
+
+4. Admin section links:
+   - Create Captain Account
+   - Manage Fixtures
+   - View Import Logs
+
+Test: Verify sections show/hide based on auth state and role.
+```
+
+### Prompt 7.2 - My House Selection
+
+```
+Create Views/Settings/MyHouseSheet.swift.
+
+Implement:
+1. List of houses (excluding school teams)
+2. "Show all fixtures" option at top
+3. Checkmark on selected house
+4. Save to @AppStorage on selection
+5. Dismiss on selection
+
+6. For logged-in captains:
+   - Pre-select their assigned house
+   - Still allow changing for viewing preference
+
+Test: Select house, close app, reopen - preference should persist.
+```
+
+### Prompt 7.3 - Authentication Service
+
+```
+Create Services/AuthService.swift.
+
+Implement ObservableObject with:
+
+State:
+- @Published currentUser: UserProfile?
+- @Published isAuthenticated: Bool
+- @Published isLoading: Bool
+
+Methods:
+- signIn(email:password:) async throws
+- signOut() async
+- resetPassword(email:) async throws
+- checkSession() async - restore session on app launch
+- fetchUserProfile() async throws -> UserProfile
+
+Keychain storage:
+- Store auth token securely
+- Retrieve on app launch
+
+Biometric:
+- canUseBiometric: Bool
+- authenticateWithBiometric() async throws -> Bool
+
+Test: Unit tests for state management. Manual test for actual auth flow.
+```
+
+### Prompt 7.4 - Login View
+
+```
+Create Views/Settings/LoginView.swift.
+
+Implement:
+1. Email text field
+2. Password secure field
+3. "Forgot Password?" button
+4. Login button (disabled when fields empty)
+5. Loading state during auth
+6. Error display (invalid credentials, network error)
+
+7. Forgot password flow:
+   - Show email input
+   - Call resetPassword
+   - Show success message
+
+8. After successful login:
+   - Check if mustChangePassword
+   - Navigate to change password if needed
+   - Otherwise dismiss
+
+9. Face ID option (after initial login):
+   - "Use Face ID" toggle
+   - On enable, authenticate and store
+
+Test: Test login with valid/invalid credentials, forgot password flow, biometric setup.
+```
+
+---
+
+## Phase 8: Captain Features
+
+### Prompt 8.1 - Score Entry Component
+
+```
+Create Views/Components/ScoreEntryView.swift.
+
+Implement inline score entry for MatchCardView:
+
+1. Only visible if:
+   - User is captain or admin
+   - Match is for captain's house
+   - Match status is "scheduled" OR within 5-min edit window
+
+2. Collapsed state: "Enter Score" button
+
+3. Expanded state:
+   - Home team name + score TextField (number pad)
+   - Away team name + score TextField
+   - "Submit" button
+   - "Cancel" button
+
+4. Submit flow:
+   - Show confirmation alert
+   - Call SupabaseService.updateScore
+   - Show success feedback
+   - Collapse back
+
+5. Edit window logic:
+   - If match.scoreEnteredAt exists and < 5 minutes ago, allow edit
+   - Otherwise hide entirely (not disabled)
+
+Test: Verify visibility rules, submit flow, edit window timing.
+```
+
+### Prompt 8.2 - Integrate Score Entry
+
+```
+Update MatchCardView to include score entry.
+
+1. Add to MatchCardView:
+   - Check if current user can enter score for this match
+   - Show ScoreEntryView when eligible
+   - Hide for anonymous users entirely
+
+2. Update FixturesViewModel:
+   - Add method to check score entry eligibility
+   - Refresh match after score submission
+
+3. Ensure score entry only appears on Fixtures tab (not Results)
+
+Test:
+- Anonymous user sees no score entry
+- Captain sees score entry only for their house's matches
+- Admin sees score entry for all matches
+- Score submits and match moves to completed
+```
+
+---
+
+## Phase 9: Admin Features
+
+### Prompt 9.1 - Admin Dashboard
+
+```
+Create Views/Admin/AdminDashboardView.swift.
+
+Simple navigation list with:
+1. "Create Captain Account" → CreateCaptainView
+2. "Manage Fixtures" → ManageFixturesView
+3. "Import Logs" → ImportLogsView
+
+Only accessible when user.role == .admin.
+
+Test: Verify only admins can access, navigation works.
+```
+
+### Prompt 9.2 - Create Captain Account
+
+```
+Create Views/Admin/CreateCaptainView.swift.
+
+Form with:
+1. Email text field
+2. House picker (from houses list)
+3. Temporary password field (with generate button)
+4. Create button
+
+Flow:
+1. Validate email format
+2. Call Supabase Auth admin.createUser
+3. Create user_profiles entry with role: captain, house_id
+4. Show success with "Captain must change password on first login"
+5. Clear form or dismiss
+
+Test: Create test captain account, verify it appears in Supabase.
+```
+
+### Prompt 9.3 - Manage Fixtures
+
+```
+Create Views/Admin/ManageFixturesView.swift.
+
+Two modes: Add New / Edit Existing
+
+Add New:
+1. Date picker
+2. Time picker (optional)
+3. Competition type picker
+4. Pitch picker (from known pitches)
+5. Home team picker
+6. Away team picker (optional)
+7. Umpires text field
+8. Save button
+
+Edit Existing:
+1. Search by date or team
+2. List matching fixtures
+3. Tap to edit (same form as add)
+4. Delete option with confirmation
+
+Test: Add fixture, verify it appears in fixtures list. Edit fixture, verify changes persist.
+```
+
+### Prompt 9.4 - Import Logs
+
+```
+Create Views/Admin/ImportLogsView.swift.
+
+Simple view-only list:
+1. Fetch from import_log table
+2. Display: timestamp, email subject, matches imported count
+3. Sort by timestamp descending
+4. Pull to refresh
+
+No edit/delete functionality (view only).
+
+Test: Verify logs display correctly, most recent first.
+```
+
+---
+
+## Phase 10: Polish & Testing
+
+### Prompt 10.1 - Offline Support
+
+```
+Implement comprehensive offline support:
+
+1. Update SupabaseService methods to:
+   - Try network fetch first
+   - On success, cache to disk
+   - On failure, load from disk cache
+   - Return cached data with "offline" flag
+
+2. Update ViewModels to:
+   - Track isOffline state
+   - Show banner when using cached data
+   - Display "Last updated" timestamp
+
+3. NetworkMonitor integration:
+   - Subscribe to connectivity changes
+   - Auto-refresh when coming back online
+
+4. Score entry when offline:
+   - Show "No connection" message
+   - Don't queue (block submission)
+
+Test: Enable airplane mode, verify cached data shows, banner displays, score entry blocked.
+```
+
+### Prompt 10.2 - iPad Layout
+
+```
+Optimize layouts for iPad:
+
+1. FixturesView:
+   - Sidebar for filters on iPad
+   - Main content area for list/calendar
+   - Use NavigationSplitView
+
+2. StandingsView:
+   - Wider table with more columns visible
+
+3. PitchMapSheet:
+   - Side-by-side maps on landscape iPad
+
+4. Settings:
+   - Form style that works on both devices
+
+Use horizontalSizeClass to detect iPad.
+
+Test: Run on iPad simulator in both orientations.
+```
+
+### Prompt 10.3 - Accessibility
+
+```
+Add accessibility support:
+
+1. Dynamic Type:
+   - Use .font(.body) etc. instead of fixed sizes
+   - Test with largest accessibility sizes
+
+2. VoiceOver:
+   - Add accessibilityLabel to icons
+   - Group related elements
+   - Announce score changes
+
+3. Color contrast:
+   - Verify competition colors have sufficient contrast
+   - Test with color blindness simulator
+
+Test: Enable VoiceOver, navigate through app. Enable large text, verify layouts adapt.
+```
+
+### Prompt 10.4 - Unit Tests
+
+```
+Create comprehensive unit tests:
+
+1. ModelTests:
+   - JSON decoding for all models
+   - House.isSchoolTeam logic
+   - TimeFilter.dateRange calculations
+
+2. ViewModelTests:
+   - Filter logic in FixturesViewModel
+   - Umpire extraction
+   - Score entry eligibility
+
+3. UtilityTests:
+   - Color parsing
+   - Date formatting
+   - Competition color mapping
+
+4. ServiceTests (with mocks):
+   - Cache TTL expiration
+   - ICS generation
+
+Target: 80%+ code coverage on Models, ViewModels, Utilities.
+
+Test: Run `xcodebuild test` and verify all pass.
+```
+
+### Prompt 10.5 - UI Tests
+
+```
+Create UI tests for critical flows:
+
+1. NavigationTests:
+   - Tab switching
+   - Settings sheet open/close
+   - Pitch map sheet open/close
+
+2. FilterTests:
+   - Select time filter
+   - Select house filter
+   - Clear filters
+
+3. AuthTests:
+   - Login flow
+   - Logout flow
+   - Protected route access
+
+4. ScoreEntryTests (if possible to mock auth):
+   - Enter score
+   - Submit confirmation
+   - Edit within window
+
+Test: Run UI tests on simulator.
+```
+
+---
+
+## Phase 11: Release Preparation
+
+### Prompt 11.1 - App Store Assets
+
+```
+Prepare App Store assets:
+
+1. App Icon:
+   - Create 1024x1024 icon
+   - Field game goalpost silhouette in Eton green on white
+   - Export all required sizes to Assets.xcassets
+
+2. Launch Screen:
+   - Simple launch screen with app icon centered
+   - Eton green background or white
+
+3. Screenshots (for unlisted, minimal needed):
+   - iPhone 6.7" (iPhone 15 Pro Max)
+   - iPad 12.9"
+
+Test: Verify icon appears correctly on home screen and in Settings.
+```
+
+### Prompt 11.2 - Info.plist & Capabilities
+
+```
+Configure app metadata:
+
+1. Info.plist:
+   - NSCalendarsUsageDescription: "Field Game Planner needs calendar access to export fixtures to your calendar."
+   - NSFaceIDUsageDescription: "Use Face ID for quick login."
+   - CFBundleDisplayName: "Field Game Planner"
+
+2. Capabilities:
+   - Background App Refresh (optional, for future)
+
+3. Privacy manifest if required by App Store
+
+Test: Verify permission prompts show correct messages.
+```
+
+### Prompt 11.3 - TestFlight Setup
+
+```
+Set up TestFlight distribution:
+
+1. Create App Store Connect record
+2. Configure app information:
+   - Name: Field Game Planner
+   - Category: Sports
+   - Age Rating: 4+
+
+3. Archive and upload:
+   - Product > Archive in Xcode
+   - Distribute to App Store Connect
+   - Select TestFlight
+
+4. TestFlight configuration:
+   - Add internal testers
+   - Add external testers (if needed)
+   - Write test notes
+
+5. Unlisted distribution:
+   - After approval, set to "Unlisted"
+   - Generate direct link
+
+Document the upload process for future releases.
+```
+
+---
+
+## Testing Checklist (Final)
+
+Run through this checklist before each release:
+
+### Anonymous User
+- [ ] Can view fixtures list
+- [ ] Can switch time filters
+- [ ] Can filter by house
+- [ ] Can filter by school team
+- [ ] Can filter by umpire
+- [ ] Can view calendar (month and week)
+- [ ] Can tap pitch to see map
+- [ ] Can view results
+- [ ] Can view standings
+- [ ] Can switch competition in standings
+- [ ] Can set My House preference
+- [ ] Cannot see score entry option
+- [ ] Cannot access admin features
+- [ ] Can export to calendar
+- [ ] Offline mode shows cached data
+
+### Captain User
+- [ ] Can log in
+- [ ] Can use Face ID after initial login
+- [ ] Can see score entry for their house's matches
+- [ ] Cannot see score entry for other matches
+- [ ] Can enter and submit score
+- [ ] Sees confirmation before submit
+- [ ] Can edit within 5 minutes
+- [ ] Cannot edit after 5 minutes
+- [ ] Can log out
+
+### Admin User
+- [ ] Can see admin section in settings
+- [ ] Can create captain account
+- [ ] Can add new fixture
+- [ ] Can edit existing fixture
+- [ ] Can view import logs
+- [ ] Can enter scores for any match
+
+### Device/Platform
+- [ ] Works on iPhone (various sizes)
+- [ ] Works on iPad (portrait and landscape)
+- [ ] Handles rotation correctly
+- [ ] Respects Dynamic Type
+- [ ] Works with VoiceOver
