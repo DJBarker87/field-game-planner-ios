@@ -1,0 +1,894 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		/* App Files */
+		APP001 /* FieldGamePlannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC001 /* FieldGamePlannerApp.swift */; };
+		APP002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC002 /* AppState.swift */; };
+		APP003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC003 /* ContentView.swift */; };
+		APP004 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC004 /* Config.swift */; };
+
+		/* Models */
+		MOD001 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC010 /* Match.swift */; };
+		MOD002 /* MatchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC011 /* MatchResult.swift */; };
+		MOD003 /* Standing.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC012 /* Standing.swift */; };
+		MOD004 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC013 /* House.swift */; };
+
+		/* ViewModels */
+		VML001 /* FixturesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC020 /* FixturesViewModel.swift */; };
+		VML002 /* ResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC021 /* ResultsViewModel.swift */; };
+		VML003 /* StandingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC022 /* StandingsViewModel.swift */; };
+
+		/* Views - Fixtures */
+		VFX001 /* FixturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC030 /* FixturesView.swift */; };
+
+		/* Views - Results */
+		VRS001 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC040 /* ResultsView.swift */; };
+
+		/* Views - Standings */
+		VST001 /* StandingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC050 /* StandingsView.swift */; };
+
+		/* Views - PitchMaps */
+		VPM001 /* PitchMapsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC060 /* PitchMapsView.swift */; };
+		VPM002 /* NorthFieldsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC061 /* NorthFieldsMapView.swift */; };
+		VPM003 /* SouthFieldsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC062 /* SouthFieldsMapView.swift */; };
+
+		/* Views - Settings */
+		VSE001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC070 /* SettingsView.swift */; };
+		VSE002 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC071 /* LoginView.swift */; };
+		VSE003 /* HousePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC072 /* HousePickerView.swift */; };
+
+		/* Views - Admin */
+		VAD001 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC080 /* AdminView.swift */; };
+
+		/* Views - Components */
+		VCO001 /* MatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC090 /* MatchCard.swift */; };
+		VCO002 /* ResultCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC091 /* ResultCard.swift */; };
+		VCO003 /* StandingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC092 /* StandingRow.swift */; };
+
+		/* Services */
+		SRV001 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC100 /* SupabaseService.swift */; };
+		SRV002 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC101 /* AuthService.swift */; };
+		SRV003 /* CacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC102 /* CacheService.swift */; };
+
+		/* Utilities */
+		UTL001 /* ColorSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC110 /* ColorSystem.swift */; };
+		UTL002 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC111 /* Constants.swift */; };
+		UTL003 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC112 /* DateFormatters.swift */; };
+
+		/* Resources */
+		RES001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = RES100 /* Assets.xcassets */; };
+
+		/* Tests */
+		TST001 /* FieldGamePlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST100 /* FieldGamePlannerTests.swift */; };
+		TST002 /* FieldGamePlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST200 /* FieldGamePlannerUITests.swift */; };
+		TST003 /* FieldGamePlannerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST201 /* FieldGamePlannerUITestsLaunchTests.swift */; };
+
+		/* SPM */
+		SPM001 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = PKG001 /* Supabase */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CIP001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PRJ001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = TGT001;
+			remoteInfo = FieldGamePlanner;
+		};
+		CIP002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PRJ001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = TGT001;
+			remoteInfo = FieldGamePlanner;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		/* Products */
+		PRD001 /* FieldGamePlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FieldGamePlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		PRD002 /* FieldGamePlannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FieldGamePlannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		PRD003 /* FieldGamePlannerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FieldGamePlannerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+
+		/* App */
+		SRC001 /* FieldGamePlannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldGamePlannerApp.swift; sourceTree = "<group>"; };
+		SRC002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		SRC003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		SRC004 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+
+		/* Models */
+		SRC010 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		SRC011 /* MatchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchResult.swift; sourceTree = "<group>"; };
+		SRC012 /* Standing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Standing.swift; sourceTree = "<group>"; };
+		SRC013 /* House.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = House.swift; sourceTree = "<group>"; };
+
+		/* ViewModels */
+		SRC020 /* FixturesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixturesViewModel.swift; sourceTree = "<group>"; };
+		SRC021 /* ResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewModel.swift; sourceTree = "<group>"; };
+		SRC022 /* StandingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsViewModel.swift; sourceTree = "<group>"; };
+
+		/* Views - Fixtures */
+		SRC030 /* FixturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixturesView.swift; sourceTree = "<group>"; };
+
+		/* Views - Results */
+		SRC040 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
+
+		/* Views - Standings */
+		SRC050 /* StandingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsView.swift; sourceTree = "<group>"; };
+
+		/* Views - PitchMaps */
+		SRC060 /* PitchMapsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchMapsView.swift; sourceTree = "<group>"; };
+		SRC061 /* NorthFieldsMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NorthFieldsMapView.swift; sourceTree = "<group>"; };
+		SRC062 /* SouthFieldsMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SouthFieldsMapView.swift; sourceTree = "<group>"; };
+
+		/* Views - Settings */
+		SRC070 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		SRC071 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		SRC072 /* HousePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousePickerView.swift; sourceTree = "<group>"; };
+
+		/* Views - Admin */
+		SRC080 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
+
+		/* Views - Components */
+		SRC090 /* MatchCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCard.swift; sourceTree = "<group>"; };
+		SRC091 /* ResultCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCard.swift; sourceTree = "<group>"; };
+		SRC092 /* StandingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingRow.swift; sourceTree = "<group>"; };
+
+		/* Services */
+		SRC100 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
+		SRC101 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		SRC102 /* CacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
+
+		/* Utilities */
+		SRC110 /* ColorSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSystem.swift; sourceTree = "<group>"; };
+		SRC111 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		SRC112 /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
+
+		/* Resources */
+		RES100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		RES101 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+
+		/* Tests */
+		TST100 /* FieldGamePlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldGamePlannerTests.swift; sourceTree = "<group>"; };
+		TST200 /* FieldGamePlannerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldGamePlannerUITests.swift; sourceTree = "<group>"; };
+		TST201 /* FieldGamePlannerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldGamePlannerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FWK001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				SPM001 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FWK002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FWK003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		GRP001 = {
+			isa = PBXGroup;
+			children = (
+				GRP002 /* FieldGamePlanner */,
+				GRP003 /* FieldGamePlannerTests */,
+				GRP004 /* FieldGamePlannerUITests */,
+				GRP005 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		GRP002 /* FieldGamePlanner */ = {
+			isa = PBXGroup;
+			children = (
+				SRC004 /* Config.swift */,
+				RES101 /* Info.plist */,
+				GRP010 /* App */,
+				GRP011 /* Models */,
+				GRP012 /* ViewModels */,
+				GRP013 /* Views */,
+				GRP020 /* Services */,
+				GRP021 /* Utilities */,
+				GRP022 /* Resources */,
+			);
+			path = FieldGamePlanner;
+			sourceTree = "<group>";
+		};
+		GRP003 /* FieldGamePlannerTests */ = {
+			isa = PBXGroup;
+			children = (
+				TST100 /* FieldGamePlannerTests.swift */,
+			);
+			path = FieldGamePlannerTests;
+			sourceTree = "<group>";
+		};
+		GRP004 /* FieldGamePlannerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				TST200 /* FieldGamePlannerUITests.swift */,
+				TST201 /* FieldGamePlannerUITestsLaunchTests.swift */,
+			);
+			path = FieldGamePlannerUITests;
+			sourceTree = "<group>";
+		};
+		GRP005 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				PRD001 /* FieldGamePlanner.app */,
+				PRD002 /* FieldGamePlannerTests.xctest */,
+				PRD003 /* FieldGamePlannerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		GRP010 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				SRC001 /* FieldGamePlannerApp.swift */,
+				SRC002 /* AppState.swift */,
+				SRC003 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		GRP011 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				SRC010 /* Match.swift */,
+				SRC011 /* MatchResult.swift */,
+				SRC012 /* Standing.swift */,
+				SRC013 /* House.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		GRP012 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				SRC020 /* FixturesViewModel.swift */,
+				SRC021 /* ResultsViewModel.swift */,
+				SRC022 /* StandingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		GRP013 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				GRP014 /* Fixtures */,
+				GRP015 /* Results */,
+				GRP016 /* Standings */,
+				GRP017 /* PitchMaps */,
+				GRP018 /* Settings */,
+				GRP019 /* Admin */,
+				GRP023 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		GRP014 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				SRC030 /* FixturesView.swift */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		GRP015 /* Results */ = {
+			isa = PBXGroup;
+			children = (
+				SRC040 /* ResultsView.swift */,
+			);
+			path = Results;
+			sourceTree = "<group>";
+		};
+		GRP016 /* Standings */ = {
+			isa = PBXGroup;
+			children = (
+				SRC050 /* StandingsView.swift */,
+			);
+			path = Standings;
+			sourceTree = "<group>";
+		};
+		GRP017 /* PitchMaps */ = {
+			isa = PBXGroup;
+			children = (
+				SRC060 /* PitchMapsView.swift */,
+				SRC061 /* NorthFieldsMapView.swift */,
+				SRC062 /* SouthFieldsMapView.swift */,
+			);
+			path = PitchMaps;
+			sourceTree = "<group>";
+		};
+		GRP018 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				SRC070 /* SettingsView.swift */,
+				SRC071 /* LoginView.swift */,
+				SRC072 /* HousePickerView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		GRP019 /* Admin */ = {
+			isa = PBXGroup;
+			children = (
+				SRC080 /* AdminView.swift */,
+			);
+			path = Admin;
+			sourceTree = "<group>";
+		};
+		GRP020 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				SRC100 /* SupabaseService.swift */,
+				SRC101 /* AuthService.swift */,
+				SRC102 /* CacheService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		GRP021 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				SRC110 /* ColorSystem.swift */,
+				SRC111 /* Constants.swift */,
+				SRC112 /* DateFormatters.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		GRP022 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				RES100 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		GRP023 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				SRC090 /* MatchCard.swift */,
+				SRC091 /* ResultCard.swift */,
+				SRC092 /* StandingRow.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		TGT001 /* FieldGamePlanner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCL001 /* Build configuration list for PBXNativeTarget "FieldGamePlanner" */;
+			buildPhases = (
+				SRC200 /* Sources */,
+				FWK001 /* Frameworks */,
+				RES200 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FieldGamePlanner;
+			packageProductDependencies = (
+				PKG001 /* Supabase */,
+			);
+			productName = FieldGamePlanner;
+			productReference = PRD001 /* FieldGamePlanner.app */;
+			productType = "com.apple.product-type.application";
+		};
+		TGT002 /* FieldGamePlannerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCL002 /* Build configuration list for PBXNativeTarget "FieldGamePlannerTests" */;
+			buildPhases = (
+				SRC201 /* Sources */,
+				FWK002 /* Frameworks */,
+				RES201 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEP001 /* PBXTargetDependency */,
+			);
+			name = FieldGamePlannerTests;
+			productName = FieldGamePlannerTests;
+			productReference = PRD002 /* FieldGamePlannerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		TGT003 /* FieldGamePlannerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCL003 /* Build configuration list for PBXNativeTarget "FieldGamePlannerUITests" */;
+			buildPhases = (
+				SRC202 /* Sources */,
+				FWK003 /* Frameworks */,
+				RES202 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEP002 /* PBXTargetDependency */,
+			);
+			name = FieldGamePlannerUITests;
+			productName = FieldGamePlannerUITests;
+			productReference = PRD003 /* FieldGamePlannerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PRJ001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					TGT001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					TGT002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = TGT001;
+					};
+					TGT003 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = TGT001;
+					};
+				};
+			};
+			buildConfigurationList = BCL000 /* Build configuration list for PBXProject "FieldGamePlanner" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = GRP001;
+			packageReferences = (
+				PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			productRefGroup = GRP005 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				TGT001 /* FieldGamePlanner */,
+				TGT002 /* FieldGamePlannerTests */,
+				TGT003 /* FieldGamePlannerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		RES200 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				RES001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		RES201 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		RES202 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		SRC200 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				APP001 /* FieldGamePlannerApp.swift in Sources */,
+				APP002 /* AppState.swift in Sources */,
+				APP003 /* ContentView.swift in Sources */,
+				APP004 /* Config.swift in Sources */,
+				MOD001 /* Match.swift in Sources */,
+				MOD002 /* MatchResult.swift in Sources */,
+				MOD003 /* Standing.swift in Sources */,
+				MOD004 /* House.swift in Sources */,
+				VML001 /* FixturesViewModel.swift in Sources */,
+				VML002 /* ResultsViewModel.swift in Sources */,
+				VML003 /* StandingsViewModel.swift in Sources */,
+				VFX001 /* FixturesView.swift in Sources */,
+				VRS001 /* ResultsView.swift in Sources */,
+				VST001 /* StandingsView.swift in Sources */,
+				VPM001 /* PitchMapsView.swift in Sources */,
+				VPM002 /* NorthFieldsMapView.swift in Sources */,
+				VPM003 /* SouthFieldsMapView.swift in Sources */,
+				VSE001 /* SettingsView.swift in Sources */,
+				VSE002 /* LoginView.swift in Sources */,
+				VSE003 /* HousePickerView.swift in Sources */,
+				VAD001 /* AdminView.swift in Sources */,
+				VCO001 /* MatchCard.swift in Sources */,
+				VCO002 /* ResultCard.swift in Sources */,
+				VCO003 /* StandingRow.swift in Sources */,
+				SRV001 /* SupabaseService.swift in Sources */,
+				SRV002 /* AuthService.swift in Sources */,
+				SRV003 /* CacheService.swift in Sources */,
+				UTL001 /* ColorSystem.swift in Sources */,
+				UTL002 /* Constants.swift in Sources */,
+				UTL003 /* DateFormatters.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		SRC201 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				TST001 /* FieldGamePlannerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		SRC202 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				TST002 /* FieldGamePlannerUITests.swift in Sources */,
+				TST003 /* FieldGamePlannerUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DEP001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = TGT001 /* FieldGamePlanner */;
+			targetProxy = CIP001 /* PBXContainerItemProxy */;
+		};
+		DEP002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = TGT001 /* FieldGamePlanner */;
+			targetProxy = CIP002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CFG001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CFG002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CFG003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FieldGamePlanner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Field Game Planner";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etonfieldgame.planner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CFG004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FieldGamePlanner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Field Game Planner";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etonfieldgame.planner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CFG005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etonfieldgame.planner.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FieldGamePlanner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FieldGamePlanner";
+			};
+			name = Debug;
+		};
+		CFG006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etonfieldgame.planner.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FieldGamePlanner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FieldGamePlanner";
+			};
+			name = Release;
+		};
+		CFG007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etonfieldgame.planner.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = FieldGamePlanner;
+			};
+			name = Debug;
+		};
+		CFG008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etonfieldgame.planner.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = FieldGamePlanner;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BCL000 /* Build configuration list for PBXProject "FieldGamePlanner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFG001 /* Debug */,
+				CFG002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCL001 /* Build configuration list for PBXNativeTarget "FieldGamePlanner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFG003 /* Debug */,
+				CFG004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCL002 /* Build configuration list for PBXNativeTarget "FieldGamePlannerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFG005 /* Debug */,
+				CFG006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCL003 /* Build configuration list for PBXNativeTarget "FieldGamePlannerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFG007 /* Debug */,
+				CFG008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductReference section */
+		PKG001 /* Supabase */ = {
+			isa = XCSwiftPackageProductReference;
+			package = PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductReference section */
+	};
+	rootObject = PRJ001 /* Project object */;
+}
