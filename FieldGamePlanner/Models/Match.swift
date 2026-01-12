@@ -126,12 +126,12 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     /// Parse home team colours into SwiftUI Colors
     var homeKitColors: [Color] {
-        KitColorMapper.parse(homeTeamColours ?? "")
+        KitColorMapper.parse(homeTeamColours)
     }
 
     /// Parse away team colours into SwiftUI Colors
     var awayKitColors: [Color] {
-        KitColorMapper.parse(awayTeamColours ?? "")
+        KitColorMapper.parse(awayTeamColours)
     }
 
     /// Competition color based on type
@@ -195,7 +195,7 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     /// Check if a given team name is involved in this match
     func involves(teamName: String) -> Bool {
         homeTeamName.lowercased() == teamName.lowercased() ||
-        awayTeamName?.lowercased() == teamName.lowercased()
+        awayTeamName.lowercased() == teamName.lowercased()
     }
 
     // MARK: - Equatable
