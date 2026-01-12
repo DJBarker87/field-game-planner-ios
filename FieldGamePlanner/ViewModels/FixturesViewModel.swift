@@ -207,6 +207,11 @@ class FixturesViewModel: ObservableObject {
                 teamId: activeTeamFilter
             )
 
+            print("[FixturesViewModel] Fetched \(fetched.count) matches from database")
+            if fetched.isEmpty {
+                print("[FixturesViewModel] No matches returned. Filter: \(selectedFilter.rawValue), startDate: \(String(describing: startDate)), endDate: \(String(describing: endDate))")
+            }
+
             matches = fetched
             lastUpdated = Date()
             isOffline = false
@@ -230,6 +235,7 @@ class FixturesViewModel: ObservableObject {
                 ttl: 300
             )
         } catch {
+            print("[FixturesViewModel] Error fetching matches: \(error)")
             // Network failed, try cache
             await loadFromCache()
             isOffline = true
