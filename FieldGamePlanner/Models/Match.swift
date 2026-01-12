@@ -11,13 +11,13 @@ import SwiftUI
 
 /// Base match model representing the core match data
 struct Match: Identifiable, Codable, Equatable {
-    let id: UUID
-    let homeTeamId: UUID
-    let awayTeamId: UUID
+    let id: String
+    let homeTeamId: String
+    let awayTeamId: String
     let competitionType: String
     let matchDate: Date
     let matchTime: String?
-    let locationId: UUID?
+    let locationId: String?
     let homeScore: Int?
     let awayScore: Int?
     let status: MatchStatus
@@ -66,9 +66,9 @@ struct Match: Identifiable, Codable, Equatable {
 
     static var preview: Match {
         Match(
-            id: UUID(),
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            id: "1",
+            homeTeamId: "1",
+            awayTeamId: "2",
             competitionType: "Senior League",
             matchDate: Date(),
             matchTime: "14:30",
@@ -86,17 +86,17 @@ struct Match: Identifiable, Codable, Equatable {
 
 /// Extended match model with resolved team names and colours from the database view
 struct MatchWithHouses: Identifiable, Codable, Equatable {
-    let id: UUID
+    let id: String
     let date: Date
     let time: String?
     let competitionType: String
     let pitch: String?
-    let homeTeamId: UUID
-    let awayTeamId: UUID?
+    let homeTeamId: String
+    let awayTeamId: String?
     let homeTeamName: String
-    let awayTeamName: String
-    let homeTeamColours: String
-    let awayTeamColours: String
+    let awayTeamName: String?
+    let homeTeamColours: String?
+    let awayTeamColours: String?
     let umpires: String?
     let status: String
     let homeScore: Int?
@@ -188,19 +188,19 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     // MARK: - Methods
 
     /// Check if a given team is involved in this match
-    func involves(teamId: UUID) -> Bool {
+    func involves(teamId: String) -> Bool {
         homeTeamId == teamId || awayTeamId == teamId
     }
 
-    /// Check if a given team is involved in this match (String ID version)
+    /// Check if a given team is involved in this match (String ID version - alias)
     func involves(teamIdString: String) -> Bool {
-        homeTeamId.uuidString == teamIdString || awayTeamId?.uuidString == teamIdString
+        involves(teamId: teamIdString)
     }
 
     /// Check if a given team name is involved in this match
     func involves(teamName: String) -> Bool {
         homeTeamName.lowercased() == teamName.lowercased() ||
-        awayTeamName.lowercased() == teamName.lowercased()
+        (awayTeamName?.lowercased() == teamName.lowercased())
     }
 
     // MARK: - Equatable
@@ -213,13 +213,13 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     static var preview: MatchWithHouses {
         MatchWithHouses(
-            id: UUID(),
+            id: "1",
             date: Date(),
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            homeTeamId: "1",
+            awayTeamId: "2",
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
             homeTeamColours: "red/white",
@@ -233,13 +233,13 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     static var completedPreview: MatchWithHouses {
         MatchWithHouses(
-            id: UUID(),
+            id: "2",
             date: Date().addingTimeInterval(-86400),
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            homeTeamId: "1",
+            awayTeamId: "2",
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
             homeTeamColours: "red/white",
@@ -266,7 +266,7 @@ private extension DateFormatter {
 
 extension Array where Element == MatchWithHouses {
     /// Filter matches by team
-    func matches(for teamId: UUID) -> [MatchWithHouses] {
+    func matches(for teamId: String) -> [MatchWithHouses] {
         filter { $0.involves(teamId: teamId) }
     }
 
