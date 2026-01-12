@@ -9,11 +9,12 @@ import SwiftUI
 
 struct StandingRow: View {
     let standing: LeagueStanding
+    let position: Int
 
     var body: some View {
         HStack {
             // Position
-            Text("\(standing.position ?? 0)")
+            Text("\(position)")
                 .font(.headline)
                 .fontWeight(.bold)
                 .frame(width: 30)
@@ -43,7 +44,6 @@ struct StandingRow: View {
     }
 
     private var positionColor: Color {
-        guard let position = standing.position else { return .primary }
         switch position {
         case 1: return .etonPrimary
         case 2, 3: return .eton600
@@ -89,8 +89,8 @@ struct StatColumn: View {
 
 #Preview {
     List {
-        ForEach(LeagueStanding.previewList) { standing in
-            StandingRow(standing: standing)
+        ForEach(Array(LeagueStanding.previewList.enumerated()), id: \.element.id) { index, standing in
+            StandingRow(standing: standing, position: index + 1)
         }
     }
 }

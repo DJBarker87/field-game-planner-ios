@@ -71,12 +71,12 @@ actor SupabaseService {
         // Apply date filters
         if let start = startDate {
             let dateString = ISO8601DateFormatter().string(from: start)
-            query = query.gte("match_date", value: dateString)
+            query = query.gte("date", value: dateString)
         }
 
         if let end = endDate {
             let dateString = ISO8601DateFormatter().string(from: end)
-            query = query.lte("match_date", value: dateString)
+            query = query.lte("date", value: dateString)
         }
 
         // Apply team filter (matches where team is home OR away)
@@ -85,8 +85,8 @@ actor SupabaseService {
         }
 
         let response: [MatchWithHouses] = try await query
-            .order("match_date", ascending: true)
-            .order("match_time", ascending: true)
+            .order("date", ascending: true)
+            .order("time", ascending: true)
             .execute()
             .value
 
@@ -138,8 +138,8 @@ actor SupabaseService {
         let endString = ISO8601DateFormatter().string(from: endOfYear)
 
         query = query
-            .gte("match_date", value: startString)
-            .lt("match_date", value: endString)
+            .gte("date", value: startString)
+            .lt("date", value: endString)
 
         // Apply team filter
         if let team = teamId {
@@ -147,7 +147,7 @@ actor SupabaseService {
         }
 
         let response: [MatchWithHouses] = try await query
-            .order("match_date", ascending: false)
+            .order("date", ascending: false)
             .limit(limit)
             .execute()
             .value
@@ -157,28 +157,21 @@ actor SupabaseService {
 
     // MARK: - League Standings
 
-    /// Fetch league standings with optional competition filter
-    /// - Parameter competitionType: Optional competition type to filter
-    /// - Returns: Array of LeagueStanding objects
-    func fetchStandings(competitionType: String? = nil) async throws -> [LeagueStanding] {
-        var query = client
+    /// Fetch league standings
+    /// - Returns: Array of LeagueStanding objects sorted by points
+    func fetchStandings() async throws -> [LeagueStanding] {
+        let response: [LeagueStanding] = try await client
             .from("league_standings")
             .select()
-
-        if let competition = competitionType {
-            query = query.eq("competition_type", value: competition)
-        }
-
-        let response: [LeagueStanding] = try await query
-            .order("competition_type", ascending: true)
-            .order("position", ascending: true)
+            .order("points", ascending: false)
+            .order("goal_difference", ascending: false)
             .execute()
             .value
 
         return response
     }
 
-    /// Fetch standings for a specific team across all competitions
+    /// Fetch standings for a specific team
     /// - Parameter teamId: The team UUID
     /// - Returns: Array of LeagueStanding objects for that team
     func fetchStandings(for teamId: UUID) async throws -> [LeagueStanding] {

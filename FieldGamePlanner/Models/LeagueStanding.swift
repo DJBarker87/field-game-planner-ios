@@ -9,11 +9,9 @@ import Foundation
 
 /// Represents a team's standing in a league table
 struct LeagueStanding: Identifiable, Codable, Equatable {
-    let id: UUID
     let teamId: UUID
     let teamName: String
     let teamColours: String
-    let competitionType: String
     let played: Int
     let wins: Int
     let draws: Int
@@ -22,16 +20,16 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
     let goalsAgainst: Int
     let goalDifference: Int
     let points: Int
-    let position: Int?
+
+    // Computed id for Identifiable conformance
+    var id: UUID { teamId }
 
     // MARK: - Coding Keys
 
     enum CodingKeys: String, CodingKey {
-        case id
         case teamId = "team_id"
         case teamName = "team_name"
         case teamColours = "team_colours"
-        case competitionType = "competition_type"
         case played
         case wins
         case draws
@@ -40,7 +38,6 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
         case goalsAgainst = "goals_against"
         case goalDifference = "goal_difference"
         case points
-        case position
     }
 
     // MARK: - Computed Properties
@@ -85,18 +82,16 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
     // MARK: - Equatable
 
     static func == (lhs: LeagueStanding, rhs: LeagueStanding) -> Bool {
-        lhs.id == rhs.id
+        lhs.teamId == rhs.teamId
     }
 
     // MARK: - Preview
 
     static var preview: LeagueStanding {
         LeagueStanding(
-            id: UUID(),
             teamId: UUID(),
             teamName: "Keate",
             teamColours: "red/white",
-            competitionType: "Senior League",
             played: 10,
             wins: 7,
             draws: 2,
@@ -104,27 +99,26 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
             goalsFor: 24,
             goalsAgainst: 8,
             goalDifference: 16,
-            points: 23,
-            position: 1
+            points: 23
         )
     }
 
     static var previewList: [LeagueStanding] {
         [
             LeagueStanding(
-                id: UUID(), teamId: UUID(), teamName: "Keate", teamColours: "red/white",
-                competitionType: "Senior League", played: 10, wins: 7, draws: 2, losses: 1,
-                goalsFor: 24, goalsAgainst: 8, goalDifference: 16, points: 23, position: 1
+                teamId: UUID(), teamName: "Keate", teamColours: "red/white",
+                played: 10, wins: 7, draws: 2, losses: 1,
+                goalsFor: 24, goalsAgainst: 8, goalDifference: 16, points: 23
             ),
             LeagueStanding(
-                id: UUID(), teamId: UUID(), teamName: "Hawtrey", teamColours: "navy/gold",
-                competitionType: "Senior League", played: 10, wins: 6, draws: 3, losses: 1,
-                goalsFor: 20, goalsAgainst: 10, goalDifference: 10, points: 21, position: 2
+                teamId: UUID(), teamName: "Hawtrey", teamColours: "navy/gold",
+                played: 10, wins: 6, draws: 3, losses: 1,
+                goalsFor: 20, goalsAgainst: 10, goalDifference: 10, points: 21
             ),
             LeagueStanding(
-                id: UUID(), teamId: UUID(), teamName: "Godolphin", teamColours: "maroon/sky",
-                competitionType: "Senior League", played: 10, wins: 5, draws: 3, losses: 2,
-                goalsFor: 18, goalsAgainst: 12, goalDifference: 6, points: 18, position: 3
+                teamId: UUID(), teamName: "Godolphin", teamColours: "maroon/sky",
+                played: 10, wins: 5, draws: 3, losses: 2,
+                goalsFor: 18, goalsAgainst: 12, goalDifference: 6, points: 18
             ),
         ]
     }
@@ -137,28 +131,14 @@ import SwiftUI
 // MARK: - Array Extensions
 
 extension Array where Element == LeagueStanding {
-    /// Sort by position (or points if position is nil)
+    /// Sort by points, then goal difference
     var sortedByPosition: [LeagueStanding] {
         sorted { lhs, rhs in
-            if let lhsPos = lhs.position, let rhsPos = rhs.position {
-                return lhsPos < rhsPos
-            }
-            // Fall back to points, then goal difference
             if lhs.points != rhs.points {
                 return lhs.points > rhs.points
             }
             return lhs.goalDifference > rhs.goalDifference
         }
-    }
-
-    /// Group by competition type
-    var groupedByCompetition: [String: [LeagueStanding]] {
-        Dictionary(grouping: self) { $0.competitionType }
-    }
-
-    /// Filter by competition
-    func standings(for competition: String) -> [LeagueStanding] {
-        filter { $0.competitionType == competition }.sortedByPosition
     }
 
     /// Get standing for a specific team

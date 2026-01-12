@@ -45,30 +45,24 @@ class ResultsViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        do {
-            // Try cache first
-            let cacheKey = CacheKey.recentResults
-            if let cached: [MatchWithHouses] = await cacheService.getWithDiskFallback(
-                cacheKey,
-                type: [MatchWithHouses].self,
-                diskMaxAge: 300
-            ) {
-                results = cached
-                isLoading = false
+        // Try cache first
+        let cacheKey = CacheKey.recentResults
+        if let cached: [MatchWithHouses] = await cacheService.getWithDiskFallback(
+            cacheKey,
+            type: [MatchWithHouses].self,
+            diskMaxAge: 300
+        ) {
+            results = cached
+            isLoading = false
 
-                // Refresh in background
-                Task {
-                    await refreshFromNetwork()
-                }
-                return
+            // Refresh in background
+            Task {
+                await refreshFromNetwork()
             }
-
-            await refreshFromNetwork()
-        } catch {
-            errorMessage = error.localizedDescription
+            return
         }
 
-        isLoading = false
+        await refreshFromNetwork()
     }
 
     private func refreshFromNetwork() async {
