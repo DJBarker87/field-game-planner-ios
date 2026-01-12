@@ -77,7 +77,7 @@ actor CalendarExportService {
         let event = EKEvent(eventStore: eventStore)
 
         // Title: "Home v Away" or team name
-        event.title = "\(match.homeTeamName) v \(match.awayTeamName)"
+        event.title = "\(match.homeTeamName) v \(match.awayTeamName ?? "TBD")"
 
         // Location
         event.location = match.fullLocationString
@@ -159,7 +159,7 @@ actor CalendarExportService {
             let endDate = startDate.addingTimeInterval(3600)
 
             let uid = match.id
-            let title = escapeICS("\(match.homeTeamName) v \(match.awayTeamName)")
+            let title = escapeICS("\(match.homeTeamName) v \(match.awayTeamName ?? "TBD")")
             let location = escapeICS(match.fullLocationString ?? "")
             let description = escapeICS("Competition: \(match.competitionType)")
 

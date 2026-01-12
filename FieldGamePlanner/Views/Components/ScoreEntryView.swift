@@ -109,7 +109,7 @@ struct ScoreEntryView: View {
                     .background(Color.etonPrimary)
                     .cornerRadius(8)
                 }
-                .accessibilityLabel("Enter score for \(match.homeTeamName) versus \(match.awayTeamName)")
+                .accessibilityLabel("Enter score for \(match.homeTeamName) versus \(match.awayTeamName ?? "TBD")")
                 .accessibilityHint("Tap to enter the final score")
             }
         }
@@ -163,7 +163,7 @@ struct ScoreEntryView: View {
 
                 // Away team
                 VStack(spacing: 4) {
-                    Text(match.awayTeamName)
+                    Text(match.awayTeamName ?? "TBD")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
@@ -178,7 +178,7 @@ struct ScoreEntryView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                         .disabled(!networkMonitor.isConnected)
-                        .accessibilityLabel("\(match.awayTeamName) score")
+                        .accessibilityLabel("\(match.awayTeamName ?? "TBD") score")
                         .accessibilityValue(awayScore.isEmpty ? "Not entered" : awayScore)
                 }
             }
@@ -237,7 +237,7 @@ struct ScoreEntryView: View {
             isPresented: $showingConfirmation,
             titleVisibility: .visible
         ) {
-            Button("Submit \(match.homeTeamName) \(homeScore) - \(awayScore) \(match.awayTeamName)") {
+            Button("Submit \(match.homeTeamName) \(homeScore) - \(awayScore) \(match.awayTeamName ?? "TBD")") {
                 Task { await submitScore() }
             }
             Button("Cancel", role: .cancel) { }

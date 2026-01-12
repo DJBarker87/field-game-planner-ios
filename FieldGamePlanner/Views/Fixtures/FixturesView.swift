@@ -220,7 +220,7 @@ struct MatchDetailView: View {
                         .foregroundColor(.secondary)
 
                     TeamDetailView(
-                        name: match.awayTeamName,
+                        name: match.awayTeamName ?? "TBD",
                         colors: match.awayKitColors,
                         score: match.awayScore,
                         isWinner: match.winner == match.awayTeamName

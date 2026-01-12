@@ -94,7 +94,7 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     let homeTeamIdString: String  // Stored as string from database
     let awayTeamIdString: String?  // Stored as string from database
     let homeTeamName: String
-    let awayTeamName: String
+    let awayTeamName: String?  // Can be null (e.g., TBD or bye)
     let homeTeamColours: String?  // Can be null in database
     let awayTeamColours: String?  // Can be null in database
     let umpires: String?
@@ -218,7 +218,7 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     /// Check if a given team name is involved in this match
     func involves(teamName: String) -> Bool {
         homeTeamName.lowercased() == teamName.lowercased() ||
-        awayTeamName.lowercased() == teamName.lowercased()
+        awayTeamName?.lowercased() == teamName.lowercased()
     }
 
     // MARK: - Equatable
