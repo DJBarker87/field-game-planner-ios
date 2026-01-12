@@ -87,15 +87,23 @@ struct AsyncHouseCrestImage: View {
 
     var body: some View {
         Group {
-            if let imagePath = imagePath,
-               let uiImage = loadImage(from: imagePath) {
-                // Load from app bundle
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: size, height: size)
+            if let imagePath = imagePath {
+                print("🎨 AsyncHouseCrestImage: imagePath = \(imagePath)")
+                if let uiImage = loadImage(from: imagePath) {
+                    // Load from app bundle
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: size, height: size)
+                } else {
+                    // Image load failed, show fallback
+                    print("⚠️ Image load failed, showing fallback colors")
+                    KitColorIndicator(colors: fallbackColors)
+                        .frame(width: size * 0.5, height: size)
+                }
             } else {
-                // Fallback to color stripes
+                // No image path provided
+                print("⚠️ AsyncHouseCrestImage: imagePath is NIL, showing fallback colors")
                 KitColorIndicator(colors: fallbackColors)
                     .frame(width: size * 0.5, height: size)
             }
