@@ -43,7 +43,7 @@ struct MatchCard: View {
             HStack {
                 TeamView(
                     name: match.homeTeamName,
-                    crestURL: match.homeCrestURL,
+                    crestPath: match.homeCrestPath,
                     fallbackColors: match.homeKitColors
                 )
                 Spacer()
@@ -57,7 +57,7 @@ struct MatchCard: View {
                 Spacer()
                 TeamView(
                     name: match.awayTeamName,
-                    crestURL: match.awayCrestURL,
+                    crestPath: match.awayCrestPath,
                     fallbackColors: match.awayKitColors
                 )
             }
@@ -108,13 +108,13 @@ struct MatchCard: View {
 
 struct TeamView: View {
     let name: String
-    let crestURL: URL?
+    let crestPath: String?
     let fallbackColors: [Color]
 
     var body: some View {
         HStack(spacing: 6) {
             AsyncHouseCrestImage(
-                url: crestURL,
+                imagePath: crestPath,
                 size: 20,
                 fallbackColors: fallbackColors
             )

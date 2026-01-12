@@ -22,7 +22,7 @@ struct StandingRow: View {
 
             // House crest
             AsyncHouseCrestImage(
-                url: standing.crestURL,
+                imagePath: standing.crestPath,
                 size: 24,
                 fallbackColors: standing.parsedColours
             )

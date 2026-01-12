@@ -25,7 +25,21 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     // MARK: - Computed Properties
 
-    /// URL to the house crest image on the server
+    /// Path to the house crest image (for bundle loading)
+    var crestImagePath: String? {
+        // Return the colours field which contains path like "/images/houses/angelos.png"
+        guard !colours.isEmpty else { return nil }
+
+        // If it's an image path (starting with / or containing "images"), return it
+        if colours.hasPrefix("/") || colours.contains("images") {
+            return colours
+        }
+
+        // Not an image path (legacy color codes)
+        return nil
+    }
+
+    /// URL to the house crest image on the server (legacy support for remote loading)
     var crestImageURL: URL? {
         // Assuming colours contains path like "/images/houses/angelos.png"
         guard !colours.isEmpty else { return nil }
@@ -35,9 +49,17 @@ struct House: Identifiable, Codable, Equatable, Hashable {
             return URL(string: colours)
         }
 
-        // Otherwise construct from base URL (you'll need to configure this)
-        let baseURL = Config.supabaseURL.replacingOccurrences(of: "/rest/v1", with: "")
-        return URL(string: baseURL + colours)
+        // For Supabase Storage paths (starting with /)
+        if colours.hasPrefix("/") {
+            // Remove leading slash
+            let path = String(colours.dropFirst())
+            // Construct Supabase Storage URL: /storage/v1/object/public/{bucket}/{path}
+            // Assuming "public" bucket (standard Supabase bucket name)
+            return URL(string: "\(Config.supabaseURL)/storage/v1/object/public/public/\(path)")
+        }
+
+        // Fallback: direct append (for backward compatibility)
+        return URL(string: "\(Config.supabaseURL)/\(colours)")
     }
 
     /// Legacy color parsing for backward compatibility (if colours contains color codes)

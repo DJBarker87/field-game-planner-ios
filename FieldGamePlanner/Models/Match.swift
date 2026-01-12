@@ -124,12 +124,35 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     // MARK: - Computed Properties
 
-    /// URL to home team crest image
+    /// Path to home team crest image (for bundle loading)
+    var homeCrestPath: String? {
+        crestPath(from: homeTeamColours)
+    }
+
+    /// Path to away team crest image (for bundle loading)
+    var awayCrestPath: String? {
+        crestPath(from: awayTeamColours)
+    }
+
+    /// Helper to extract crest path from colours field
+    private func crestPath(from colours: String?) -> String? {
+        guard let colours = colours, !colours.isEmpty else { return nil }
+
+        // If it's an image path (starting with / or containing "images"), return it
+        if colours.hasPrefix("/") || colours.contains("images") {
+            return colours
+        }
+
+        // Not an image path (legacy color codes)
+        return nil
+    }
+
+    /// URL to home team crest image (legacy support)
     var homeCrestURL: URL? {
         crestURL(from: homeTeamColours)
     }
 
-    /// URL to away team crest image
+    /// URL to away team crest image (legacy support)
     var awayCrestURL: URL? {
         crestURL(from: awayTeamColours)
     }

@@ -26,7 +26,7 @@ struct ResultCard: View {
             HStack {
                 TeamScoreView(
                     name: result.homeTeamName,
-                    crestURL: result.homeCrestURL,
+                    crestPath: result.homeCrestPath,
                     fallbackColors: result.homeKitColors,
                     score: result.homeScore ?? 0,
                     isWinner: (result.homeScore ?? 0) > (result.awayScore ?? 0)
@@ -38,7 +38,7 @@ struct ResultCard: View {
                 Spacer()
                 TeamScoreView(
                     name: result.awayTeamName,
-                    crestURL: result.awayCrestURL,
+                    crestPath: result.awayCrestPath,
                     fallbackColors: result.awayKitColors,
                     score: result.awayScore ?? 0,
                     isWinner: (result.awayScore ?? 0) > (result.homeScore ?? 0)
@@ -65,7 +65,7 @@ struct ResultCard: View {
 
 struct TeamScoreView: View {
     let name: String
-    let crestURL: URL?
+    let crestPath: String?
     let fallbackColors: [Color]
     let score: Int
     let isWinner: Bool
@@ -73,7 +73,7 @@ struct TeamScoreView: View {
     var body: some View {
         VStack(spacing: 4) {
             AsyncHouseCrestImage(
-                url: crestURL,
+                imagePath: crestPath,
                 size: 32,
                 fallbackColors: fallbackColors
             )

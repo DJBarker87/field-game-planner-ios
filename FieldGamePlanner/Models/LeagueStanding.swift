@@ -42,7 +42,20 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
 
     // MARK: - Computed Properties
 
-    /// URL to team crest image
+    /// Path to team crest image (for bundle loading)
+    var crestPath: String? {
+        guard !teamColours.isEmpty else { return nil }
+
+        // If it's an image path (starting with / or containing "images"), return it
+        if teamColours.hasPrefix("/") || teamColours.contains("images") {
+            return teamColours
+        }
+
+        // Not an image path (legacy color codes)
+        return nil
+    }
+
+    /// URL to team crest image (legacy support)
     var crestURL: URL? {
         guard !teamColours.isEmpty else { return nil }
 

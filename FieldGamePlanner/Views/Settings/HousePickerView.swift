@@ -150,7 +150,7 @@ struct HouseRow: View {
             HStack(spacing: 12) {
                 // House crest
                 AsyncHouseCrestImage(
-                    url: house.crestImageURL,
+                    imagePath: house.crestImagePath,
                     size: 28,
                     fallbackColors: house.parsedColours
                 )

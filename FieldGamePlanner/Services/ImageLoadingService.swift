@@ -68,28 +68,32 @@ actor ImageLoadingService {
 
 /// SwiftUI View for loading and displaying house crest images
 struct AsyncHouseCrestImage: View {
-    let url: URL?
+    let imagePath: String?
     let size: CGFloat
     let fallbackColors: [Color]
 
-    @State private var image: UIImage?
-    @State private var isLoading = false
+    init(imagePath: String?, size: CGFloat = 24, fallbackColors: [Color] = [.gray, .white]) {
+        self.imagePath = imagePath
+        self.size = size
+        self.fallbackColors = fallbackColors
+    }
 
+    // Legacy init for URL-based loading (for backward compatibility)
     init(url: URL?, size: CGFloat = 24, fallbackColors: [Color] = [.gray, .white]) {
-        self.url = url
+        self.imagePath = nil
         self.size = size
         self.fallbackColors = fallbackColors
     }
 
     var body: some View {
         Group {
-            if let image = image {
-                Image(uiImage: image)
+            if let imagePath = imagePath,
+               let imageName = extractImageName(from: imagePath),
+               let uiImage = UIImage(named: imageName) {
+                // Load from app bundle
+                Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: size, height: size)
-            } else if isLoading {
-                ProgressView()
                     .frame(width: size, height: size)
             } else {
                 // Fallback to color stripes
@@ -97,22 +101,20 @@ struct AsyncHouseCrestImage: View {
                     .frame(width: size * 0.5, height: size)
             }
         }
-        .task {
-            await loadImage()
-        }
     }
 
-    private func loadImage() async {
-        guard let url = url else { return }
-        isLoading = true
+    /// Extract image name from path like "/images/houses/angelos.png" -> "angelos"
+    private func extractImageName(from path: String) -> String? {
+        // Remove leading slash if present
+        let cleanPath = path.hasPrefix("/") ? String(path.dropFirst()) : path
 
-        do {
-            image = try await ImageLoadingService.shared.loadImage(from: url)
-        } catch {
-            print("Failed to load image from \(url): \(error)")
-        }
+        // Extract filename from path
+        let components = cleanPath.components(separatedBy: "/")
+        guard let filename = components.last else { return nil }
 
-        isLoading = false
+        // Remove file extension
+        let nameComponents = filename.components(separatedBy: ".")
+        return nameComponents.first
     }
 }
 
