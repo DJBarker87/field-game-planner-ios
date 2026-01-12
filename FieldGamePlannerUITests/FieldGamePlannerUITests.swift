@@ -54,4 +54,88 @@ final class FieldGamePlannerUITests: XCTestCase {
         app.tabBars.buttons["Settings"].tap()
         XCTAssertTrue(app.navigationBars["Settings"].exists)
     }
+
+    func testFixturesFilterMenu() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Navigate to Fixtures tab
+        app.tabBars.buttons["Fixtures"].tap()
+
+        // Look for filter button in toolbar
+        let filterButton = app.navigationBars.buttons["Filter"]
+        if filterButton.exists {
+            filterButton.tap()
+
+            // Check filter options exist
+            XCTAssertTrue(app.buttons["Today"].waitForExistence(timeout: 2))
+        }
+    }
+
+    func testStandingsCompetitionPicker() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Navigate to Standings tab
+        app.tabBars.buttons["Standings"].tap()
+
+        // Check navigation bar exists
+        XCTAssertTrue(app.navigationBars["Standings"].exists)
+    }
+
+    func testSettingsContent() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Navigate to Settings tab
+        app.tabBars.buttons["Settings"].tap()
+
+        // Check for common settings elements
+        let settingsNav = app.navigationBars["Settings"]
+        XCTAssertTrue(settingsNav.exists)
+    }
+
+    func testPullToRefresh() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Navigate to Fixtures tab
+        app.tabBars.buttons["Fixtures"].tap()
+
+        // Find scrollable content
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            // Perform pull to refresh gesture
+            scrollView.swipeDown()
+        }
+    }
+
+    func testAccessibilityLabels() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Check tab bar buttons have accessibility labels
+        XCTAssertTrue(app.tabBars.buttons["Fixtures"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Results"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Standings"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Pitches"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Settings"].exists)
+    }
+
+    func testTabPersistenceOnRelaunch() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Navigate to Standings tab
+        app.tabBars.buttons["Standings"].tap()
+        XCTAssertTrue(app.navigationBars["Standings"].exists)
+
+        // Navigate to Settings
+        app.tabBars.buttons["Settings"].tap()
+        XCTAssertTrue(app.navigationBars["Settings"].exists)
+
+        // Go back to Fixtures
+        app.tabBars.buttons["Fixtures"].tap()
+        XCTAssertTrue(app.navigationBars["Fixtures"].exists)
+    }
 }

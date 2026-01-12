@@ -9,56 +9,60 @@ import SwiftUI
 
 struct AdminView: View {
     @EnvironmentObject var appState: AppState
+    @ObservedObject private var authService = AuthService.shared
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("Management") {
-                    NavigationLink {
-                        ManageCaptainsView()
-                    } label: {
-                        Label("Manage Captains", systemImage: "person.2.badge.key")
-                    }
-
-                    NavigationLink {
-                        ManageFixturesView()
-                    } label: {
-                        Label("Manage Fixtures", systemImage: "calendar.badge.plus")
-                    }
-                }
-
-                Section("Logs") {
-                    NavigationLink {
-                        ImportLogsView()
-                    } label: {
-                        Label("Import Logs", systemImage: "doc.text.magnifyingglass")
-                    }
-                }
+            if authService.isAdmin {
+                adminContent
+            } else {
+                accessDeniedView
             }
-            .navigationTitle("Admin")
         }
     }
-}
 
-// Placeholder views for admin functionality
-struct ManageCaptainsView: View {
-    var body: some View {
-        Text("Manage Captains")
-            .navigationTitle("Captains")
+    private var adminContent: some View {
+        List {
+            Section("User Management") {
+                NavigationLink {
+                    CreateCaptainView()
+                } label: {
+                    Label("Create Captain Account", systemImage: "person.badge.plus")
+                }
+            }
+
+            Section("Fixture Management") {
+                NavigationLink {
+                    ManageFixturesView()
+                } label: {
+                    Label("Manage Fixtures", systemImage: "calendar.badge.plus")
+                }
+            }
+
+            Section("System") {
+                NavigationLink {
+                    ImportLogsView()
+                } label: {
+                    Label("Import Logs", systemImage: "doc.text.magnifyingglass")
+                }
+            }
+        }
+        .navigationTitle("Admin Dashboard")
     }
-}
 
-struct ManageFixturesView: View {
-    var body: some View {
-        Text("Manage Fixtures")
-            .navigationTitle("Fixtures")
-    }
-}
-
-struct ImportLogsView: View {
-    var body: some View {
-        Text("Import Logs")
-            .navigationTitle("Import Logs")
+    private var accessDeniedView: some View {
+        ContentUnavailableView {
+            Label("Access Denied", systemImage: "lock.shield")
+        } description: {
+            Text("You must be an administrator to access this area.")
+        } actions: {
+            if !authService.isAuthenticated {
+                NavigationLink("Sign In") {
+                    LoginView()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
     }
 }
 
