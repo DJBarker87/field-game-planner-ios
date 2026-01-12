@@ -16,8 +16,8 @@ actor SupabaseService {
 
     private init() {
         client = SupabaseClient(
-            supabaseURL: URL(string: Config.supabaseURL)!,
-            supabaseKey: Config.supabaseAnonKey
+            supabaseURL: URL(string: Config.Supabase.projectURL)!,
+            supabaseKey: Config.Supabase.anonKey
         )
     }
 
@@ -138,8 +138,8 @@ actor SupabaseService {
         let endOfYear = "\(targetYear + 1)-01-01"
 
         query = query
-            .gte("date", value: startString)
-            .lt("date", value: endString)
+            .gte("date", value: startOfYear)
+            .lt("date", value: endOfYear)
 
         // Apply team filter
         if let team = teamId {
