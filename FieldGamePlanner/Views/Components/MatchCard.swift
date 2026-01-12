@@ -10,6 +10,7 @@ import SwiftUI
 struct MatchCard: View {
     let match: MatchWithHouses
     var showScoreEntry: Bool = false
+    var onPitchTap: (() -> Void)?
     var onScoreSubmitted: (() -> Void)?
 
     private var accessibilityDescription: String {
@@ -61,7 +62,16 @@ struct MatchCard: View {
                 Label(match.formattedTime, systemImage: "clock")
                 if let location = match.fullLocationString {
                     Spacer()
-                    Label(location, systemImage: "mappin.circle")
+                    if onPitchTap != nil {
+                        Button {
+                            onPitchTap?()
+                        } label: {
+                            Label(location, systemImage: "mappin.circle")
+                                .foregroundColor(.etonPrimary)
+                        }
+                    } else {
+                        Label(location, systemImage: "mappin.circle")
+                    }
                 }
             }
             .font(.caption)
