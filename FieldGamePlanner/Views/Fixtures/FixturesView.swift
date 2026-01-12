@@ -552,11 +552,18 @@ struct FixturesView: View {
         if viewModel.isLoading && viewModel.matches.isEmpty {
             ProgressView("Loading fixtures...")
         } else if viewModel.filteredMatches.isEmpty {
-            ContentUnavailableView(
-                emptyStateTitle,
-                systemImage: "calendar.badge.exclamationmark",
-                description: Text(emptyStateSubtitle)
-            )
+            VStack(spacing: 16) {
+                Image(systemName: "calendar.badge.exclamationmark")
+                    .font(.largeTitle)
+                    .foregroundStyle(.secondary)
+                Text(emptyStateTitle)
+                    .font(.headline)
+                Text(emptyStateSubtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding()
         } else if viewModel.viewMode == .calendar {
             MonthlyCalendarView(
                 matches: viewModel.selectedUmpire != nil ? viewModel.filteredMatches : viewModel.allMatches,
