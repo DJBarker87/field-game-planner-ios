@@ -88,8 +88,7 @@ struct AsyncHouseCrestImage: View {
     var body: some View {
         Group {
             if let imagePath = imagePath,
-               let imageName = extractImageName(from: imagePath),
-               let uiImage = UIImage(named: imageName) {
+               let uiImage = loadImage(from: imagePath) {
                 // Load from app bundle
                 Image(uiImage: uiImage)
                     .resizable()
@@ -101,6 +100,57 @@ struct AsyncHouseCrestImage: View {
                     .frame(width: size * 0.5, height: size)
             }
         }
+    }
+
+    /// Load image from bundle using multiple strategies
+    private func loadImage(from path: String) -> UIImage? {
+        // Strategy 1: Try Asset Catalog with folder/name format
+        if let imageName = extractImageName(from: path),
+           let uiImage = UIImage(named: imageName) {
+            return uiImage
+        }
+
+        // Strategy 2: Try direct filename without folder
+        if let filename = path.components(separatedBy: "/").last,
+           let name = filename.components(separatedBy: ".").first,
+           let uiImage = UIImage(named: name) {
+            return uiImage
+        }
+
+        // Strategy 3: Try loading from bundle path
+        if let bundleImage = loadFromBundle(path: path) {
+            return bundleImage
+        }
+
+        return nil
+    }
+
+    /// Load image from bundle using path
+    private func loadFromBundle(path: String) -> UIImage? {
+        // Remove leading slash
+        let cleanPath = path.hasPrefix("/") ? String(path.dropFirst()) : path
+
+        // Get filename and extension
+        let components = cleanPath.components(separatedBy: "/")
+        guard let filename = components.last else { return nil }
+
+        let fileComponents = filename.components(separatedBy: ".")
+        guard fileComponents.count >= 2 else { return nil }
+
+        let name = fileComponents.dropLast().joined(separator: ".")
+        let ext = fileComponents.last!
+
+        // Try to find in bundle
+        if let bundlePath = Bundle.main.path(forResource: name, ofType: ext, inDirectory: "houses") {
+            return UIImage(contentsOfFile: bundlePath)
+        }
+
+        // Try without directory
+        if let bundlePath = Bundle.main.path(forResource: name, ofType: ext) {
+            return UIImage(contentsOfFile: bundlePath)
+        }
+
+        return nil
     }
 
     /// Extract image name from path like "/images/houses/angelos.png" -> "houses/angelos"
