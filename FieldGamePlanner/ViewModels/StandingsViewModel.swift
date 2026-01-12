@@ -41,30 +41,24 @@ class StandingsViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        do {
-            // Try cache first
-            let cacheKey = selectedCompetition.map { CacheKey.standings(for: $0) } ?? CacheKey.standings
-            if let cached: [LeagueStanding] = await cacheService.getWithDiskFallback(
-                cacheKey,
-                type: [LeagueStanding].self,
-                diskMaxAge: 600 // 10 minutes for standings
-            ) {
-                standings = cached
-                isLoading = false
+        // Try cache first
+        let cacheKey = selectedCompetition.map { CacheKey.standings(for: $0) } ?? CacheKey.standings
+        if let cached: [LeagueStanding] = await cacheService.getWithDiskFallback(
+            cacheKey,
+            type: [LeagueStanding].self,
+            diskMaxAge: 600 // 10 minutes for standings
+        ) {
+            standings = cached
+            isLoading = false
 
-                // Refresh in background
-                Task {
-                    await refreshFromNetwork()
-                }
-                return
+            // Refresh in background
+            Task {
+                await refreshFromNetwork()
             }
-
-            await refreshFromNetwork()
-        } catch {
-            errorMessage = error.localizedDescription
+            return
         }
 
-        isLoading = false
+        await refreshFromNetwork()
     }
 
     private func refreshFromNetwork() async {
