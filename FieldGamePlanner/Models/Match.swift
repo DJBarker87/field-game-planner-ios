@@ -145,6 +145,17 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         return UUID(uuidString: str)
     }
 
+    /// Display name for away team (handles nil and empty string)
+    var awayTeamDisplayName: String {
+        guard let name = awayTeamName, !name.isEmpty else { return "TBD" }
+        return name
+    }
+
+    /// Check if this is a versus match (has an opponent)
+    var isVersusMatch: Bool {
+        awayTeamIdString != nil || (awayTeamName != nil && !awayTeamName!.isEmpty)
+    }
+
     // MARK: - Computed Properties
 
     /// Parse home team colours into SwiftUI Colors

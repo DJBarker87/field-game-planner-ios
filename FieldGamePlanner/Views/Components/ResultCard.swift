@@ -36,7 +36,7 @@ struct ResultCard: View {
                     .fontWeight(.bold)
                 Spacer()
                 TeamScoreView(
-                    name: result.awayTeamName ?? "TBD",
+                    name: result.awayTeamDisplayName,
                     colors: result.awayKitColors,
                     score: result.awayScore ?? 0,
                     isWinner: (result.awayScore ?? 0) > (result.homeScore ?? 0)
