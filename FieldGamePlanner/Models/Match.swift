@@ -91,11 +91,11 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     let time: String?
     let competitionType: String
     let pitch: String?
-    let homeTeamId: UUID
-    let awayTeamId: UUID?
+    let homeTeamId: String  // Housemaster initials (e.g., "JDM", "HWTA")
+    let awayTeamId: String?  // Housemaster initials or special team name
     let homeTeamName: String
     let awayTeamName: String
-    let homeTeamColours: String
+    let homeTeamColours: String  // Image path or color codes for backward compatibility
     let awayTeamColours: String
     let umpires: String?
     let status: String
@@ -124,14 +124,51 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     // MARK: - Computed Properties
 
-    /// Parse home team colours into SwiftUI Colors
-    var homeKitColors: [Color] {
-        KitColorMapper.parse(homeTeamColours ?? "")
+    /// URL to home team crest image
+    var homeCrestURL: URL? {
+        crestURL(from: homeTeamColours)
     }
 
-    /// Parse away team colours into SwiftUI Colors
+    /// URL to away team crest image
+    var awayCrestURL: URL? {
+        crestURL(from: awayTeamColours)
+    }
+
+    /// Helper to construct crest URL from colours field
+    private func crestURL(from colours: String?) -> URL? {
+        guard let colours = colours, !colours.isEmpty else { return nil }
+
+        // If it's already a full URL, use it
+        if colours.hasPrefix("http") {
+            return URL(string: colours)
+        }
+
+        // If it's an image path, construct from base URL
+        if colours.hasPrefix("/") {
+            let baseURL = Config.supabaseURL.replacingOccurrences(of: "/rest/v1", with: "")
+            return URL(string: baseURL + colours)
+        }
+
+        // Not an image path, return nil (legacy color codes)
+        return nil
+    }
+
+    /// Parse home team colours into SwiftUI Colors (legacy support)
+    var homeKitColors: [Color] {
+        // If colours is an image path, return default colors
+        if let colours = homeTeamColours, (colours.hasPrefix("/") || colours.hasPrefix("http")) {
+            return [.gray, .white]
+        }
+        return KitColorMapper.parse(homeTeamColours ?? "")
+    }
+
+    /// Parse away team colours into SwiftUI Colors (legacy support)
     var awayKitColors: [Color] {
-        KitColorMapper.parse(awayTeamColours ?? "")
+        // If colours is an image path, return default colors
+        if let colours = awayTeamColours, (colours.hasPrefix("/") || colours.hasPrefix("http")) {
+            return [.gray, .white]
+        }
+        return KitColorMapper.parse(awayTeamColours ?? "")
     }
 
     /// Competition color based on type
@@ -187,15 +224,15 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     // MARK: - Methods
 
-    /// Check if a given team is involved in this match
-    func involves(teamId: UUID) -> Bool {
+    /// Check if a given team is involved in this match (by initials)
+    func involves(teamId: String) -> Bool {
         homeTeamId == teamId || awayTeamId == teamId
     }
 
     /// Check if a given team name is involved in this match
     func involves(teamName: String) -> Bool {
         homeTeamName.lowercased() == teamName.lowercased() ||
-        awayTeamName?.lowercased() == teamName.lowercased()
+        awayTeamName.lowercased() == teamName.lowercased()
     }
 
     // MARK: - Equatable
@@ -213,12 +250,12 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            homeTeamId: "JDM",
+            awayTeamId: "HWTA",
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
-            homeTeamColours: "red/white",
-            awayTeamColours: "navy/gold",
+            homeTeamColours: "/images/houses/keate.png",
+            awayTeamColours: "/images/houses/hawtrey.png",
             umpires: nil,
             status: "scheduled",
             homeScore: nil,
@@ -233,12 +270,12 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            homeTeamId: "JDM",
+            awayTeamId: "HWTA",
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
-            homeTeamColours: "red/white",
-            awayTeamColours: "navy/gold",
+            homeTeamColours: "/images/houses/keate.png",
+            awayTeamColours: "/images/houses/hawtrey.png",
             umpires: nil,
             status: "completed",
             homeScore: 3,
@@ -260,8 +297,8 @@ private extension DateFormatter {
 // MARK: - Array Extensions
 
 extension Array where Element == MatchWithHouses {
-    /// Filter matches by team
-    func matches(for teamId: UUID) -> [MatchWithHouses] {
+    /// Filter matches by team (using initials)
+    func matches(for teamId: String) -> [MatchWithHouses] {
         filter { $0.involves(teamId: teamId) }
     }
 

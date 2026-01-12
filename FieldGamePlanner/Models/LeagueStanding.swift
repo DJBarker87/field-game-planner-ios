@@ -9,9 +9,9 @@ import Foundation
 
 /// Represents a team's standing in a league table
 struct LeagueStanding: Identifiable, Codable, Equatable {
-    let teamId: UUID
+    let teamId: String  // Housemaster initials (e.g., "JDM", "HWTA")
     let teamName: String
-    let teamColours: String
+    let teamColours: String  // Image path or color codes for backward compatibility
     let played: Int
     let wins: Int
     let draws: Int
@@ -22,7 +22,7 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
     let points: Int
 
     // Computed id for Identifiable conformance
-    var id: UUID { teamId }
+    var id: String { teamId }
 
     // MARK: - Coding Keys
 
@@ -42,9 +42,32 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
 
     // MARK: - Computed Properties
 
-    /// Parse team colours into SwiftUI Colors
+    /// URL to team crest image
+    var crestURL: URL? {
+        guard !teamColours.isEmpty else { return nil }
+
+        // If it's already a full URL, use it
+        if teamColours.hasPrefix("http") {
+            return URL(string: teamColours)
+        }
+
+        // If it's an image path, construct from base URL
+        if teamColours.hasPrefix("/") {
+            let baseURL = Config.supabaseURL.replacingOccurrences(of: "/rest/v1", with: "")
+            return URL(string: baseURL + teamColours)
+        }
+
+        // Not an image path
+        return nil
+    }
+
+    /// Parse team colours into SwiftUI Colors (legacy support)
     var parsedColours: [Color] {
-        KitColorMapper.parse(teamColours)
+        // If colours is an image path, return default colors
+        if teamColours.hasPrefix("/") || teamColours.hasPrefix("http") {
+            return [.gray, .white]
+        }
+        return KitColorMapper.parse(teamColours)
     }
 
     /// Win percentage (0-100)
@@ -89,9 +112,9 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
 
     static var preview: LeagueStanding {
         LeagueStanding(
-            teamId: UUID(),
+            teamId: "JDM",
             teamName: "Keate",
-            teamColours: "red/white",
+            teamColours: "/images/houses/keate.png",
             played: 10,
             wins: 7,
             draws: 2,
@@ -106,17 +129,17 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
     static var previewList: [LeagueStanding] {
         [
             LeagueStanding(
-                teamId: UUID(), teamName: "Keate", teamColours: "red/white",
+                teamId: "JDM", teamName: "Keate", teamColours: "/images/houses/keate.png",
                 played: 10, wins: 7, draws: 2, losses: 1,
                 goalsFor: 24, goalsAgainst: 8, goalDifference: 16, points: 23
             ),
             LeagueStanding(
-                teamId: UUID(), teamName: "Hawtrey", teamColours: "navy/gold",
+                teamId: "HWTA", teamName: "Hawtrey", teamColours: "/images/houses/hawtrey.png",
                 played: 10, wins: 6, draws: 3, losses: 1,
                 goalsFor: 20, goalsAgainst: 10, goalDifference: 10, points: 21
             ),
             LeagueStanding(
-                teamId: UUID(), teamName: "Godolphin", teamColours: "maroon/sky",
+                teamId: "IRS", teamName: "Godolphin", teamColours: "/images/houses/godolphin.png",
                 played: 10, wins: 5, draws: 3, losses: 2,
                 goalsFor: 18, goalsAgainst: 12, goalDifference: 6, points: 18
             ),
@@ -141,8 +164,8 @@ extension Array where Element == LeagueStanding {
         }
     }
 
-    /// Get standing for a specific team
-    func standing(for teamId: UUID) -> LeagueStanding? {
+    /// Get standing for a specific team (by initials)
+    func standing(for teamId: String) -> LeagueStanding? {
         first { $0.teamId == teamId }
     }
 }

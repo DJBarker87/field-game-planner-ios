@@ -148,8 +148,12 @@ struct HouseRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                // Kit colors
-                KitColorIndicator(colors: house.parsedColours)
+                // House crest
+                AsyncHouseCrestImage(
+                    url: house.crestImageURL,
+                    size: 28,
+                    fallbackColors: house.parsedColours
+                )
 
                 // House name
                 Text(house.name)

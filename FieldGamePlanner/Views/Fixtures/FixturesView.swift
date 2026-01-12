@@ -762,7 +762,7 @@ struct DetailRow: View {
 struct MyHouseSettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
     let houses: [House]
-    @Binding var selectedHouseId: UUID?
+    @Binding var selectedHouseId: String?
 
     var body: some View {
         NavigationStack {
@@ -796,7 +796,11 @@ struct MyHouseSettingsSheet: View {
                             HStack {
                                 Image(systemName: selectedHouseId == house.id ? "checkmark.circle.fill" : "circle")
                                     .foregroundColor(selectedHouseId == house.id ? .etonPrimary : .secondary)
-                                KitColorIndicator(colors: house.parsedColours)
+                                AsyncHouseCrestImage(
+                                    url: house.crestImageURL,
+                                    size: 24,
+                                    fallbackColors: house.parsedColours
+                                )
                                 Text(house.name)
                                     .foregroundColor(.primary)
                             }
