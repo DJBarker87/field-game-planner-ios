@@ -73,6 +73,7 @@
 		UTL001 /* ColorSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC110 /* ColorSystem.swift */; };
 		UTL002 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC111 /* Constants.swift */; };
 		UTL003 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC112 /* DateFormatters.swift */; };
+		UTL004 /* PitchMapHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC113 /* PitchMapHelper.swift */; };
 
 		/* Resources */
 		RES001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = RES100 /* Assets.xcassets */; };
@@ -169,6 +170,7 @@
 		SRC110 /* ColorSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSystem.swift; sourceTree = "<group>"; };
 		SRC111 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		SRC112 /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
+		SRC113 /* PitchMapHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchMapHelper.swift; sourceTree = "<group>"; };
 
 		/* Resources */
 		RES100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 				SRC110 /* ColorSystem.swift */,
 				SRC111 /* Constants.swift */,
 				SRC112 /* DateFormatters.swift */,
+				SRC113 /* PitchMapHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -575,6 +578,7 @@
 				UTL001 /* ColorSystem.swift in Sources */,
 				UTL002 /* Constants.swift in Sources */,
 				UTL003 /* DateFormatters.swift in Sources */,
+				UTL004 /* PitchMapHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

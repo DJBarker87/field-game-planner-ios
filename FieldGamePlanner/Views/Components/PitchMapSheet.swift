@@ -20,13 +20,14 @@ struct PitchMapSheet: View {
         self.highlightedPitch = highlightedPitch
         self.title = title
 
-        // Auto-select the map based on pitch name
-        if let pitch = highlightedPitch?.lowercased() {
-            if pitch.contains("south") || pitch.contains("sixpenny") {
+        // Auto-select the map based on pitch name using the helper
+        if let pitch = highlightedPitch {
+            if PitchMapHelper.isSouthFieldsPitch(pitch) {
                 _selectedMap = State(initialValue: .south)
-            } else {
+            } else if PitchMapHelper.isNorthFieldsPitch(pitch) {
                 _selectedMap = State(initialValue: .north)
             }
+            // If neither, default to .north (already initialized)
         }
     }
 

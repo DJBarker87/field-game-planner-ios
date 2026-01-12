@@ -47,62 +47,41 @@ struct SouthFieldsMapView: View {
                                     )
                                 }
                             }
-
-                            // Row 2: S6-S10
-                            HStack(spacing: 2) {
-                                ForEach(6...10, id: \.self) { num in
-                                    PitchBox(
-                                        name: "S\(num)",
-                                        fullName: "South Meadow \(num)",
-                                        isHighlighted: isPitchHighlighted("South Meadow \(num)")
-                                    )
-                                }
-                            }
                         }
                         .position(x: width * 0.5, y: height * 0.25)
 
-                        // Sixpenny (bottom section)
+                        // Warre's (middle section)
                         VStack(spacing: 4) {
-                            Text("Sixpenny")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-
-                            HStack(spacing: 2) {
-                                ForEach(1...6, id: \.self) { num in
-                                    PitchBox(
-                                        name: "6P\(num)",
-                                        fullName: "Sixpenny \(num)",
-                                        isHighlighted: isPitchHighlighted("Sixpenny \(num)")
-                                    )
-                                }
-                            }
-                        }
-                        .position(x: width * 0.5, y: height * 0.55)
-
-                        // Special pitches at bottom
-                        HStack(spacing: 12) {
                             PitchBox(
-                                name: "Rafts",
-                                fullName: "Rafts",
-                                isHighlighted: isPitchHighlighted("Rafts"),
-                                width: 50
-                            )
-
-                            PitchBox(
-                                name: "Upper Club",
-                                fullName: "Upper Club",
-                                isHighlighted: isPitchHighlighted("Upper Club"),
-                                width: 70
-                            )
-
-                            PitchBox(
-                                name: "Lower Club",
-                                fullName: "Lower Club",
-                                isHighlighted: isPitchHighlighted("Lower Club"),
+                                name: "Warre's",
+                                fullName: "Warre's",
+                                isHighlighted: isPitchHighlighted("Warre's"),
                                 width: 70
                             )
                         }
-                        .position(x: width * 0.5, y: height * 0.85)
+                        .position(x: width * 0.3, y: height * 0.5)
+
+                        // Carter's (middle section)
+                        VStack(spacing: 4) {
+                            PitchBox(
+                                name: "Carter's",
+                                fullName: "Carter's",
+                                isHighlighted: isPitchHighlighted("Carter's"),
+                                width: 70
+                            )
+                        }
+                        .position(x: width * 0.7, y: height * 0.5)
+
+                        // Square Close (bottom section)
+                        VStack(spacing: 4) {
+                            PitchBox(
+                                name: "Square Close",
+                                fullName: "Square Close",
+                                isHighlighted: isPitchHighlighted("Square Close"),
+                                width: 85
+                            )
+                        }
+                        .position(x: width * 0.5, y: height * 0.75)
                     }
                 }
             }
@@ -112,13 +91,12 @@ struct SouthFieldsMapView: View {
 
     private func isPitchHighlighted(_ pitchName: String) -> Bool {
         guard let highlighted = highlightedPitch else { return false }
-        return pitchName.lowercased().contains(highlighted.lowercased()) ||
-               highlighted.lowercased().contains(pitchName.lowercased())
+        return PitchMapHelper.pitchNamesMatch(pitchName, highlighted)
     }
 }
 
 #Preview {
-    SouthFieldsMapView(highlightedPitch: "Sixpenny 3")
+    SouthFieldsMapView(highlightedPitch: "South Meadow 3")
         .frame(height: 400)
         .padding()
 }
