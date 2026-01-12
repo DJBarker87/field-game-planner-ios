@@ -90,7 +90,11 @@ struct SouthFieldsMapView: View {
     }
 
     private func isPitchHighlighted(_ pitchName: String) -> Bool {
-        guard let highlighted = highlightedPitch else { return false }
+        guard let highlighted = highlightedPitch else {
+            print("⚠️ No highlighted pitch set (South)")
+            return false
+        }
+        print("🔍 Checking if '\(pitchName)' should be highlighted (target: '\(highlighted)') [SOUTH]")
         return PitchMapHelper.pitchNamesMatch(pitchName, highlighted)
     }
 }
