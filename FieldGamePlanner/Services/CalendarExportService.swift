@@ -158,7 +158,7 @@ actor CalendarExportService {
             let startDate = combineDateAndTime(date: match.date, time: match.time)
             let endDate = startDate.addingTimeInterval(3600)
 
-            let uid = match.id.uuidString
+            let uid = match.id
             let title = escapeICS("\(match.homeTeamName) v \(match.awayTeamName)")
             let location = escapeICS(match.fullLocationString ?? "")
             let description = escapeICS("Competition: \(match.competitionType)")
