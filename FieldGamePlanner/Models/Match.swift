@@ -86,13 +86,13 @@ struct Match: Identifiable, Codable, Equatable {
 
 /// Extended match model with resolved team names and colours from the database view
 struct MatchWithHouses: Identifiable, Codable, Equatable {
-    let id: UUID
+    let id: String  // Stored as string from database
     let dateString: String  // Stored as string from database (yyyy-MM-dd)
     let time: String?
     let competitionType: String
     let pitch: String?
-    let homeTeamId: UUID
-    let awayTeamId: UUID?
+    let homeTeamIdString: String  // Stored as string from database
+    let awayTeamIdString: String?  // Stored as string from database
     let homeTeamName: String
     let awayTeamName: String
     let homeTeamColours: String
@@ -110,8 +110,8 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         case time
         case competitionType = "competition_type"
         case pitch
-        case homeTeamId = "home_team_id"
-        case awayTeamId = "away_team_id"
+        case homeTeamIdString = "home_team_id"
+        case awayTeamIdString = "away_team_id"
         case homeTeamName = "home_team_name"
         case awayTeamName = "away_team_name"
         case homeTeamColours = "home_team_colours"
@@ -127,6 +127,22 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.date(from: dateString) ?? Date()
+    }
+
+    /// Parsed UUID from id string
+    var uuid: UUID {
+        UUID(uuidString: id) ?? UUID()
+    }
+
+    /// Parsed home team UUID
+    var homeTeamId: UUID {
+        UUID(uuidString: homeTeamIdString) ?? UUID()
+    }
+
+    /// Parsed away team UUID
+    var awayTeamId: UUID? {
+        guard let str = awayTeamIdString else { return nil }
+        return UUID(uuidString: str)
     }
 
     // MARK: - Computed Properties
@@ -217,13 +233,13 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return MatchWithHouses(
-            id: UUID(),
+            id: UUID().uuidString,
             dateString: formatter.string(from: Date()),
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            homeTeamIdString: UUID().uuidString,
+            awayTeamIdString: UUID().uuidString,
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
             homeTeamColours: "red/white",
@@ -239,13 +255,13 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return MatchWithHouses(
-            id: UUID(),
+            id: UUID().uuidString,
             dateString: formatter.string(from: Date().addingTimeInterval(-86400)),
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
-            homeTeamId: UUID(),
-            awayTeamId: UUID(),
+            homeTeamIdString: UUID().uuidString,
+            awayTeamIdString: UUID().uuidString,
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
             homeTeamColours: "red/white",
