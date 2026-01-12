@@ -59,7 +59,12 @@ struct PitchMapHelper {
     static func pitchNamesMatch(_ name1: String, _ name2: String) -> Bool {
         let type1 = parsePitchType(name1)
         let type2 = parsePitchType(name2)
-        return type1 == type2
+        let matches = type1 == type2
+
+        // Debug logging
+        print("🎯 Comparing: '\(name1)' (\(type1)) vs '\(name2)' (\(type2)) = \(matches)")
+
+        return matches
     }
 
     // MARK: - Private Helpers
