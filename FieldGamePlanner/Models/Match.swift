@@ -87,39 +87,39 @@ struct Match: Identifiable, Codable, Equatable {
 /// Extended match model with resolved team names and colours from the database view
 struct MatchWithHouses: Identifiable, Codable, Equatable {
     let id: UUID
+    let date: Date
+    let time: String?
+    let competitionType: String
+    let pitch: String?
     let homeTeamId: UUID
     let awayTeamId: UUID?
     let homeTeamName: String
-    let awayTeamName: String?
-    let homeTeamColours: String?
-    let awayTeamColours: String?
-    let competitionType: String
-    let matchDate: Date
-    let matchTime: String?
-    let pitch: String?
+    let awayTeamName: String
+    let homeTeamColours: String
+    let awayTeamColours: String
+    let umpires: String?
+    let status: String
     let homeScore: Int?
     let awayScore: Int?
-    let status: MatchStatus
-    let umpires: String?
 
     // MARK: - Coding Keys
 
     enum CodingKeys: String, CodingKey {
         case id
+        case date
+        case time
+        case competitionType = "competition_type"
+        case pitch
         case homeTeamId = "home_team_id"
         case awayTeamId = "away_team_id"
         case homeTeamName = "home_team_name"
         case awayTeamName = "away_team_name"
         case homeTeamColours = "home_team_colours"
         case awayTeamColours = "away_team_colours"
-        case competitionType = "competition_type"
-        case matchDate = "date"
-        case matchTime = "time"
-        case pitch
+        case umpires
+        case status
         case homeScore = "home_score"
         case awayScore = "away_score"
-        case status
-        case umpires
     }
 
     // MARK: - Computed Properties
@@ -141,30 +141,30 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     /// Formatted date string
     var formattedDate: String {
-        matchDate.displayString
+        date.displayString
     }
 
     /// Formatted time string
     var formattedTime: String {
-        guard let time = matchTime else { return "TBD" }
+        guard let time = time else { return "TBD" }
         // Convert 24h to 12h format if needed
-        if let date = DateFormatter.timeOnly.date(from: time) {
-            return DateFormatter.displayTime.string(from: date)
+        if let parsedDate = DateFormatter.timeOnly.date(from: time) {
+            return DateFormatter.displayTime.string(from: parsedDate)
         }
         return time
     }
 
-    /// Full location string (pitch name)
+    /// Full location string
     var fullLocationString: String? {
         pitch
     }
 
     var isCompleted: Bool {
-        status == .completed && homeScore != nil && awayScore != nil
+        status == "completed" && homeScore != nil && awayScore != nil
     }
 
     var isUpcoming: Bool {
-        status == .scheduled
+        status == "scheduled"
     }
 
     var scoreString: String? {
@@ -209,40 +209,40 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     static var preview: MatchWithHouses {
         MatchWithHouses(
             id: UUID(),
+            date: Date(),
+            time: "14:30",
+            competitionType: "Senior League",
+            pitch: "North Fields - Pitch 3",
             homeTeamId: UUID(),
             awayTeamId: UUID(),
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
             homeTeamColours: "red/white",
             awayTeamColours: "navy/gold",
-            competitionType: "Senior League",
-            matchDate: Date(),
-            matchTime: "14:30",
-            pitch: "North Fields - Pitch 3",
+            umpires: nil,
+            status: "scheduled",
             homeScore: nil,
-            awayScore: nil,
-            status: .scheduled,
-            umpires: nil
+            awayScore: nil
         )
     }
 
     static var completedPreview: MatchWithHouses {
         MatchWithHouses(
             id: UUID(),
+            date: Date().addingTimeInterval(-86400),
+            time: "14:30",
+            competitionType: "Senior League",
+            pitch: "North Fields - Pitch 3",
             homeTeamId: UUID(),
             awayTeamId: UUID(),
             homeTeamName: "Keate",
             awayTeamName: "Hawtrey",
             homeTeamColours: "red/white",
             awayTeamColours: "navy/gold",
-            competitionType: "Senior League",
-            matchDate: Date().addingTimeInterval(-86400),
-            matchTime: "14:30",
-            pitch: "North Fields - Pitch 3",
+            umpires: nil,
+            status: "completed",
             homeScore: 3,
-            awayScore: 1,
-            status: .completed,
-            umpires: nil
+            awayScore: 1
         )
     }
 }
@@ -272,7 +272,7 @@ extension Array where Element == MatchWithHouses {
 
     /// Filter matches within date range
     func matches(from start: Date, to end: Date) -> [MatchWithHouses] {
-        filter { $0.matchDate >= start && $0.matchDate <= end }
+        filter { $0.date >= start && $0.date <= end }
     }
 
     /// Get only upcoming matches
@@ -287,13 +287,13 @@ extension Array where Element == MatchWithHouses {
 
     /// Sort by date (ascending)
     var sortedByDate: [MatchWithHouses] {
-        sorted { $0.matchDate < $1.matchDate }
+        sorted { $0.date < $1.date }
     }
 
     /// Group by date
     var groupedByDate: [Date: [MatchWithHouses]] {
         Dictionary(grouping: self) { match in
-            Calendar.current.startOfDay(for: match.matchDate)
+            Calendar.current.startOfDay(for: match.date)
         }
     }
 

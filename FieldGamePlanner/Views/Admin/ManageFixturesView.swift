@@ -364,7 +364,7 @@ struct EditFixtureView: View {
 
     init(match: MatchWithHouses) {
         self.match = match
-        _matchDate = State(initialValue: match.matchDate)
+        _matchDate = State(initialValue: match.date)
         _matchTime = State(initialValue: Date())
         _pitchName = State(initialValue: match.pitch ?? "")
     }

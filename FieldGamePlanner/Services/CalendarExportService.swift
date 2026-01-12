@@ -83,7 +83,7 @@ actor CalendarExportService {
         event.location = match.fullLocationString
 
         // Start time
-        let startDate = combineDateAndTime(date: match.matchDate, time: match.matchTime)
+        let startDate = combineDateAndTime(date: match.date, time: match.time)
         event.startDate = startDate
 
         // Duration: 1 hour
@@ -155,7 +155,7 @@ actor CalendarExportService {
         dateFormatter.timeZone = TimeZone.current
 
         for match in matches {
-            let startDate = combineDateAndTime(date: match.matchDate, time: match.matchTime)
+            let startDate = combineDateAndTime(date: match.date, time: match.time)
             let endDate = startDate.addingTimeInterval(3600)
 
             let uid = match.id.uuidString

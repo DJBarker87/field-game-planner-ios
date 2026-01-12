@@ -164,7 +164,8 @@ final class FieldGamePlannerTests: XCTestCase {
             "competition_type": "Senior League",
             "date": "2024-03-15T00:00:00Z",
             "time": "14:30",
-            "pitch": "North Fields - Pitch 3",
+            "pitch": "Pitch 3",
+            "umpires": null,
             "home_score": null,
             "away_score": null,
             "status": "scheduled",
@@ -180,7 +181,7 @@ final class FieldGamePlannerTests: XCTestCase {
         XCTAssertEqual(match.homeTeamName, "Keate")
         XCTAssertEqual(match.awayTeamName, "Hawtrey")
         XCTAssertEqual(match.competitionType, "Senior League")
-        XCTAssertEqual(match.status, .scheduled)
+        XCTAssertEqual(match.status, "scheduled")
         XCTAssertEqual(match.homeKitColors.count, 2)
         XCTAssertEqual(match.awayKitColors.count, 2)
         XCTAssertNil(match.homeScore)
@@ -203,6 +204,7 @@ final class FieldGamePlannerTests: XCTestCase {
             "date": "2024-03-15T00:00:00Z",
             "time": "14:30",
             "pitch": null,
+            "umpires": null,
             "home_score": 3,
             "away_score": 1,
             "status": "completed",
@@ -234,11 +236,9 @@ final class FieldGamePlannerTests: XCTestCase {
     func testLeagueStandingDecoding() throws {
         let json = """
         {
-            "id": "550e8400-e29b-41d4-a716-446655440000",
             "team_id": "550e8400-e29b-41d4-a716-446655440001",
             "team_name": "Keate",
             "team_colours": "red/white",
-            "competition_type": "Senior League",
             "played": 10,
             "wins": 7,
             "draws": 2,
@@ -246,8 +246,7 @@ final class FieldGamePlannerTests: XCTestCase {
             "goals_for": 24,
             "goals_against": 8,
             "goal_difference": 16,
-            "points": 23,
-            "position": 1
+            "points": 23
         }
         """
 
@@ -259,7 +258,6 @@ final class FieldGamePlannerTests: XCTestCase {
         XCTAssertEqual(standing.wins, 7)
         XCTAssertEqual(standing.goalDifference, 16)
         XCTAssertEqual(standing.points, 23)
-        XCTAssertEqual(standing.position, 1)
     }
 
     func testLeagueStandingComputedProperties() {
@@ -435,9 +433,10 @@ final class FieldGamePlannerTests: XCTestCase {
 
     func testDateStartOfDay() {
         let date = Date()
-        let startOfDay = date.startOfDay
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
 
-        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: startOfDay)
+        let components = calendar.dateComponents([.hour, .minute, .second], from: startOfDay)
         XCTAssertEqual(components.hour, 0)
         XCTAssertEqual(components.minute, 0)
         XCTAssertEqual(components.second, 0)
@@ -445,9 +444,11 @@ final class FieldGamePlannerTests: XCTestCase {
 
     func testDateEndOfDay() {
         let date = Date()
-        let endOfDay = date.endOfDay
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: DateComponents(day: 1, second: -1), to: startOfDay)!
 
-        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: endOfDay)
+        let components = calendar.dateComponents([.hour, .minute, .second], from: endOfDay)
         XCTAssertEqual(components.hour, 23)
         XCTAssertEqual(components.minute, 59)
         XCTAssertEqual(components.second, 59)

@@ -238,7 +238,7 @@ struct MatchDetailView: View {
                         DetailRow(icon: "mappin.circle", title: "Location", value: location)
                     }
 
-                    DetailRow(icon: "flag", title: "Status", value: match.status.displayName)
+                    DetailRow(icon: "flag", title: "Status", value: match.status.capitalized)
                 }
 
                 Spacer()
