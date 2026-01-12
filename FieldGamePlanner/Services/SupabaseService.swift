@@ -36,14 +36,14 @@ actor SupabaseService {
         return response
     }
 
-    /// Fetch a single house by ID
-    /// - Parameter id: The house UUID
+    /// Fetch a single house by ID (housemaster initials)
+    /// - Parameter id: The house ID (housemaster initials like "JDM", "HWTA")
     /// - Returns: The House object or nil if not found
-    func fetchHouse(id: UUID) async throws -> House? {
+    func fetchHouse(id: String) async throws -> House? {
         let response: [House] = try await client
             .from("houses")
             .select()
-            .eq("id", value: id.uuidString)
+            .eq("id", value: id)
             .limit(1)
             .execute()
             .value
@@ -57,12 +57,12 @@ actor SupabaseService {
     /// - Parameters:
     ///   - startDate: Optional start date filter
     ///   - endDate: Optional end date filter
-    ///   - teamId: Optional team ID to filter matches involving this team
+    ///   - teamId: Optional team ID (housemaster initials) to filter matches involving this team
     /// - Returns: Array of MatchWithHouses objects
     func fetchUpcomingMatches(
         startDate: Date? = nil,
         endDate: Date? = nil,
-        teamId: UUID? = nil
+        teamId: String? = nil
     ) async throws -> [MatchWithHouses] {
         var query = client
             .from("upcoming_matches")
@@ -84,7 +84,7 @@ actor SupabaseService {
 
         // Apply team filter (matches where team is home OR away)
         if let team = teamId {
-            query = query.or("home_team_id.eq.\(team.uuidString),away_team_id.eq.\(team.uuidString)")
+            query = query.or("home_team_id.eq.\(team),away_team_id.eq.\(team)")
         }
 
         let response: [MatchWithHouses] = try await query
@@ -119,12 +119,12 @@ actor SupabaseService {
 
     /// Fetch recent results with optional filters
     /// - Parameters:
-    ///   - teamId: Optional team ID to filter
+    ///   - teamId: Optional team ID (housemaster initials) to filter
     ///   - year: Optional year to filter (defaults to current year)
     ///   - limit: Maximum number of results to return
     /// - Returns: Array of MatchWithHouses objects (completed matches)
     func fetchRecentResults(
-        teamId: UUID? = nil,
+        teamId: String? = nil,
         year: Int? = nil,
         limit: Int = 50
     ) async throws -> [MatchWithHouses] {
@@ -138,12 +138,12 @@ actor SupabaseService {
         let endOfYear = "\(targetYear + 1)-01-01"
 
         query = query
-            .gte("date", value: startString)
-            .lt("date", value: endString)
+            .gte("date", value: startOfYear)
+            .lt("date", value: endOfYear)
 
         // Apply team filter
         if let team = teamId {
-            query = query.or("home_team_id.eq.\(team.uuidString),away_team_id.eq.\(team.uuidString)")
+            query = query.or("home_team_id.eq.\(team),away_team_id.eq.\(team)")
         }
 
         let response: [MatchWithHouses] = try await query
@@ -172,13 +172,13 @@ actor SupabaseService {
     }
 
     /// Fetch standings for a specific team
-    /// - Parameter teamId: The team UUID
+    /// - Parameter teamId: The team ID (housemaster initials)
     /// - Returns: Array of LeagueStanding objects for that team
-    func fetchStandings(for teamId: UUID) async throws -> [LeagueStanding] {
+    func fetchStandings(for teamId: String) async throws -> [LeagueStanding] {
         let response: [LeagueStanding] = try await client
             .from("league_standings")
             .select()
-            .eq("team_id", value: teamId.uuidString)
+            .eq("team_id", value: teamId)
             .execute()
             .value
 

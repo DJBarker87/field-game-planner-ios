@@ -9,9 +9,9 @@ import SwiftUI
 
 /// Represents a house or team in the field game system
 struct House: Identifiable, Codable, Equatable, Hashable {
-    let id: UUID
+    let id: String  // Housemaster initials (e.g., "JDM", "HWTA") or special team name
     let name: String
-    let colours: String
+    let colours: String  // Path to house crest image (e.g., "/images/houses/angelos.png")
     let createdAt: Date?
 
     // MARK: - Coding Keys
@@ -25,9 +25,29 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     // MARK: - Computed Properties
 
-    /// Parse the colour string into SwiftUI Colors
+    /// URL to the house crest image on the server
+    var crestImageURL: URL? {
+        // Assuming colours contains path like "/images/houses/angelos.png"
+        guard !colours.isEmpty else { return nil }
+
+        // If it's already a full URL, use it
+        if colours.hasPrefix("http") {
+            return URL(string: colours)
+        }
+
+        // Otherwise construct from base URL (you'll need to configure this)
+        let baseURL = Config.supabaseURL.replacingOccurrences(of: "/rest/v1", with: "")
+        return URL(string: baseURL + colours)
+    }
+
+    /// Legacy color parsing for backward compatibility (if colours contains color codes)
     var parsedColours: [Color] {
-        KitColorMapper.parse(colours)
+        // If colours is an image path, return default colors
+        if colours.hasPrefix("/") || colours.hasPrefix("http") {
+            return [.gray, .white]
+        }
+        // Otherwise try to parse as color codes
+        return KitColorMapper.parse(colours)
     }
 
     /// Check if this is a school team (e.g., "Field", "1st Field", "2nd XI")
@@ -91,20 +111,20 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     static var preview: House {
         House(
-            id: UUID(),
+            id: "JDM",
             name: "Keate",
-            colours: "red/white",
+            colours: "/images/houses/keate.png",
             createdAt: Date()
         )
     }
 
     static var previewList: [House] {
         [
-            House(id: UUID(), name: "Keate", colours: "red/white", createdAt: Date()),
-            House(id: UUID(), name: "Hawtrey", colours: "navy/gold", createdAt: Date()),
-            House(id: UUID(), name: "Godolphin", colours: "maroon/sky", createdAt: Date()),
-            House(id: UUID(), name: "Villiers", colours: "green/white", createdAt: Date()),
-            House(id: UUID(), name: "Field", colours: "eton/white", createdAt: Date()),
+            House(id: "JDM", name: "Keate", colours: "/images/houses/keate.png", createdAt: Date()),
+            House(id: "HWTA", name: "Hawtrey", colours: "/images/houses/hawtrey.png", createdAt: Date()),
+            House(id: "IRS", name: "Godolphin", colours: "/images/houses/godolphin.png", createdAt: Date()),
+            House(id: "JCAJ", name: "Villiers", colours: "/images/houses/villiers.png", createdAt: Date()),
+            House(id: "Field", name: "Field", colours: "/images/houses/field.png", createdAt: Date()),
         ]
     }
 }
@@ -112,8 +132,8 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 // MARK: - House Array Extension
 
 extension Array where Element == House {
-    /// Find a house by ID
-    func house(withId id: UUID) -> House? {
+    /// Find a house by ID (housemaster initials)
+    func house(withId id: String) -> House? {
         first { $0.id == id }
     }
 

@@ -41,7 +41,11 @@ struct MatchCard: View {
 
             // Teams
             HStack {
-                TeamView(name: match.homeTeamName, kitColors: match.homeKitColors)
+                TeamView(
+                    name: match.homeTeamName,
+                    crestURL: match.homeCrestURL,
+                    fallbackColors: match.homeKitColors
+                )
                 Spacer()
                 if match.isCompleted {
                     ScoreView(homeScore: match.homeScore!, awayScore: match.awayScore!)
@@ -51,7 +55,11 @@ struct MatchCard: View {
                         .foregroundColor(.secondary)
                 }
                 Spacer()
-                TeamView(name: match.awayTeamName ?? "", kitColors: match.awayKitColors)
+                TeamView(
+                    name: match.awayTeamName,
+                    crestURL: match.awayCrestURL,
+                    fallbackColors: match.awayKitColors
+                )
             }
             .accessibilityHidden(true)
 
@@ -100,36 +108,22 @@ struct MatchCard: View {
 
 struct TeamView: View {
     let name: String
-    let kitColors: [Color]
+    let crestURL: URL?
+    let fallbackColors: [Color]
 
     var body: some View {
         HStack(spacing: 6) {
-            KitColorIndicator(colors: kitColors)
+            AsyncHouseCrestImage(
+                url: crestURL,
+                size: 20,
+                fallbackColors: fallbackColors
+            )
+            .accessibilityHidden(true)
             Text(name)
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .lineLimit(1)
         }
-    }
-}
-
-struct KitColorIndicator: View {
-    let colors: [Color]
-
-    var body: some View {
-        HStack(spacing: 0) {
-            ForEach(colors.indices, id: \.self) { index in
-                Rectangle()
-                    .fill(colors[index])
-                    .frame(width: 8, height: 16)
-            }
-        }
-        .cornerRadius(2)
-        .overlay(
-            RoundedRectangle(cornerRadius: 2)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 0.5)
-        )
-        .accessibilityHidden(true)
     }
 }
 

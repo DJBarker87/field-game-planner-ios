@@ -20,8 +20,12 @@ struct StandingRow: View {
                 .frame(width: 30)
                 .foregroundColor(positionColor)
 
-            // Kit colors
-            KitColorIndicator(colors: standing.parsedColours)
+            // House crest
+            AsyncHouseCrestImage(
+                url: standing.crestURL,
+                size: 24,
+                fallbackColors: standing.parsedColours
+            )
 
             // Team name
             Text(standing.teamName)
