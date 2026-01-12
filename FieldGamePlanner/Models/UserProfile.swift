@@ -66,7 +66,7 @@ struct UserProfile: Identifiable, Codable, Equatable {
 
     /// Check if user can edit a specific match
     func canEditMatch(_ match: MatchWithHouses) -> Bool {
-        canEditScore(for: match.homeTeamId) || canEditScore(for: match.awayTeamId)
+        canEditScore(for: match.homeTeamId) || (match.awayTeamId.map { canEditScore(for: $0) } ?? false)
     }
 
     // MARK: - Equatable

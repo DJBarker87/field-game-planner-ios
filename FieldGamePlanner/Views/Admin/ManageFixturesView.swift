@@ -102,7 +102,7 @@ struct ManageFixturesView: View {
             if !searchTeam.isEmpty {
                 fetched = fetched.filter { match in
                     match.homeTeamName.localizedCaseInsensitiveContains(searchTeam) ||
-                    match.awayTeamName.localizedCaseInsensitiveContains(searchTeam)
+                    (match.awayTeamName ?? "").localizedCaseInsensitiveContains(searchTeam)
                 }
             }
 
@@ -136,7 +136,7 @@ struct MatchSummaryRow: View {
                     .fontWeight(.medium)
                 Text("vs")
                     .foregroundColor(.secondary)
-                Text(match.awayTeamName)
+                Text(match.awayTeamName ?? "")
                     .fontWeight(.medium)
             }
             .font(.subheadline)
@@ -366,7 +366,7 @@ struct EditFixtureView: View {
         self.match = match
         _matchDate = State(initialValue: match.matchDate)
         _matchTime = State(initialValue: Date())
-        _pitchName = State(initialValue: match.pitchName ?? "")
+        _pitchName = State(initialValue: match.pitch ?? "")
     }
 
     var body: some View {
@@ -382,7 +382,7 @@ struct EditFixtureView: View {
                 HStack {
                     Text("Away")
                     Spacer()
-                    Text(match.awayTeamName)
+                    Text(match.awayTeamName ?? "N/A")
                         .foregroundColor(.secondary)
                 }
 

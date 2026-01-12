@@ -88,20 +88,19 @@ struct Match: Identifiable, Codable, Equatable {
 struct MatchWithHouses: Identifiable, Codable, Equatable {
     let id: UUID
     let homeTeamId: UUID
-    let awayTeamId: UUID
+    let awayTeamId: UUID?
     let homeTeamName: String
-    let awayTeamName: String
-    let homeTeamColours: String
-    let awayTeamColours: String
+    let awayTeamName: String?
+    let homeTeamColours: String?
+    let awayTeamColours: String?
     let competitionType: String
     let matchDate: Date
     let matchTime: String?
-    let locationId: UUID?
-    let locationName: String?
-    let pitchName: String?
+    let pitch: String?
     let homeScore: Int?
     let awayScore: Int?
     let status: MatchStatus
+    let umpires: String?
 
     // MARK: - Coding Keys
 
@@ -114,26 +113,25 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         case homeTeamColours = "home_team_colours"
         case awayTeamColours = "away_team_colours"
         case competitionType = "competition_type"
-        case matchDate = "match_date"
-        case matchTime = "match_time"
-        case locationId = "location_id"
-        case locationName = "location_name"
-        case pitchName = "pitch_name"
+        case matchDate = "date"
+        case matchTime = "time"
+        case pitch
         case homeScore = "home_score"
         case awayScore = "away_score"
         case status
+        case umpires
     }
 
     // MARK: - Computed Properties
 
     /// Parse home team colours into SwiftUI Colors
     var homeKitColors: [Color] {
-        KitColorMapper.parse(homeTeamColours)
+        KitColorMapper.parse(homeTeamColours ?? "")
     }
 
     /// Parse away team colours into SwiftUI Colors
     var awayKitColors: [Color] {
-        KitColorMapper.parse(awayTeamColours)
+        KitColorMapper.parse(awayTeamColours ?? "")
     }
 
     /// Competition color based on type
@@ -156,12 +154,9 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         return time
     }
 
-    /// Full location string (e.g., "North Fields - Pitch 3")
+    /// Full location string (pitch name)
     var fullLocationString: String? {
-        if let location = locationName, let pitch = pitchName {
-            return "\(location) - \(pitch)"
-        }
-        return locationName ?? pitchName
+        pitch
     }
 
     var isCompleted: Bool {
@@ -200,7 +195,7 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     /// Check if a given team name is involved in this match
     func involves(teamName: String) -> Bool {
         homeTeamName.lowercased() == teamName.lowercased() ||
-        awayTeamName.lowercased() == teamName.lowercased()
+        awayTeamName?.lowercased() == teamName.lowercased()
     }
 
     // MARK: - Equatable
@@ -223,12 +218,11 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
             competitionType: "Senior League",
             matchDate: Date(),
             matchTime: "14:30",
-            locationId: UUID(),
-            locationName: "North Fields",
-            pitchName: "Pitch 3",
+            pitch: "North Fields - Pitch 3",
             homeScore: nil,
             awayScore: nil,
-            status: .scheduled
+            status: .scheduled,
+            umpires: nil
         )
     }
 
@@ -244,12 +238,11 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
             competitionType: "Senior League",
             matchDate: Date().addingTimeInterval(-86400),
             matchTime: "14:30",
-            locationId: UUID(),
-            locationName: "North Fields",
-            pitchName: "Pitch 3",
+            pitch: "North Fields - Pitch 3",
             homeScore: 3,
             awayScore: 1,
-            status: .completed
+            status: .completed,
+            umpires: nil
         )
     }
 }

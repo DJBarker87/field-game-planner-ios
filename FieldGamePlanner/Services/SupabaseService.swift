@@ -68,15 +68,18 @@ actor SupabaseService {
             .from("upcoming_matches")
             .select()
 
-        // Apply date filters
+        // Apply date filters (using YYYY-MM-DD format to match database)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
         if let start = startDate {
-            let dateString = ISO8601DateFormatter().string(from: start)
-            query = query.gte("match_date", value: dateString)
+            let dateString = dateFormatter.string(from: start)
+            query = query.gte("date", value: dateString)
         }
 
         if let end = endDate {
-            let dateString = ISO8601DateFormatter().string(from: end)
-            query = query.lte("match_date", value: dateString)
+            let dateString = dateFormatter.string(from: end)
+            query = query.lte("date", value: dateString)
         }
 
         // Apply team filter (matches where team is home OR away)
@@ -85,8 +88,8 @@ actor SupabaseService {
         }
 
         let response: [MatchWithHouses] = try await query
-            .order("match_date", ascending: true)
-            .order("match_time", ascending: true)
+            .order("date", ascending: true)
+            .order("time", ascending: true)
             .execute()
             .value
 
@@ -129,17 +132,14 @@ actor SupabaseService {
             .from("recent_results")
             .select()
 
-        // Filter to current calendar year by default
+        // Filter to current calendar year by default (using YYYY-MM-DD format)
         let targetYear = year ?? Calendar.current.component(.year, from: Date())
-        let startOfYear = Calendar.current.date(from: DateComponents(year: targetYear, month: 1, day: 1))!
-        let endOfYear = Calendar.current.date(from: DateComponents(year: targetYear + 1, month: 1, day: 1))!
-
-        let startString = ISO8601DateFormatter().string(from: startOfYear)
-        let endString = ISO8601DateFormatter().string(from: endOfYear)
+        let startOfYear = "\(targetYear)-01-01"
+        let endOfYear = "\(targetYear + 1)-01-01"
 
         query = query
-            .gte("match_date", value: startString)
-            .lt("match_date", value: endString)
+            .gte("date", value: startOfYear)
+            .lt("date", value: endOfYear)
 
         // Apply team filter
         if let team = teamId {
@@ -147,7 +147,7 @@ actor SupabaseService {
         }
 
         let response: [MatchWithHouses] = try await query
-            .order("match_date", ascending: false)
+            .order("date", ascending: false)
             .limit(limit)
             .execute()
             .value

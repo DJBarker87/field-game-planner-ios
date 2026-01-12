@@ -162,14 +162,13 @@ final class FieldGamePlannerTests: XCTestCase {
             "home_team_colours": "red/white",
             "away_team_colours": "navy/gold",
             "competition_type": "Senior League",
-            "match_date": "2024-03-15T00:00:00Z",
-            "match_time": "14:30",
-            "location_id": null,
-            "location_name": "North Fields",
-            "pitch_name": "Pitch 3",
+            "date": "2024-03-15T00:00:00Z",
+            "time": "14:30",
+            "pitch": "North Fields - Pitch 3",
             "home_score": null,
             "away_score": null,
-            "status": "scheduled"
+            "status": "scheduled",
+            "umpires": null
         }
         """
 
@@ -201,14 +200,13 @@ final class FieldGamePlannerTests: XCTestCase {
             "home_team_colours": "red/white",
             "away_team_colours": "navy/gold",
             "competition_type": "Senior League",
-            "match_date": "2024-03-15T00:00:00Z",
-            "match_time": "14:30",
-            "location_id": null,
-            "location_name": null,
-            "pitch_name": null,
+            "date": "2024-03-15T00:00:00Z",
+            "time": "14:30",
+            "pitch": null,
             "home_score": 3,
             "away_score": 1,
-            "status": "completed"
+            "status": "completed",
+            "umpires": null
         }
         """
 
