@@ -51,99 +51,62 @@ struct PitchMapHelper {
     /// Determine if a pitch belongs to North Fields
     static func isNorthFieldsPitch(_ pitchName: String?) -> Bool {
         guard let pitch = pitchName else { return false }
-        let normalized = normalizePitchName(pitch)
-
-        // Check exact match first
-        if northFieldsPitches.contains(normalized) {
-            return true
-        }
-
-        // Check case-insensitive match
-        for northPitch in northFieldsPitches {
-            if normalized.caseInsensitiveCompare(northPitch) == .orderedSame {
-                return true
-            }
-        }
+        let normalized = normalizePitchName(pitch).lowercased()
 
         // Check if it contains key North Field identifiers
-        let lowercased = normalized.lowercased()
-        if lowercased.contains("agar") ||
-           lowercased.contains("dutchman") ||
-           lowercased.contains("austin") ||
-           lowercased.contains("o.e. soccer") ||
-           lowercased.contains("college field") {
-            return true
-        }
-
-        return false
+        return normalized.contains("agar") ||
+               normalized.contains("dutchman") ||
+               normalized.contains("austin") ||
+               normalized.contains("o.e. soccer") ||
+               normalized.contains("college field")
     }
 
     /// Determine if a pitch belongs to South Fields
     static func isSouthFieldsPitch(_ pitchName: String?) -> Bool {
         guard let pitch = pitchName else { return false }
-        let normalized = normalizePitchName(pitch)
-
-        // Check exact match first
-        if southFieldsPitches.contains(normalized) {
-            return true
-        }
-
-        // Check case-insensitive match
-        for southPitch in southFieldsPitches {
-            if normalized.caseInsensitiveCompare(southPitch) == .orderedSame {
-                return true
-            }
-        }
+        let normalized = normalizePitchName(pitch).lowercased()
 
         // Check if it contains key South Field identifiers
-        let lowercased = normalized.lowercased()
-        if lowercased.contains("south meadow") ||
-           lowercased.contains("warre") ||
-           lowercased.contains("carter") ||
-           lowercased.contains("square close") {
-            return true
-        }
-
-        return false
+        return normalized.contains("south meadow") ||
+               normalized.contains("warre") ||
+               normalized.contains("carter") ||
+               normalized.contains("square close")
     }
 
     // MARK: - Pitch Matching
 
-    /// Check if two pitch names match (with normalization)
+    /// Check if two pitch names match - EXACT MATCH ONLY after normalization
     static func pitchNamesMatch(_ name1: String, _ name2: String) -> Bool {
-        let normalized1 = normalizePitchName(name1)
-        let normalized2 = normalizePitchName(name2)
+        // Normalize both names
+        let normalized1 = normalizePitchName(name1).lowercased()
+        let normalized2 = normalizePitchName(name2).lowercased()
 
-        // Exact match (case-insensitive)
-        if normalized1.caseInsensitiveCompare(normalized2) == .orderedSame {
+        // Direct exact match
+        if normalized1 == normalized2 {
             return true
         }
 
-        // Try expanding shortened forms to full names before comparing
-        let expanded1 = expandPitchName(normalized1)
-        let expanded2 = expandPitchName(normalized2)
+        // Try to canonicalize both to their full standard forms
+        let canonical1 = getCanonicalName(normalized1)
+        let canonical2 = getCanonicalName(normalized2)
 
-        if expanded1.caseInsensitiveCompare(expanded2) == .orderedSame {
-            return true
-        }
-
-        return false
+        return canonical1 == canonical2
     }
 
     /// Find the canonical pitch name from any variant
     static func findCanonicalPitchName(for input: String) -> String? {
-        let normalized = normalizePitchName(input)
+        let canonical = getCanonicalName(normalizePitchName(input).lowercased())
 
-        // Check North Fields
+        // Find in north fields
         for northPitch in northFieldsPitches {
-            if pitchNamesMatch(normalized, northPitch) {
+            if getCanonicalName(northPitch.lowercased()) == canonical {
                 return northPitch
             }
         }
 
-        // Check South Fields
+        // Find in south fields
         for southPitch in southFieldsPitches {
-            if pitchNamesMatch(normalized, southPitch) {
+            if getCanonicalName(southPitch.lowercased()) == canonical {
                 return southPitch
             }
         }
@@ -153,37 +116,58 @@ struct PitchMapHelper {
 
     // MARK: - Private Helpers
 
-    /// Expand abbreviated pitch names to full names for matching
-    /// e.g., "A5" -> "Agar's 5", "D12" -> "Dutchman's 12", "S3" -> "South Meadow 3"
-    private static func expandPitchName(_ name: String) -> String {
+    /// Get the canonical name for a pitch (handles abbreviations)
+    /// Returns the name in lowercase standardized format for exact matching
+    private static func getCanonicalName(_ name: String) -> String {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
 
-        // Try to match abbreviated patterns with exact regex
-        // Pattern: letter followed immediately by digits (e.g., "A5", "D12", "S3")
-        let pattern = "^([ADSads])(\\d+)$"
-
-        if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
-           let match = regex.firstMatch(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)) {
-
-            let letterRange = Range(match.range(at: 1), in: trimmed)!
-            let numberRange = Range(match.range(at: 2), in: trimmed)!
-
-            let letter = String(trimmed[letterRange]).uppercased()
-            let number = String(trimmed[numberRange])
-
-            switch letter {
-            case "A":
-                return "Agar's \(number)"
-            case "D":
-                return "Dutchman's \(number)"
-            case "S":
-                return "South Meadow \(number)"
-            default:
-                break
+        // Check exact matches in our pitch lists first (case-insensitive)
+        for pitch in northFieldsPitches {
+            if pitch.lowercased() == trimmed {
+                return pitch.lowercased()
+            }
+        }
+        for pitch in southFieldsPitches {
+            if pitch.lowercased() == trimmed {
+                return pitch.lowercased()
             }
         }
 
-        // If already in full form, return as-is
+        // Handle specific abbreviation patterns explicitly
+        // Agar's pitches
+        if trimmed == "a1" { return "agar's 1" }
+        if trimmed == "a2" { return "agar's 2" }
+        if trimmed == "a3" { return "agar's 3" }
+        if trimmed == "a4" { return "agar's 4" }
+        if trimmed == "a5" { return "agar's 5" }
+        if trimmed == "a6" { return "agar's 6" }
+        if trimmed == "a7" { return "agar's 7" }
+
+        // Dutchman's pitches
+        if trimmed == "d1" { return "dutchman's 1" }
+        if trimmed == "d2" { return "dutchman's 2" }
+        if trimmed == "d3" { return "dutchman's 3" }
+        if trimmed == "d4" { return "dutchman's 4" }
+        if trimmed == "d5" { return "dutchman's 5" }
+        if trimmed == "d6" { return "dutchman's 6" }
+        if trimmed == "d7" { return "dutchman's 7" }
+        if trimmed == "d8" { return "dutchman's 8" }
+        if trimmed == "d9" { return "dutchman's 9" }
+        if trimmed == "d10" { return "dutchman's 10" }
+        if trimmed == "d11" { return "dutchman's 11" }
+        if trimmed == "d12" { return "dutchman's 12" }
+        if trimmed == "d13" { return "dutchman's 13" }
+        if trimmed == "d14" { return "dutchman's 14" }
+        if trimmed == "d15" { return "dutchman's 15" }
+
+        // South Meadow pitches
+        if trimmed == "s1" { return "south meadow 1" }
+        if trimmed == "s2" { return "south meadow 2" }
+        if trimmed == "s3" { return "south meadow 3" }
+        if trimmed == "s4" { return "south meadow 4" }
+        if trimmed == "s5" { return "south meadow 5" }
+
+        // Return as-is if no abbreviation matched
         return trimmed
     }
 }
