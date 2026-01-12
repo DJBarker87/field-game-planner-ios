@@ -122,6 +122,80 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         case awayScore = "away_score"
     }
 
+    // MARK: - Custom Decoding
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        time = try container.decodeIfPresent(String.self, forKey: .time)
+        competitionType = try container.decode(String.self, forKey: .competitionType)
+        pitch = try container.decodeIfPresent(String.self, forKey: .pitch)
+        homeTeamId = try container.decode(String.self, forKey: .homeTeamId)
+        awayTeamId = try container.decodeIfPresent(String.self, forKey: .awayTeamId)
+        homeTeamName = try container.decode(String.self, forKey: .homeTeamName)
+        awayTeamName = try container.decodeIfPresent(String.self, forKey: .awayTeamName)
+        homeTeamColours = try container.decodeIfPresent(String.self, forKey: .homeTeamColours)
+        awayTeamColours = try container.decodeIfPresent(String.self, forKey: .awayTeamColours)
+        umpires = try container.decodeIfPresent(String.self, forKey: .umpires)
+        status = try container.decode(String.self, forKey: .status)
+        homeScore = try container.decodeIfPresent(Int.self, forKey: .homeScore)
+        awayScore = try container.decodeIfPresent(Int.self, forKey: .awayScore)
+
+        // Custom date parsing - handle "YYYY-MM-DD" format from database
+        let dateString = try container.decode(String.self, forKey: .date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+
+        if let parsedDate = dateFormatter.date(from: dateString) {
+            date = parsedDate
+        } else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [CodingKeys.date],
+                    debugDescription: "Invalid date format: \(dateString)"
+                )
+            )
+        }
+    }
+
+    // MARK: - Memberwise Init (for previews)
+
+    init(
+        id: String,
+        date: Date,
+        time: String?,
+        competitionType: String,
+        pitch: String?,
+        homeTeamId: String,
+        awayTeamId: String?,
+        homeTeamName: String,
+        awayTeamName: String?,
+        homeTeamColours: String?,
+        awayTeamColours: String?,
+        umpires: String?,
+        status: String,
+        homeScore: Int?,
+        awayScore: Int?
+    ) {
+        self.id = id
+        self.date = date
+        self.time = time
+        self.competitionType = competitionType
+        self.pitch = pitch
+        self.homeTeamId = homeTeamId
+        self.awayTeamId = awayTeamId
+        self.homeTeamName = homeTeamName
+        self.awayTeamName = awayTeamName
+        self.homeTeamColours = homeTeamColours
+        self.awayTeamColours = awayTeamColours
+        self.umpires = umpires
+        self.status = status
+        self.homeScore = homeScore
+        self.awayScore = awayScore
+    }
+
     // MARK: - Computed Properties
 
     /// Parse home team colours into SwiftUI Colors
