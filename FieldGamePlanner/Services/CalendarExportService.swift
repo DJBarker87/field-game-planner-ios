@@ -186,7 +186,7 @@ actor CalendarExportService {
     private func escapeICS(_ string: String) -> String {
         string
             .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: ";", with: "\;")
+            .replacingOccurrences(of: ";", with: "\\;")
             .replacingOccurrences(of: ",", with: "\\,")
             .replacingOccurrences(of: "\n", with: "\\n")
     }

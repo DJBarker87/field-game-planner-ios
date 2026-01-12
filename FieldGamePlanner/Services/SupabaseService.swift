@@ -200,14 +200,15 @@ actor SupabaseService {
     ///   - homeScore: The home team's score
     ///   - awayScore: The away team's score
     func updateScore(matchId: UUID, homeScore: Int, awayScore: Int) async throws {
+        let update = ScoreUpdate(
+            homeScore: homeScore,
+            awayScore: awayScore,
+            status: MatchStatus.completed.rawValue,
+            updatedAt: ISO8601DateFormatter().string(from: Date())
+        )
         try await client
             .from("matches")
-            .update([
-                "home_score": homeScore,
-                "away_score": awayScore,
-                "status": MatchStatus.completed.rawValue,
-                "updated_at": ISO8601DateFormatter().string(from: Date())
-            ])
+            .update(update)
             .eq("id", value: matchId.uuidString)
             .execute()
     }
@@ -215,14 +216,13 @@ actor SupabaseService {
     /// Clear the score for a match (revert to scheduled)
     /// - Parameter matchId: The match UUID
     func clearScore(matchId: UUID) async throws {
+        let update = ScoreClear(
+            status: MatchStatus.scheduled.rawValue,
+            updatedAt: ISO8601DateFormatter().string(from: Date())
+        )
         try await client
             .from("matches")
-            .update([
-                "home_score": NSNull(),
-                "away_score": NSNull(),
-                "status": MatchStatus.scheduled.rawValue,
-                "updated_at": ISO8601DateFormatter().string(from: Date())
-            ])
+            .update(update)
             .eq("id", value: matchId.uuidString)
             .execute()
     }
@@ -295,9 +295,9 @@ actor SupabaseService {
     // MARK: - Locations
 
     /// Fetch all pitch locations
-    /// - Returns: Array of location dictionaries
-    func fetchLocations() async throws -> [[String: Any]] {
-        let response: [[String: Any]] = try await client
+    /// - Returns: Array of Location objects
+    func fetchLocations() async throws -> [Location] {
+        let response: [Location] = try await client
             .from("locations")
             .select()
             .order("name", ascending: true)
@@ -305,6 +305,32 @@ actor SupabaseService {
             .value
 
         return response
+    }
+}
+
+// MARK: - Helper Types for Updates
+
+private struct ScoreUpdate: Encodable {
+    let homeScore: Int
+    let awayScore: Int
+    let status: String
+    let updatedAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case homeScore = "home_score"
+        case awayScore = "away_score"
+        case status
+        case updatedAt = "updated_at"
+    }
+}
+
+private struct ScoreClear: Encodable {
+    let status: String
+    let updatedAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case status
+        case updatedAt = "updated_at"
     }
 }
 

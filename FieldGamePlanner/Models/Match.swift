@@ -262,12 +262,6 @@ private extension DateFormatter {
         formatter.dateFormat = "HH:mm"
         return formatter
     }()
-
-    static let displayTime: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        return formatter
-    }()
 }
 
 // MARK: - Array Extensions

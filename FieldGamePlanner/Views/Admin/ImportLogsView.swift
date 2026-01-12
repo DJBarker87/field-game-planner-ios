@@ -77,11 +77,17 @@ struct ImportLogsView: View {
             if isLoading && logs.isEmpty {
                 ProgressView("Loading logs...")
             } else if logs.isEmpty {
-                ContentUnavailableView(
-                    "No Import Logs",
-                    systemImage: "doc.text.magnifyingglass",
-                    description: Text("No email imports have been processed yet")
-                )
+                VStack(spacing: 16) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.largeTitle)
+                        .foregroundStyle(.secondary)
+                    Text("No Import Logs")
+                        .font(.headline)
+                    Text("No email imports have been processed yet")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
             } else {
                 List(logs) { log in
                     ImportLogRow(log: log)

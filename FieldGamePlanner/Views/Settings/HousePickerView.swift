@@ -32,21 +32,34 @@ struct HousePickerView: View {
                 if isLoading {
                     ProgressView("Loading houses...")
                 } else if let error = errorMessage {
-                    ContentUnavailableView {
-                        Label("Error", systemImage: "exclamationmark.triangle")
-                    } description: {
+                    VStack(spacing: 16) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                        Text("Error")
+                            .font(.headline)
                         Text(error)
-                    } actions: {
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                         Button("Retry") {
                             Task { await loadHouses() }
                         }
+                        .buttonStyle(.bordered)
                     }
+                    .padding()
                 } else if houses.isEmpty {
-                    ContentUnavailableView(
-                        "No Houses",
-                        systemImage: "house",
-                        description: Text("No houses available")
-                    )
+                    VStack(spacing: 16) {
+                        Image(systemName: "house")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                        Text("No Houses")
+                            .font(.headline)
+                        Text("No houses available")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
                 } else {
                     List {
                         ForEach(filteredHouses) { house in
@@ -90,27 +103,21 @@ struct HousePickerView: View {
         isLoading = true
         errorMessage = nil
 
-        do {
-            // Try cache first
-            if let cached: [House] = await cacheService.getWithDiskFallback(
-                CacheKey.houses,
-                type: [House].self,
-                diskMaxAge: 3600 // 1 hour for houses
-            ) {
-                houses = cached.filter { !$0.isSchoolTeam }
-                isLoading = false
+        // Try cache first
+        if let cached: [House] = await cacheService.getWithDiskFallback(
+            CacheKey.houses,
+            type: [House].self,
+            diskMaxAge: 3600 // 1 hour for houses
+        ) {
+            houses = cached.filter { !$0.isSchoolTeam }
+            isLoading = false
 
-                // Refresh in background
-                Task { await refreshFromNetwork() }
-                return
-            }
-
-            await refreshFromNetwork()
-        } catch {
-            errorMessage = error.localizedDescription
+            // Refresh in background
+            Task { await refreshFromNetwork() }
+            return
         }
 
-        isLoading = false
+        await refreshFromNetwork()
     }
 
     private func refreshFromNetwork() async {

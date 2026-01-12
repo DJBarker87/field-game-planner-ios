@@ -19,6 +19,7 @@
 		MOD003 /* LeagueStanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC012 /* LeagueStanding.swift */; };
 		MOD004 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC013 /* House.swift */; };
 		MOD005 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC014 /* UserProfile.swift */; };
+		MOD006 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC015 /* Location.swift */; };
 
 		/* ViewModels */
 		VML001 /* FixturesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC020 /* FixturesViewModel.swift */; };
@@ -56,6 +57,10 @@
 		VCO003 /* StandingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC092 /* StandingRow.swift */; };
 		VCO004 /* ScoreEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC093 /* ScoreEntryView.swift */; };
 		VCO005 /* OfflineBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC094 /* OfflineBanner.swift */; };
+		VCO006 /* AppIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC095 /* AppIconView.swift */; };
+
+		/* Privacy */
+		PRV001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = RES102 /* PrivacyInfo.xcprivacy */; };
 
 		/* Services */
 		SRV001 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC100 /* SupabaseService.swift */; };
@@ -76,9 +81,6 @@
 		TST001 /* FieldGamePlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST100 /* FieldGamePlannerTests.swift */; };
 		TST002 /* FieldGamePlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST200 /* FieldGamePlannerUITests.swift */; };
 		TST003 /* FieldGamePlannerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST201 /* FieldGamePlannerUITestsLaunchTests.swift */; };
-
-		/* SPM */
-		SPM001 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = PKG001 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +118,7 @@
 		SRC012 /* LeagueStanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueStanding.swift; sourceTree = "<group>"; };
 		SRC013 /* House.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = House.swift; sourceTree = "<group>"; };
 		SRC014 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		SRC015 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 
 		/* ViewModels */
 		SRC020 /* FixturesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixturesViewModel.swift; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 		SRC092 /* StandingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingRow.swift; sourceTree = "<group>"; };
 		SRC093 /* ScoreEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEntryView.swift; sourceTree = "<group>"; };
 		SRC094 /* OfflineBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBanner.swift; sourceTree = "<group>"; };
+		SRC095 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 
 		/* Services */
 		SRC100 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
@@ -169,6 +173,7 @@
 		/* Resources */
 		RES100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		RES101 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		RES102 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 
 		/* Tests */
 		TST100 /* FieldGamePlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldGamePlannerTests.swift; sourceTree = "<group>"; };
@@ -181,7 +186,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				SPM001 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +221,7 @@
 			children = (
 				SRC004 /* Config.swift */,
 				RES101 /* Info.plist */,
+				RES102 /* PrivacyInfo.xcprivacy */,
 				GRP010 /* App */,
 				GRP011 /* Models */,
 				GRP012 /* ViewModels */,
@@ -271,6 +276,7 @@
 				SRC011 /* Enums.swift */,
 				SRC013 /* House.swift */,
 				SRC012 /* LeagueStanding.swift */,
+				SRC015 /* Location.swift */,
 				SRC010 /* Match.swift */,
 				SRC014 /* UserProfile.swift */,
 			);
@@ -389,6 +395,7 @@
 		GRP023 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				SRC095 /* AppIconView.swift */,
 				SRC090 /* MatchCard.swift */,
 				SRC094 /* OfflineBanner.swift */,
 				SRC091 /* ResultCard.swift */,
@@ -414,9 +421,6 @@
 			dependencies = (
 			);
 			name = FieldGamePlanner;
-			packageProductDependencies = (
-				PKG001 /* Supabase */,
-			);
 			productName = FieldGamePlanner;
 			productReference = PRD001 /* FieldGamePlanner.app */;
 			productType = "com.apple.product-type.application";
@@ -489,9 +493,6 @@
 				Base,
 			);
 			mainGroup = GRP001;
-			packageReferences = (
-				PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */,
-			);
 			productRefGroup = GRP005 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -509,6 +510,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				RES001 /* Assets.xcassets in Resources */,
+				PRV001 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +544,7 @@
 				MOD003 /* LeagueStanding.swift in Sources */,
 				MOD004 /* House.swift in Sources */,
 				MOD005 /* UserProfile.swift in Sources */,
+				MOD006 /* Location.swift in Sources */,
 				VML001 /* FixturesViewModel.swift in Sources */,
 				VML002 /* ResultsViewModel.swift in Sources */,
 				VML003 /* StandingsViewModel.swift in Sources */,
@@ -563,6 +566,7 @@
 				VCO003 /* StandingRow.swift in Sources */,
 				VCO004 /* ScoreEntryView.swift in Sources */,
 				VCO005 /* OfflineBanner.swift in Sources */,
+				VCO006 /* AppIconView.swift in Sources */,
 				SRV001 /* SupabaseService.swift in Sources */,
 				SRV002 /* AuthService.swift in Sources */,
 				SRV003 /* CacheService.swift in Sources */,
@@ -902,25 +906,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductReference section */
-		PKG001 /* Supabase */ = {
-			isa = XCSwiftPackageProductReference;
-			package = PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-/* End XCSwiftPackageProductReference section */
 	};
 	rootObject = PRJ001 /* Project object */;
 }

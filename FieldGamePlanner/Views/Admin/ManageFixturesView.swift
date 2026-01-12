@@ -64,11 +64,17 @@ struct ManageFixturesView: View {
                 Spacer()
             } else if matches.isEmpty {
                 Spacer()
-                ContentUnavailableView(
-                    "No Fixtures Found",
-                    systemImage: "calendar.badge.exclamationmark",
-                    description: Text("Try adjusting your search criteria")
-                )
+                VStack(spacing: 16) {
+                    Image(systemName: "calendar.badge.exclamationmark")
+                        .font(.largeTitle)
+                        .foregroundStyle(.secondary)
+                    Text("No Fixtures Found")
+                        .font(.headline)
+                    Text("Try adjusting your search criteria")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
                 Spacer()
             } else {
                 List {
