@@ -405,4 +405,138 @@ final class FieldGamePlannerTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - Date Extension Tests
+
+    func testDateRelativeDescription() {
+        let calendar = Calendar.current
+
+        // Test today
+        let today = Date()
+        XCTAssertEqual(today.relativeDescription, "Today")
+
+        // Test tomorrow
+        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: today) {
+            XCTAssertEqual(tomorrow.relativeDescription, "Tomorrow")
+        }
+
+        // Test yesterday
+        if let yesterday = calendar.date(byAdding: .day, value: -1, to: today) {
+            XCTAssertEqual(yesterday.relativeDescription, "Yesterday")
+        }
+    }
+
+    func testDateDisplayString() {
+        let date = Date()
+        let displayString = date.displayString
+
+        // Should contain day of week and month
+        XCTAssertFalse(displayString.isEmpty)
+        XCTAssertTrue(displayString.count > 5)
+    }
+
+    func testDateStartOfDay() {
+        let date = Date()
+        let startOfDay = date.startOfDay
+
+        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: startOfDay)
+        XCTAssertEqual(components.hour, 0)
+        XCTAssertEqual(components.minute, 0)
+        XCTAssertEqual(components.second, 0)
+    }
+
+    func testDateEndOfDay() {
+        let date = Date()
+        let endOfDay = date.endOfDay
+
+        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: endOfDay)
+        XCTAssertEqual(components.hour, 23)
+        XCTAssertEqual(components.minute, 59)
+        XCTAssertEqual(components.second, 59)
+    }
+
+    // MARK: - MatchWithHouses Computed Property Tests
+
+    func testMatchFormattedDateAndTime() {
+        let match = MatchWithHouses.preview
+        XCTAssertFalse(match.formattedDate.isEmpty)
+        XCTAssertFalse(match.formattedTime.isEmpty)
+    }
+
+    func testMatchCompetitionColor() {
+        let match = MatchWithHouses.preview
+        // Should return a color based on competition type
+        XCTAssertNotNil(match.competitionColor)
+    }
+
+    func testMatchFullLocationString() {
+        let match = MatchWithHouses.preview
+        // Location string depends on whether location exists
+        // Just test it doesn't crash
+        _ = match.fullLocationString
+    }
+
+    func testCompletedMatchWinner() {
+        let match = MatchWithHouses.completedPreview
+        if match.isCompleted {
+            // Winner should be the team with higher score or nil if draw
+            if let homeScore = match.homeScore, let awayScore = match.awayScore {
+                if homeScore > awayScore {
+                    XCTAssertEqual(match.winner, match.homeTeamName)
+                } else if awayScore > homeScore {
+                    XCTAssertEqual(match.winner, match.awayTeamName)
+                } else {
+                    XCTAssertNil(match.winner)
+                    XCTAssertTrue(match.isDraw)
+                }
+            }
+        }
+    }
+
+    // MARK: - TimeFilter Tests
+
+    func testAllTimeFilters() {
+        for filter in TimeFilter.allCases {
+            let range = filter.dateRange
+            XCTAssertTrue(range.start <= range.end)
+        }
+    }
+
+    func testTimeFilterSystemImages() {
+        for filter in TimeFilter.allCases {
+            XCTAssertFalse(filter.systemImage.isEmpty)
+        }
+    }
+
+    // MARK: - MatchStatus Tests
+
+    func testAllMatchStatuses() {
+        let statuses: [MatchStatus] = [.scheduled, .completed, .cancelled, .postponed]
+        for status in statuses {
+            XCTAssertFalse(status.displayName.isEmpty)
+            XCTAssertFalse(status.rawValue.isEmpty)
+        }
+    }
+
+    // MARK: - User Role Tests
+
+    func testUserRoleDisplayNames() {
+        XCTAssertEqual(UserRole.viewer.displayName, "Viewer")
+        XCTAssertEqual(UserRole.captain.displayName, "Captain")
+        XCTAssertEqual(UserRole.admin.displayName, "Admin")
+    }
+
+    func testUserRoleComparison() {
+        let roles: [UserRole] = [.viewer, .captain, .admin]
+        let sortedRoles = roles.sorted()
+        XCTAssertEqual(sortedRoles, [.viewer, .captain, .admin])
+    }
+
+    // MARK: - Network Monitor Tests
+
+    func testNetworkMonitorSingleton() {
+        let monitor1 = NetworkMonitor.shared
+        let monitor2 = NetworkMonitor.shared
+        XCTAssertTrue(monitor1 === monitor2)
+    }
 }

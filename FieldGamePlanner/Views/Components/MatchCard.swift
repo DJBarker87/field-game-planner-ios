@@ -9,6 +9,21 @@ import SwiftUI
 
 struct MatchCard: View {
     let match: MatchWithHouses
+    var showScoreEntry: Bool = false
+    var onScoreSubmitted: (() -> Void)?
+
+    private var accessibilityDescription: String {
+        var description = "\(match.competitionType): \(match.homeTeamName) versus \(match.awayTeamName)"
+        if match.isCompleted, let homeScore = match.homeScore, let awayScore = match.awayScore {
+            description += ". Final score: \(homeScore) to \(awayScore)"
+            if let winner = match.winner {
+                description += ". \(winner) wins"
+            }
+        } else {
+            description += " on \(match.formattedDate) at \(match.formattedTime)"
+        }
+        return description
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -21,6 +36,7 @@ struct MatchCard: View {
                 .padding(.vertical, 4)
                 .background(match.competitionColor)
                 .cornerRadius(4)
+                .accessibilityHidden(true)
 
             // Teams
             HStack {
@@ -36,6 +52,7 @@ struct MatchCard: View {
                 Spacer()
                 TeamView(name: match.awayTeamName, kitColors: match.awayKitColors)
             }
+            .accessibilityHidden(true)
 
             // Details
             HStack {
@@ -49,11 +66,25 @@ struct MatchCard: View {
             }
             .font(.caption)
             .foregroundColor(.secondary)
+            .accessibilityHidden(true)
+
+            // Score entry (only for fixtures, not results)
+            if showScoreEntry && !match.isCompleted {
+                Divider()
+                    .padding(.vertical, 4)
+
+                ScoreEntryView(match: match) {
+                    onScoreSubmitted?()
+                }
+            }
         }
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        .accessibilityElement(children: showScoreEntry && !match.isCompleted ? .contain : .ignore)
+        .accessibilityLabel(accessibilityDescription)
+        .accessibilityHint(showScoreEntry && !match.isCompleted ? "Tap to enter score" : "Tap to view details")
     }
 }
 
@@ -88,6 +119,7 @@ struct KitColorIndicator: View {
             RoundedRectangle(cornerRadius: 2)
                 .stroke(Color.gray.opacity(0.3), lineWidth: 0.5)
         )
+        .accessibilityHidden(true)
     }
 }
 
@@ -106,12 +138,15 @@ struct ScoreView: View {
                 .foregroundColor(awayScore > homeScore ? .etonPrimary : .primary)
         }
         .font(.title3)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(homeScore) to \(awayScore)")
     }
 }
 
 #Preview {
     VStack(spacing: 16) {
         MatchCard(match: .preview)
+        MatchCard(match: .preview, showScoreEntry: true)
         MatchCard(match: .completedPreview)
     }
     .padding()

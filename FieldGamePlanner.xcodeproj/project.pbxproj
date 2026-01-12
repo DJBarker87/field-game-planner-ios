@@ -46,12 +46,17 @@
 
 		/* Views - Admin */
 		VAD001 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC080 /* AdminView.swift */; };
+		VAD002 /* CreateCaptainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC081 /* CreateCaptainView.swift */; };
+		VAD003 /* ManageFixturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC082 /* ManageFixturesView.swift */; };
+		VAD004 /* ImportLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC083 /* ImportLogsView.swift */; };
 
 		/* Views - Components */
 		VCO001 /* MatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC090 /* MatchCard.swift */; };
 		VCO002 /* ResultCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC091 /* ResultCard.swift */; };
 		VCO003 /* StandingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC092 /* StandingRow.swift */; };
-		VCO004 /* AppIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC093 /* AppIconView.swift */; };
+		VCO004 /* ScoreEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC093 /* ScoreEntryView.swift */; };
+		VCO005 /* OfflineBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC094 /* OfflineBanner.swift */; };
+		VCO006 /* AppIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC095 /* AppIconView.swift */; };
 
 		/* Privacy */
 		PRV001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = RES102 /* PrivacyInfo.xcprivacy */; };
@@ -142,12 +147,17 @@
 
 		/* Views - Admin */
 		SRC080 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
+		SRC081 /* CreateCaptainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCaptainView.swift; sourceTree = "<group>"; };
+		SRC082 /* ManageFixturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageFixturesView.swift; sourceTree = "<group>"; };
+		SRC083 /* ImportLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportLogsView.swift; sourceTree = "<group>"; };
 
 		/* Views - Components */
 		SRC090 /* MatchCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCard.swift; sourceTree = "<group>"; };
 		SRC091 /* ResultCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCard.swift; sourceTree = "<group>"; };
 		SRC092 /* StandingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingRow.swift; sourceTree = "<group>"; };
-		SRC093 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
+		SRC093 /* ScoreEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEntryView.swift; sourceTree = "<group>"; };
+		SRC094 /* OfflineBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBanner.swift; sourceTree = "<group>"; };
+		SRC095 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 
 		/* Services */
 		SRC100 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
@@ -346,6 +356,9 @@
 			isa = PBXGroup;
 			children = (
 				SRC080 /* AdminView.swift */,
+				SRC081 /* CreateCaptainView.swift */,
+				SRC082 /* ManageFixturesView.swift */,
+				SRC083 /* ImportLogsView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -383,9 +396,11 @@
 		GRP023 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				SRC093 /* AppIconView.swift */,
+				SRC095 /* AppIconView.swift */,
 				SRC090 /* MatchCard.swift */,
+				SRC094 /* OfflineBanner.swift */,
 				SRC091 /* ResultCard.swift */,
+				SRC093 /* ScoreEntryView.swift */,
 				SRC092 /* StandingRow.swift */,
 			);
 			path = Components;
@@ -549,10 +564,15 @@
 				VSE002 /* LoginView.swift in Sources */,
 				VSE003 /* HousePickerView.swift in Sources */,
 				VAD001 /* AdminView.swift in Sources */,
+				VAD002 /* CreateCaptainView.swift in Sources */,
+				VAD003 /* ManageFixturesView.swift in Sources */,
+				VAD004 /* ImportLogsView.swift in Sources */,
 				VCO001 /* MatchCard.swift in Sources */,
 				VCO002 /* ResultCard.swift in Sources */,
 				VCO003 /* StandingRow.swift in Sources */,
-				VCO004 /* AppIconView.swift in Sources */,
+				VCO004 /* ScoreEntryView.swift in Sources */,
+				VCO005 /* OfflineBanner.swift in Sources */,
+				VCO006 /* AppIconView.swift in Sources */,
 				SRV001 /* SupabaseService.swift in Sources */,
 				SRV002 /* AuthService.swift in Sources */,
 				SRV003 /* CacheService.swift in Sources */,

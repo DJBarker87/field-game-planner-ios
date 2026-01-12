@@ -25,7 +25,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Field Game Planner needs calendar access to export fixtures to your calendar.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Use Face ID for quick login.</string>
+	<string>Use Face ID for quick login to your Field Game Planner account.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -35,6 +35,8 @@
 	<dict>
 		<key>UIColorName</key>
 		<string>LaunchScreenBackground</string>
+		<key>UIImageName</key>
+		<string>LaunchIcon</string>
 	</dict>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
@@ -53,5 +55,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

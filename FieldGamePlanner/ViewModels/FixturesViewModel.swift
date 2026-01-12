@@ -15,9 +15,30 @@ class FixturesViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var selectedFilter: TimeFilter = .week
     @Published var selectedTeamId: UUID?
+    @Published var isOffline = false
+    @Published var lastUpdated: Date?
 
     private let supabaseService = SupabaseService.shared
     private let cacheService = CacheService.shared
+    private let networkMonitor = NetworkMonitor.shared
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        // Subscribe to network changes for auto-refresh
+        networkMonitor.$isConnected
+            .dropFirst() // Skip initial value
+            .removeDuplicates()
+            .sink { [weak self] isConnected in
+                if isConnected {
+                    // Back online, refresh data
+                    Task { await self?.fetchMatches() }
+                }
+                self?.isOffline = !isConnected
+            }
+            .store(in: &cancellables)
+
+        isOffline = !networkMonitor.isConnected
+    }
 
     // MARK: - Computed Properties
 
@@ -45,30 +66,30 @@ class FixturesViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        do {
-            // Try cache first
-            let cacheKey = CacheKey.upcomingMatches
-            if let cached: [MatchWithHouses] = await cacheService.getWithDiskFallback(
-                cacheKey,
-                type: [MatchWithHouses].self,
-                diskMaxAge: 300
-            ) {
-                matches = cached
-                isLoading = false
-
-                // Refresh in background
-                Task {
-                    await refreshFromNetwork()
-                }
-                return
-            }
-
+        // Try network first if connected
+        if networkMonitor.isConnected {
             await refreshFromNetwork()
-        } catch {
-            errorMessage = error.localizedDescription
+            isLoading = false
+            return
         }
 
+        // Offline: load from cache
+        await loadFromCache()
+        isOffline = true
         isLoading = false
+    }
+
+    private func loadFromCache() async {
+        let cacheKey = CacheKey.upcomingMatches
+        if let cached: [MatchWithHouses] = await cacheService.getWithDiskFallback(
+            cacheKey,
+            type: [MatchWithHouses].self,
+            diskMaxAge: nil // Accept any age when offline
+        ) {
+            matches = cached
+        } else if matches.isEmpty {
+            errorMessage = "No cached data available. Connect to the internet to load fixtures."
+        }
     }
 
     private func refreshFromNetwork() async {
@@ -81,6 +102,8 @@ class FixturesViewModel: ObservableObject {
             )
 
             matches = fetched
+            lastUpdated = Date()
+            isOffline = false
 
             // Cache the results
             await cacheService.setWithDiskPersistence(
@@ -89,6 +112,10 @@ class FixturesViewModel: ObservableObject {
                 ttl: 300
             )
         } catch {
+            // Network failed, try cache
+            await loadFromCache()
+            isOffline = true
+
             // Only show error if we don't have cached data
             if matches.isEmpty {
                 errorMessage = error.localizedDescription
