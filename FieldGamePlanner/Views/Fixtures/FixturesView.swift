@@ -71,11 +71,18 @@ struct FixturesView: View {
             if let match = selectedMatch {
                 MatchDetailView(match: match)
             } else {
-                ContentUnavailableView(
-                    "Select a Match",
-                    systemImage: "sportscourt",
-                    description: Text("Choose a match from the list to see details")
-                )
+                VStack(spacing: 16) {
+                    Image(systemName: "sportscourt")
+                        .font(.largeTitle)
+                        .foregroundStyle(.secondary)
+                    Text("Select a Match")
+                        .font(.headline)
+                    Text("Choose a match from the list to see details")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
             }
         }
         .refreshable {
@@ -130,11 +137,17 @@ struct FixturesView: View {
         if viewModel.isLoading && viewModel.matches.isEmpty {
             ProgressView("Loading fixtures...")
         } else if viewModel.matches.isEmpty {
-            ContentUnavailableView(
-                "No Fixtures",
-                systemImage: "calendar.badge.exclamationmark",
-                description: Text("No upcoming fixtures available")
-            )
+            VStack(spacing: 16) {
+                Image(systemName: "calendar.badge.exclamationmark")
+                    .font(.largeTitle)
+                    .foregroundStyle(.secondary)
+                Text("No Fixtures")
+                    .font(.headline)
+                Text("No upcoming fixtures available")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding()
         } else {
             ScrollView {
                 LazyVStack(spacing: 12) {

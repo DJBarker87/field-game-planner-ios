@@ -16,11 +16,17 @@ struct StandingsView: View {
                 if viewModel.isLoading && viewModel.standings.isEmpty {
                     ProgressView("Loading standings...")
                 } else if viewModel.standings.isEmpty {
-                    ContentUnavailableView(
-                        "No Standings",
-                        systemImage: "list.number",
-                        description: Text("No standings available yet")
-                    )
+                    VStack(spacing: 16) {
+                        Image(systemName: "list.number")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                        Text("No Standings")
+                            .font(.headline)
+                        Text("No standings available yet")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
                 } else {
                     List {
                         ForEach(viewModel.competitions, id: \.self) { competition in

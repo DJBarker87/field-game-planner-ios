@@ -51,11 +51,16 @@ struct AdminView: View {
     }
 
     private var accessDeniedView: some View {
-        ContentUnavailableView {
-            Label("Access Denied", systemImage: "lock.shield")
-        } description: {
+        VStack(spacing: 16) {
+            Image(systemName: "lock.shield")
+                .font(.largeTitle)
+                .foregroundStyle(.secondary)
+            Text("Access Denied")
+                .font(.headline)
             Text("You must be an administrator to access this area.")
-        } actions: {
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
             if !authService.isAuthenticated {
                 NavigationLink("Sign In") {
                     LoginView()
@@ -63,6 +68,7 @@ struct AdminView: View {
                 .buttonStyle(.borderedProminent)
             }
         }
+        .padding()
     }
 }
 

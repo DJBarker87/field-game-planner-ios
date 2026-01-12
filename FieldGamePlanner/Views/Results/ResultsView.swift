@@ -16,11 +16,17 @@ struct ResultsView: View {
                 if viewModel.isLoading && viewModel.results.isEmpty {
                     ProgressView("Loading results...")
                 } else if viewModel.results.isEmpty {
-                    ContentUnavailableView(
-                        "No Results",
-                        systemImage: "checkmark.circle.badge.xmark",
-                        description: Text("No results available yet")
-                    )
+                    VStack(spacing: 16) {
+                        Image(systemName: "checkmark.circle.badge.xmark")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                        Text("No Results")
+                            .font(.headline)
+                        Text("No results available yet")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
                 } else {
                     List {
                         ForEach(viewModel.competitions, id: \.self) { competition in
