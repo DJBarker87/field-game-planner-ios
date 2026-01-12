@@ -52,13 +52,19 @@ struct PitchMapSheet: View {
 
                 // Highlighted pitch info
                 if let pitch = highlightedPitch {
-                    HStack {
-                        Image(systemName: "mappin.circle.fill")
-                            .foregroundColor(.etonPrimary)
-                        Text(pitch)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        Spacer()
+                    VStack(spacing: 4) {
+                        HStack {
+                            Image(systemName: "mappin.circle.fill")
+                                .foregroundColor(.etonPrimary)
+                            Text(pitch)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Spacer()
+                        }
+                        // DEBUG: This should appear if new code is running
+                        Text("🔴 NEW CODE RUNNING")
+                            .font(.caption)
+                            .foregroundColor(.red)
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 8)
