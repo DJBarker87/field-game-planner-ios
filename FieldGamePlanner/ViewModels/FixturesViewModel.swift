@@ -134,7 +134,7 @@ class FixturesViewModel: ObservableObject {
             let fetched = try await supabaseService.fetchUpcomingMatches(
                 startDate: range.start,
                 endDate: range.end,
-                teamId: selectedTeamId
+                teamId: nil
             )
 
             print("[FixturesVM] Fetched \(fetched.count) matches")
