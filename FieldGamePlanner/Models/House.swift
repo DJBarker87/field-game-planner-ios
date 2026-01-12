@@ -35,9 +35,17 @@ struct House: Identifiable, Codable, Equatable, Hashable {
             return URL(string: colours)
         }
 
-        // Otherwise construct from base URL (you'll need to configure this)
-        let baseURL = Config.supabaseURL.replacingOccurrences(of: "/rest/v1", with: "")
-        return URL(string: baseURL + colours)
+        // For Supabase Storage paths (starting with /)
+        if colours.hasPrefix("/") {
+            // Remove leading slash
+            let path = String(colours.dropFirst())
+            // Construct Supabase Storage URL: /storage/v1/object/public/{bucket}/{path}
+            // Assuming "public" bucket (standard Supabase bucket name)
+            return URL(string: "\(Config.supabaseURL)/storage/v1/object/public/public/\(path)")
+        }
+
+        // Fallback: direct append (for backward compatibility)
+        return URL(string: "\(Config.supabaseURL)/\(colours)")
     }
 
     /// Legacy color parsing for backward compatibility (if colours contains color codes)
