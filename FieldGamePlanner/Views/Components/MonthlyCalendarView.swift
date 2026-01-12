@@ -329,13 +329,13 @@ struct CalendarMatchCard: View {
         matches: [
             .preview,
             MatchWithHouses(
-                id: UUID(),
+                id: "2",
                 date: Date().addingTimeInterval(86400 * 2),
                 time: "14:30",
                 competitionType: "Junior League",
                 pitch: "North Fields - Pitch 3",
-                homeTeamId: UUID(),
-                awayTeamId: UUID(),
+                homeTeamId: "3",
+                awayTeamId: "4",
                 homeTeamName: "Godolphin",
                 awayTeamName: "Villiers",
                 homeTeamColours: "maroon/sky",
