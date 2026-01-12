@@ -95,8 +95,8 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     let awayTeamIdString: String?  // Stored as string from database
     let homeTeamName: String
     let awayTeamName: String
-    let homeTeamColours: String
-    let awayTeamColours: String
+    let homeTeamColours: String?  // Can be null in database
+    let awayTeamColours: String?  // Can be null in database
     let umpires: String?
     let status: String
     let homeScore: Int?
@@ -149,12 +149,12 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     /// Parse home team colours into SwiftUI Colors
     var homeKitColors: [Color] {
-        KitColorMapper.parse(homeTeamColours)
+        KitColorMapper.parse(homeTeamColours ?? "")
     }
 
     /// Parse away team colours into SwiftUI Colors
     var awayKitColors: [Color] {
-        KitColorMapper.parse(awayTeamColours)
+        KitColorMapper.parse(awayTeamColours ?? "")
     }
 
     /// Competition color based on type
