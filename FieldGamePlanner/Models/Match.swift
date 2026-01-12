@@ -87,7 +87,7 @@ struct Match: Identifiable, Codable, Equatable {
 /// Extended match model with resolved team names and colours from the database view
 struct MatchWithHouses: Identifiable, Codable, Equatable {
     let id: UUID
-    let date: Date
+    let dateString: String  // Stored as string from database (yyyy-MM-dd)
     let time: String?
     let competitionType: String
     let pitch: String?
@@ -106,7 +106,7 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
 
     enum CodingKeys: String, CodingKey {
         case id
-        case date
+        case dateString = "date"
         case time
         case competitionType = "competition_type"
         case pitch
@@ -120,6 +120,13 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         case status
         case homeScore = "home_score"
         case awayScore = "away_score"
+    }
+
+    /// Parsed date from dateString
+    var date: Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: dateString) ?? Date()
     }
 
     // MARK: - Computed Properties
@@ -207,9 +214,11 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     // MARK: - Preview
 
     static var preview: MatchWithHouses {
-        MatchWithHouses(
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return MatchWithHouses(
             id: UUID(),
-            date: Date(),
+            dateString: formatter.string(from: Date()),
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
@@ -227,9 +236,11 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
     }
 
     static var completedPreview: MatchWithHouses {
-        MatchWithHouses(
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return MatchWithHouses(
             id: UUID(),
-            date: Date().addingTimeInterval(-86400),
+            dateString: formatter.string(from: Date().addingTimeInterval(-86400)),
             time: "14:30",
             competitionType: "Senior League",
             pitch: "North Fields - Pitch 3",
