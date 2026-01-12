@@ -29,61 +29,38 @@ struct StandingsView: View {
                     .padding()
                 } else {
                     List {
-                        ForEach(viewModel.competitions, id: \.self) { competition in
-                            Section {
-                                // Header row
-                                HStack {
-                                    Text("#")
-                                        .frame(width: 30, alignment: .leading)
-                                    Text("Team")
-                                    Spacer()
-                                    HStack(spacing: 12) {
-                                        Text("P").frame(width: 28)
-                                        Text("W").frame(width: 28)
-                                        Text("D").frame(width: 28)
-                                        Text("L").frame(width: 28)
-                                        Text("GD").frame(width: 28)
-                                        Text("Pts").frame(width: 28)
-                                    }
+                        Section {
+                            // Header row
+                            HStack {
+                                Text("#")
+                                    .frame(width: 30, alignment: .leading)
+                                Text("Team")
+                                Spacer()
+                                HStack(spacing: 12) {
+                                    Text("P").frame(width: 28)
+                                    Text("W").frame(width: 28)
+                                    Text("D").frame(width: 28)
+                                    Text("L").frame(width: 28)
+                                    Text("GD").frame(width: 28)
+                                    Text("Pts").frame(width: 28)
                                 }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                                ForEach(Array(viewModel.standings(for: competition).enumerated()), id: \.element.id) { index, standing in
-                                    StandingRow(standing: standing, position: index + 1)
-                                }
-                            } header: {
-                                Text(competition)
-                                    .font(.headline)
-                                    .foregroundColor(.etonPrimary)
                             }
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+
+                            ForEach(Array(viewModel.sortedStandings.enumerated()), id: \.element.id) { index, standing in
+                                StandingRow(standing: standing, position: index + 1)
+                            }
+                        } header: {
+                            Text("League Table")
+                                .font(.headline)
+                                .foregroundColor(.etonPrimary)
                         }
                     }
                     .listStyle(.insetGrouped)
                 }
             }
             .navigationTitle("Standings")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button("All Competitions") {
-                            Task {
-                                await viewModel.selectCompetition(nil)
-                            }
-                        }
-                        Divider()
-                        ForEach(viewModel.competitions, id: \.self) { competition in
-                            Button(competition) {
-                                Task {
-                                    await viewModel.selectCompetition(competition)
-                                }
-                            }
-                        }
-                    } label: {
-                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
-                    }
-                }
-            }
             .refreshable {
                 await viewModel.fetchStandings()
             }

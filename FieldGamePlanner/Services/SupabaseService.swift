@@ -157,28 +157,21 @@ actor SupabaseService {
 
     // MARK: - League Standings
 
-    /// Fetch league standings with optional competition filter
-    /// - Parameter competitionType: Optional competition type to filter
-    /// - Returns: Array of LeagueStanding objects
-    func fetchStandings(competitionType: String? = nil) async throws -> [LeagueStanding] {
-        var query = client
+    /// Fetch league standings
+    /// - Returns: Array of LeagueStanding objects sorted by points
+    func fetchStandings() async throws -> [LeagueStanding] {
+        let response: [LeagueStanding] = try await client
             .from("league_standings")
             .select()
-
-        if let competition = competitionType {
-            query = query.eq("competition_type", value: competition)
-        }
-
-        let response: [LeagueStanding] = try await query
-            .order("competition_type", ascending: true)
-            .order("position", ascending: true)
+            .order("points", ascending: false)
+            .order("goal_difference", ascending: false)
             .execute()
             .value
 
         return response
     }
 
-    /// Fetch standings for a specific team across all competitions
+    /// Fetch standings for a specific team
     /// - Parameter teamId: The team UUID
     /// - Returns: Array of LeagueStanding objects for that team
     func fetchStandings(for teamId: UUID) async throws -> [LeagueStanding] {

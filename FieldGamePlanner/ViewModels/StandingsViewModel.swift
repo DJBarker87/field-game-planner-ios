@@ -13,26 +13,15 @@ class StandingsViewModel: ObservableObject {
     @Published var standings: [LeagueStanding] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var selectedCompetition: String?
 
     private let supabaseService = SupabaseService.shared
     private let cacheService = CacheService.shared
 
     // MARK: - Computed Properties
 
-    var groupedStandings: [String: [LeagueStanding]] {
-        standings.groupedByCompetition
-    }
-
-    var competitions: [String] {
-        groupedStandings.keys.sorted()
-    }
-
-    var filteredStandings: [LeagueStanding] {
-        if let competition = selectedCompetition {
-            return standings.standings(for: competition)
-        }
-        return standings.sortedByPosition
+    /// Standings sorted by points (position is calculated by sort order)
+    var sortedStandings: [LeagueStanding] {
+        standings.sortedByPosition
     }
 
     // MARK: - Data Fetching
@@ -42,7 +31,7 @@ class StandingsViewModel: ObservableObject {
         errorMessage = nil
 
         // Try cache first
-        let cacheKey = selectedCompetition.map { CacheKey.standings(for: $0) } ?? CacheKey.standings
+        let cacheKey = CacheKey.standings
         if let cached: [LeagueStanding] = await cacheService.getWithDiskFallback(
             cacheKey,
             type: [LeagueStanding].self,
@@ -63,32 +52,24 @@ class StandingsViewModel: ObservableObject {
 
     private func refreshFromNetwork() async {
         do {
-            let fetched = try await supabaseService.fetchStandings(
-                competitionType: selectedCompetition
-            )
+            let fetched = try await supabaseService.fetchStandings()
 
             standings = fetched
 
             // Cache the results
-            let cacheKey = selectedCompetition.map { CacheKey.standings(for: $0) } ?? CacheKey.standings
+            let cacheKey = CacheKey.standings
             await cacheService.setWithDiskPersistence(
                 cacheKey,
                 value: fetched,
                 ttl: 600
             )
+
+            isLoading = false
         } catch {
+            isLoading = false
             if standings.isEmpty {
                 errorMessage = error.localizedDescription
             }
         }
-    }
-
-    func selectCompetition(_ competition: String?) async {
-        selectedCompetition = competition
-        await fetchStandings()
-    }
-
-    func standings(for competition: String) -> [LeagueStanding] {
-        standings.standings(for: competition)
     }
 }
