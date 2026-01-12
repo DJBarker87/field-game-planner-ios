@@ -50,7 +50,6 @@ struct FixturesView: View {
                 highlightedPitch: selectedPitch,
                 title: selectedPitch != nil ? "Match Location" : "Playing Fields"
             )
-            .presentationDetents([.medium, .large])
         }
     }
 
@@ -179,11 +178,16 @@ struct FixturesView: View {
             if let match = selectedMatch {
                 MatchDetailView(match: match)
             } else {
-                ContentUnavailableView(
-                    "Select a Match",
-                    systemImage: "sportscourt",
-                    description: Text("Choose a match from the list to see details")
-                )
+                VStack(spacing: 16) {
+                    Image(systemName: "sportscourt")
+                        .font(.largeTitle)
+                        .foregroundStyle(.secondary)
+                    Text("Select a Match")
+                        .font(.headline)
+                    Text("Choose a match from the list to see details")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .refreshable {
