@@ -73,12 +73,12 @@ actor SupabaseService {
         dateFormatter.dateFormat = "yyyy-MM-dd"
 
         if let start = startDate {
-            let dateString = ISO8601DateFormatter().string(from: start)
+            let dateString = dateFormatter.string(from: start)
             query = query.gte("date", value: dateString)
         }
 
         if let end = endDate {
-            let dateString = ISO8601DateFormatter().string(from: end)
+            let dateString = dateFormatter.string(from: end)
             query = query.lte("date", value: dateString)
         }
 
