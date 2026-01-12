@@ -44,9 +44,6 @@ DerivedData/
 *.xcworkspace
 !default.xcworkspace
 
-# Sensitive files - DO NOT COMMIT
-FieldGamePlanner/Config.swift
-
 # Environment files
 .env
 .env.*
