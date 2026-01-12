@@ -10,7 +10,7 @@ import SwiftUI
 /// A monthly calendar view showing matches
 struct MonthlyCalendarView: View {
     let matches: [MatchWithHouses]
-    let selectedTeamId: UUID?
+    let selectedTeamId: String?
     var onDateClick: ((Date) -> Void)?
     var onPitchClick: ((String) -> Void)?
 
@@ -135,7 +135,7 @@ struct MonthlyCalendarView: View {
 struct CalendarDayCell: View {
     let date: Date
     let matches: [MatchWithHouses]
-    let selectedTeamId: UUID?
+    let selectedTeamId: String?
     let isToday: Bool
     var onTap: (() -> Void)?
     var onPitchClick: ((String) -> Void)?
@@ -190,11 +190,11 @@ struct CalendarDayCell: View {
 /// Small match indicator for calendar view
 struct MatchIndicator: View {
     let match: MatchWithHouses
-    let selectedTeamId: UUID?
+    let selectedTeamId: String?
 
     private var isInvolved: Bool {
         guard let teamId = selectedTeamId else { return true }
-        return match.involves(teamId: teamId)
+        return match.involves(teamIdString: teamId)
     }
 
     var body: some View {

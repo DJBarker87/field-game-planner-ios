@@ -192,6 +192,11 @@ struct MatchWithHouses: Identifiable, Codable, Equatable {
         homeTeamId == teamId || awayTeamId == teamId
     }
 
+    /// Check if a given team is involved in this match (String ID version)
+    func involves(teamIdString: String) -> Bool {
+        homeTeamId.uuidString == teamIdString || awayTeamId?.uuidString == teamIdString
+    }
+
     /// Check if a given team name is involved in this match
     func involves(teamName: String) -> Bool {
         homeTeamName.lowercased() == teamName.lowercased() ||

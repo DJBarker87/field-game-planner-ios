@@ -9,9 +9,9 @@ import SwiftUI
 
 /// Represents a house or team in the field game system
 struct House: Identifiable, Codable, Equatable, Hashable {
-    let id: UUID
+    let id: String
     let name: String
-    let colours: String
+    let colours: String?
     let createdAt: Date?
 
     // MARK: - Coding Keys
@@ -27,7 +27,7 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     /// Parse the colour string into SwiftUI Colors
     var parsedColours: [Color] {
-        KitColorMapper.parse(colours)
+        KitColorMapper.parse(colours ?? "")
     }
 
     /// Check if this is a school team (e.g., "Field", "1st Field", "2nd XI")
@@ -91,7 +91,7 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     static var preview: House {
         House(
-            id: UUID(),
+            id: "1",
             name: "Keate",
             colours: "red/white",
             createdAt: Date()
@@ -100,11 +100,11 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     static var previewList: [House] {
         [
-            House(id: UUID(), name: "Keate", colours: "red/white", createdAt: Date()),
-            House(id: UUID(), name: "Hawtrey", colours: "navy/gold", createdAt: Date()),
-            House(id: UUID(), name: "Godolphin", colours: "maroon/sky", createdAt: Date()),
-            House(id: UUID(), name: "Villiers", colours: "green/white", createdAt: Date()),
-            House(id: UUID(), name: "Field", colours: "eton/white", createdAt: Date()),
+            House(id: "1", name: "Keate", colours: "red/white", createdAt: Date()),
+            House(id: "2", name: "Hawtrey", colours: "navy/gold", createdAt: Date()),
+            House(id: "3", name: "Godolphin", colours: "maroon/sky", createdAt: Date()),
+            House(id: "4", name: "Villiers", colours: "green/white", createdAt: Date()),
+            House(id: "5", name: "Field", colours: "eton/white", createdAt: Date()),
         ]
     }
 }
@@ -113,7 +113,7 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
 extension Array where Element == House {
     /// Find a house by ID
-    func house(withId id: UUID) -> House? {
+    func house(withId id: String) -> House? {
         first { $0.id == id }
     }
 

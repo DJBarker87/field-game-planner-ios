@@ -62,7 +62,7 @@ actor SupabaseService {
     func fetchUpcomingMatches(
         startDate: Date? = nil,
         endDate: Date? = nil,
-        teamId: UUID? = nil
+        teamId: String? = nil
     ) async throws -> [MatchWithHouses] {
         var query = client
             .from("upcoming_matches")
@@ -84,7 +84,7 @@ actor SupabaseService {
 
         // Apply team filter (matches where team is home OR away)
         if let team = teamId {
-            query = query.or("home_team_id.eq.\(team.uuidString),away_team_id.eq.\(team.uuidString)")
+            query = query.or("home_team_id.eq.\(team),away_team_id.eq.\(team)")
         }
 
         let response: [MatchWithHouses] = try await query

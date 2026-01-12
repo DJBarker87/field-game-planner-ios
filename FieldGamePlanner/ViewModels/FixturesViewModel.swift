@@ -18,8 +18,8 @@ class FixturesViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var selectedFilter: TimeFilter = .all
-    @Published var selectedHouse: UUID?
-    @Published var selectedSchoolTeam: UUID?
+    @Published var selectedHouse: String?
+    @Published var selectedSchoolTeam: String?
     @Published var selectedUmpire: String?
     @Published var viewMode: ViewMode = .list
     @Published var isOffline = false
@@ -77,7 +77,7 @@ class FixturesViewModel: ObservableObject {
     }
 
     /// The currently active team filter (house or school team)
-    var activeTeamFilter: UUID? {
+    var activeTeamFilter: String? {
         selectedHouse ?? selectedSchoolTeam
     }
 
@@ -236,7 +236,7 @@ class FixturesViewModel: ObservableObject {
         await fetchMatches()
     }
 
-    func selectHouse(_ houseId: UUID?) async {
+    func selectHouse(_ houseId: String?) async {
         selectedHouse = houseId
         if houseId != nil {
             selectedSchoolTeam = nil
@@ -245,7 +245,7 @@ class FixturesViewModel: ObservableObject {
         await fetchMatches()
     }
 
-    func selectSchoolTeam(_ teamId: UUID?) async {
+    func selectSchoolTeam(_ teamId: String?) async {
         selectedSchoolTeam = teamId
         if teamId != nil {
             selectedHouse = nil

@@ -773,7 +773,7 @@ struct DetailRow: View {
 struct MyHouseSettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
     let houses: [House]
-    @Binding var selectedHouseId: UUID?
+    @Binding var selectedHouseId: String?
 
     var body: some View {
         NavigationStack {

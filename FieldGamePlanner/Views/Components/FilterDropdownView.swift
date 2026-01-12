@@ -85,7 +85,7 @@ struct FilterDropdownView<T: Hashable & Identifiable>: View {
 struct HouseFilterDropdown: View {
     let title: String
     let options: [House]
-    @Binding var selection: UUID?
+    @Binding var selection: String?
     let allLabel: String
 
     private var selectedHouse: House? {
@@ -226,7 +226,7 @@ struct UmpireFilterDropdown: View {
 /// School team filter dropdown
 struct SchoolTeamFilterDropdown: View {
     let options: [House]
-    @Binding var selection: UUID?
+    @Binding var selection: String?
     let allLabel: String
 
     private var selectedTeam: House? {
@@ -300,7 +300,7 @@ struct SchoolTeamFilterDropdown: View {
 
 #Preview("Filters") {
     struct PreviewWrapper: View {
-        @State private var selectedHouse: UUID?
+        @State private var selectedHouse: String?
         @State private var selectedUmpire: String?
 
         var body: some View {
