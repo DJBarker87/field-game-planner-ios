@@ -80,9 +80,6 @@
 		TST001 /* FieldGamePlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST100 /* FieldGamePlannerTests.swift */; };
 		TST002 /* FieldGamePlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST200 /* FieldGamePlannerUITests.swift */; };
 		TST003 /* FieldGamePlannerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TST201 /* FieldGamePlannerUITestsLaunchTests.swift */; };
-
-		/* SPM */
-		SPM001 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = PKG001 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,7 +184,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				SPM001 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,9 +418,6 @@
 			dependencies = (
 			);
 			name = FieldGamePlanner;
-			packageProductDependencies = (
-				PKG001 /* Supabase */,
-			);
 			productName = FieldGamePlanner;
 			productReference = PRD001 /* FieldGamePlanner.app */;
 			productType = "com.apple.product-type.application";
@@ -497,9 +490,6 @@
 				Base,
 			);
 			mainGroup = GRP001;
-			packageReferences = (
-				PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */,
-			);
 			productRefGroup = GRP005 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -912,25 +902,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductReference section */
-		PKG001 /* Supabase */ = {
-			isa = XCSwiftPackageProductReference;
-			package = PKR001 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-/* End XCSwiftPackageProductReference section */
 	};
 	rootObject = PRJ001 /* Project object */;
 }
