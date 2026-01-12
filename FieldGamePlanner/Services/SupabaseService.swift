@@ -124,7 +124,7 @@ actor SupabaseService {
     ///   - limit: Maximum number of results to return
     /// - Returns: Array of MatchWithHouses objects (completed matches)
     func fetchRecentResults(
-        teamId: UUID? = nil,
+        teamId: String? = nil,
         year: Int? = nil,
         limit: Int = 50
     ) async throws -> [MatchWithHouses] {
@@ -143,7 +143,7 @@ actor SupabaseService {
 
         // Apply team filter
         if let team = teamId {
-            query = query.or("home_team_id.eq.\(team.uuidString),away_team_id.eq.\(team.uuidString)")
+            query = query.or("home_team_id.eq.\(team),away_team_id.eq.\(team)")
         }
 
         let response: [MatchWithHouses] = try await query

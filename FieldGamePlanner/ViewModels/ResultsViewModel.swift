@@ -13,7 +13,7 @@ class ResultsViewModel: ObservableObject {
     @Published var results: [MatchWithHouses] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var selectedTeamId: UUID?
+    @Published var selectedTeamId: String?
     @Published var selectedYear: Int?
 
     private let supabaseService = SupabaseService.shared
@@ -85,9 +85,11 @@ class ResultsViewModel: ObservableObject {
                 errorMessage = error.localizedDescription
             }
         }
+
+        isLoading = false
     }
 
-    func filterByTeam(_ teamId: UUID?) async {
+    func filterByTeam(_ teamId: String?) async {
         selectedTeamId = teamId
         await fetchResults()
     }
@@ -99,7 +101,7 @@ class ResultsViewModel: ObservableObject {
 
     // MARK: - Statistics
 
-    func stats(for teamId: UUID) -> TeamStats {
+    func stats(for teamId: String) -> TeamStats {
         let teamResults = results.filter { $0.involves(teamId: teamId) }
 
         var wins = 0

@@ -9,11 +9,11 @@ import Foundation
 
 /// User profile model representing authenticated users
 struct UserProfile: Identifiable, Codable, Equatable {
-    let id: UUID
+    let id: String
     let email: String
     let name: String?
     let role: UserRole
-    let houseId: UUID?
+    let houseId: String?
     let houseName: String?
     let createdAt: Date?
     let updatedAt: Date?
@@ -54,7 +54,7 @@ struct UserProfile: Identifiable, Codable, Equatable {
     }
 
     /// Check if user can edit scores for a specific team
-    func canEditScore(for teamId: UUID) -> Bool {
+    func canEditScore(for teamId: String) -> Bool {
         // Admins can edit any score
         if role.isAdmin { return true }
         // Captains can only edit their own house's scores
@@ -79,7 +79,7 @@ struct UserProfile: Identifiable, Codable, Equatable {
 
     static var viewerPreview: UserProfile {
         UserProfile(
-            id: UUID(),
+            id: "1",
             email: "viewer@example.com",
             name: "John Viewer",
             role: .viewer,
@@ -92,11 +92,11 @@ struct UserProfile: Identifiable, Codable, Equatable {
 
     static var captainPreview: UserProfile {
         UserProfile(
-            id: UUID(),
+            id: "2",
             email: "captain@example.com",
             name: "James Captain",
             role: .captain,
-            houseId: UUID(),
+            houseId: "1",
             houseName: "Keate",
             createdAt: Date(),
             updatedAt: nil
@@ -105,7 +105,7 @@ struct UserProfile: Identifiable, Codable, Equatable {
 
     static var adminPreview: UserProfile {
         UserProfile(
-            id: UUID(),
+            id: "3",
             email: "admin@example.com",
             name: "Alex Admin",
             role: .admin,
