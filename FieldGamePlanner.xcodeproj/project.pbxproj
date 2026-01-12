@@ -51,6 +51,10 @@
 		VCO001 /* MatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC090 /* MatchCard.swift */; };
 		VCO002 /* ResultCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC091 /* ResultCard.swift */; };
 		VCO003 /* StandingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC092 /* StandingRow.swift */; };
+		VCO004 /* AppIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC093 /* AppIconView.swift */; };
+
+		/* Privacy */
+		PRV001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = RES102 /* PrivacyInfo.xcprivacy */; };
 
 		/* Services */
 		SRV001 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC100 /* SupabaseService.swift */; };
@@ -143,6 +147,7 @@
 		SRC090 /* MatchCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCard.swift; sourceTree = "<group>"; };
 		SRC091 /* ResultCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCard.swift; sourceTree = "<group>"; };
 		SRC092 /* StandingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingRow.swift; sourceTree = "<group>"; };
+		SRC093 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 
 		/* Services */
 		SRC100 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
@@ -159,6 +164,7 @@
 		/* Resources */
 		RES100 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		RES101 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		RES102 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 
 		/* Tests */
 		TST100 /* FieldGamePlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldGamePlannerTests.swift; sourceTree = "<group>"; };
@@ -207,6 +213,7 @@
 			children = (
 				SRC004 /* Config.swift */,
 				RES101 /* Info.plist */,
+				RES102 /* PrivacyInfo.xcprivacy */,
 				GRP010 /* App */,
 				GRP011 /* Models */,
 				GRP012 /* ViewModels */,
@@ -376,6 +383,7 @@
 		GRP023 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				SRC093 /* AppIconView.swift */,
 				SRC090 /* MatchCard.swift */,
 				SRC091 /* ResultCard.swift */,
 				SRC092 /* StandingRow.swift */,
@@ -494,6 +502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				RES001 /* Assets.xcassets in Resources */,
+				PRV001 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,6 +552,7 @@
 				VCO001 /* MatchCard.swift in Sources */,
 				VCO002 /* ResultCard.swift in Sources */,
 				VCO003 /* StandingRow.swift in Sources */,
+				VCO004 /* AppIconView.swift in Sources */,
 				SRV001 /* SupabaseService.swift in Sources */,
 				SRV002 /* AuthService.swift in Sources */,
 				SRV003 /* CacheService.swift in Sources */,
