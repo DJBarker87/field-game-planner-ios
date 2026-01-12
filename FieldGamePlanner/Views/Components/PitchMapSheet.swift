@@ -20,14 +20,21 @@ struct PitchMapSheet: View {
         self.highlightedPitch = highlightedPitch
         self.title = title
 
+        // Debug: Log the pitch being highlighted
+        print("📍 PitchMapSheet init with pitch: '\(highlightedPitch ?? "nil")'")
+
         // Auto-select the map based on pitch name using the helper
         if let pitch = highlightedPitch {
             if PitchMapHelper.isSouthFieldsPitch(pitch) {
+                print("📍 Detected South Fields pitch")
                 _selectedMap = State(initialValue: .south)
             } else if PitchMapHelper.isNorthFieldsPitch(pitch) {
+                print("📍 Detected North Fields pitch")
                 _selectedMap = State(initialValue: .north)
             }
             // If neither, default to .north (already initialized)
+        } else {
+            print("📍 No pitch provided, showing both maps")
         }
     }
 
