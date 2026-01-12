@@ -168,7 +168,8 @@ final class FieldGamePlannerTests: XCTestCase {
             "umpires": null,
             "home_score": null,
             "away_score": null,
-            "status": "scheduled"
+            "status": "scheduled",
+            "umpires": null
         }
         """
 
@@ -206,7 +207,8 @@ final class FieldGamePlannerTests: XCTestCase {
             "umpires": null,
             "home_score": 3,
             "away_score": 1,
-            "status": "completed"
+            "status": "completed",
+            "umpires": null
         }
         """
 

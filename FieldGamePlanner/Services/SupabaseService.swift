@@ -68,7 +68,10 @@ actor SupabaseService {
             .from("upcoming_matches")
             .select()
 
-        // Apply date filters
+        // Apply date filters (using YYYY-MM-DD format to match database)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
         if let start = startDate {
             let dateString = ISO8601DateFormatter().string(from: start)
             query = query.gte("date", value: dateString)
@@ -129,13 +132,10 @@ actor SupabaseService {
             .from("recent_results")
             .select()
 
-        // Filter to current calendar year by default
+        // Filter to current calendar year by default (using YYYY-MM-DD format)
         let targetYear = year ?? Calendar.current.component(.year, from: Date())
-        let startOfYear = Calendar.current.date(from: DateComponents(year: targetYear, month: 1, day: 1))!
-        let endOfYear = Calendar.current.date(from: DateComponents(year: targetYear + 1, month: 1, day: 1))!
-
-        let startString = ISO8601DateFormatter().string(from: startOfYear)
-        let endString = ISO8601DateFormatter().string(from: endOfYear)
+        let startOfYear = "\(targetYear)-01-01"
+        let endOfYear = "\(targetYear + 1)-01-01"
 
         query = query
             .gte("date", value: startString)

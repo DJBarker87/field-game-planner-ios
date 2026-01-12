@@ -13,7 +13,7 @@ struct MatchCard: View {
     var onScoreSubmitted: (() -> Void)?
 
     private var accessibilityDescription: String {
-        var description = "\(match.competitionType): \(match.homeTeamName) versus \(match.awayTeamName)"
+        var description = "\(match.competitionType): \(match.homeTeamName) versus \(match.awayTeamName ?? "TBD")"
         if match.isCompleted, let homeScore = match.homeScore, let awayScore = match.awayScore {
             description += ". Final score: \(homeScore) to \(awayScore)"
             if let winner = match.winner {
@@ -50,7 +50,7 @@ struct MatchCard: View {
                         .foregroundColor(.secondary)
                 }
                 Spacer()
-                TeamView(name: match.awayTeamName, kitColors: match.awayKitColors)
+                TeamView(name: match.awayTeamName ?? "", kitColors: match.awayKitColors)
             }
             .accessibilityHidden(true)
 
