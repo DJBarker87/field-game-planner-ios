@@ -95,12 +95,15 @@ class FixturesViewModel: ObservableObject {
     private func refreshFromNetwork() async {
         do {
             let range = selectedFilter.dateRange
+            print("[FixturesVM] Fetching matches from \(range.start) to \(range.end)")
+
             let fetched = try await supabaseService.fetchUpcomingMatches(
                 startDate: range.start,
                 endDate: range.end,
                 teamId: selectedTeamId
             )
 
+            print("[FixturesVM] Fetched \(fetched.count) matches")
             matches = fetched
             lastUpdated = Date()
             isOffline = false
@@ -112,6 +115,7 @@ class FixturesViewModel: ObservableObject {
                 ttl: 300
             )
         } catch {
+            print("[FixturesVM] Error fetching matches: \(error)")
             // Network failed, try cache
             await loadFromCache()
             isOffline = true

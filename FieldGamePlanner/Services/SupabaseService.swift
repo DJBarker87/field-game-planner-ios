@@ -74,11 +74,13 @@ actor SupabaseService {
 
         if let start = startDate {
             let dateString = dateFormatter.string(from: start)
+            print("[Supabase] Filter: date >= \(dateString)")
             query = query.gte("date", value: dateString)
         }
 
         if let end = endDate {
             let dateString = dateFormatter.string(from: end)
+            print("[Supabase] Filter: date <= \(dateString)")
             query = query.lte("date", value: dateString)
         }
 
@@ -87,12 +89,14 @@ actor SupabaseService {
             query = query.or("home_team_id.eq.\(team.uuidString),away_team_id.eq.\(team.uuidString)")
         }
 
+        print("[Supabase] Executing query on upcoming_matches...")
         let response: [MatchWithHouses] = try await query
             .order("date", ascending: true)
             .order("time", ascending: true)
             .execute()
             .value
 
+        print("[Supabase] Query returned \(response.count) results")
         return response
     }
 
