@@ -11,10 +11,12 @@ import Combine
 @MainActor
 class FixturesViewModel: ObservableObject {
     @Published var matches: [MatchWithHouses] = []
+    @Published var houses: [House] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var selectedFilter: TimeFilter = .week
-    @Published var selectedTeamId: UUID?
+    @Published var selectedHouseId: UUID?
+    @Published var selectedUmpire: String?
     @Published var isOffline = false
     @Published var lastUpdated: Date?
 
@@ -45,8 +47,17 @@ class FixturesViewModel: ObservableObject {
     var filteredMatches: [MatchWithHouses] {
         var result = matches
 
-        if let teamId = selectedTeamId {
-            result = result.filter { $0.involves(teamId: teamId) }
+        // Filter by house
+        if let houseId = selectedHouseId {
+            result = result.filter { $0.involves(teamId: houseId) }
+        }
+
+        // Filter by umpire
+        if let umpire = selectedUmpire {
+            result = result.filter { match in
+                guard let umpires = match.umpires else { return false }
+                return umpires.localizedCaseInsensitiveContains(umpire)
+            }
         }
 
         return result.sortedByDate
@@ -58,6 +69,29 @@ class FixturesViewModel: ObservableObject {
 
     var sortedDates: [Date] {
         groupedByDate.keys.sorted()
+    }
+
+    /// Get unique umpire names from all matches
+    var uniqueUmpires: [String] {
+        var umpireSet = Set<String>()
+        for match in matches {
+            if let umpireString = match.umpires {
+                // Split by comma or "and" to handle multiple umpires
+                let parts = umpireString
+                    .replacingOccurrences(of: " and ", with: ",")
+                    .replacingOccurrences(of: " & ", with: ",")
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                    .filter { !$0.isEmpty }
+                umpireSet.formUnion(parts)
+            }
+        }
+        return umpireSet.sorted()
+    }
+
+    /// Check if any filters are active
+    var hasActiveFilters: Bool {
+        selectedHouseId != nil || selectedUmpire != nil
     }
 
     // MARK: - Data Fetching
@@ -132,8 +166,24 @@ class FixturesViewModel: ObservableObject {
         await fetchMatches()
     }
 
-    func filterByTeam(_ teamId: UUID?) async {
-        selectedTeamId = teamId
-        await fetchMatches()
+    func filterByHouse(_ houseId: UUID?) {
+        selectedHouseId = houseId
+    }
+
+    func filterByUmpire(_ umpire: String?) {
+        selectedUmpire = umpire
+    }
+
+    func clearFilters() {
+        selectedHouseId = nil
+        selectedUmpire = nil
+    }
+
+    func fetchHouses() async {
+        do {
+            houses = try await supabaseService.fetchHouses()
+        } catch {
+            print("[FixturesVM] Error fetching houses: \(error)")
+        }
     }
 }

@@ -11,6 +11,7 @@ struct FixturesView: View {
     @StateObject private var viewModel = FixturesViewModel()
     @State private var selectedFilter: TimeFilter = .week
     @State private var selectedMatch: MatchWithHouses?
+    @State private var showingFilters = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some View {
@@ -24,6 +25,7 @@ struct FixturesView: View {
             }
         }
         .task {
+            await viewModel.fetchHouses()
             await viewModel.fetchMatches()
         }
     }
@@ -49,6 +51,75 @@ struct FixturesView: View {
                                 if selectedFilter == filter {
                                     Image(systemName: "checkmark")
                                         .foregroundColor(.etonPrimary)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Section("House") {
+                    Button {
+                        viewModel.filterByHouse(nil)
+                    } label: {
+                        HStack {
+                            Text("All Houses")
+                                .foregroundColor(.primary)
+                            Spacer()
+                            if viewModel.selectedHouseId == nil {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.etonPrimary)
+                            }
+                        }
+                    }
+
+                    ForEach(viewModel.houses) { house in
+                        Button {
+                            viewModel.filterByHouse(house.id)
+                        } label: {
+                            HStack {
+                                HStack(spacing: 8) {
+                                    KitColorIndicator(colors: house.parsedColours)
+                                    Text(house.name)
+                                }
+                                .foregroundColor(.primary)
+                                Spacer()
+                                if viewModel.selectedHouseId == house.id {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.etonPrimary)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if !viewModel.uniqueUmpires.isEmpty {
+                    Section("Umpire") {
+                        Button {
+                            viewModel.filterByUmpire(nil)
+                        } label: {
+                            HStack {
+                                Text("All Umpires")
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                if viewModel.selectedUmpire == nil {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.etonPrimary)
+                                }
+                            }
+                        }
+
+                        ForEach(viewModel.uniqueUmpires, id: \.self) { umpire in
+                            Button {
+                                viewModel.filterByUmpire(umpire)
+                            } label: {
+                                HStack {
+                                    Text(umpire)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if viewModel.selectedUmpire == umpire {
+                                        Image(systemName: "checkmark")
+                                            .foregroundColor(.etonPrimary)
+                                    }
                                 }
                             }
                         }
@@ -98,6 +169,13 @@ struct FixturesView: View {
                 if viewModel.isOffline {
                     OfflineBanner(lastUpdated: viewModel.lastUpdated)
                 }
+
+                // Filter bar
+                filterBar
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemBackground))
+
                 fixturesContent
             }
             .navigationTitle("Fixtures")
@@ -128,6 +206,88 @@ struct FixturesView: View {
                 await viewModel.fetchMatches()
             }
         }
+    }
+
+    // MARK: - Filter Bar
+
+    private var filterBar: some View {
+        HStack(spacing: 12) {
+            // House filter
+            Menu {
+                Button("All Houses") {
+                    viewModel.filterByHouse(nil)
+                }
+                Divider()
+                ForEach(viewModel.houses) { house in
+                    Button(house.name) {
+                        viewModel.filterByHouse(house.id)
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "house")
+                    Text(selectedHouseName)
+                        .lineLimit(1)
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                }
+                .font(.subheadline)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(viewModel.selectedHouseId != nil ? Color.etonPrimary.opacity(0.15) : Color(.systemGray6))
+                .foregroundColor(viewModel.selectedHouseId != nil ? .etonPrimary : .primary)
+                .cornerRadius(8)
+            }
+
+            // Umpire filter
+            if !viewModel.uniqueUmpires.isEmpty {
+                Menu {
+                    Button("All Umpires") {
+                        viewModel.filterByUmpire(nil)
+                    }
+                    Divider()
+                    ForEach(viewModel.uniqueUmpires, id: \.self) { umpire in
+                        Button(umpire) {
+                            viewModel.filterByUmpire(umpire)
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "person.badge.clock")
+                        Text(viewModel.selectedUmpire ?? "Umpire")
+                            .lineLimit(1)
+                        Image(systemName: "chevron.down")
+                            .font(.caption)
+                    }
+                    .font(.subheadline)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(viewModel.selectedUmpire != nil ? Color.etonPrimary.opacity(0.15) : Color(.systemGray6))
+                    .foregroundColor(viewModel.selectedUmpire != nil ? .etonPrimary : .primary)
+                    .cornerRadius(8)
+                }
+            }
+
+            Spacer()
+
+            // Clear filters button
+            if viewModel.hasActiveFilters {
+                Button {
+                    viewModel.clearFilters()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+
+    private var selectedHouseName: String {
+        if let houseId = viewModel.selectedHouseId,
+           let house = viewModel.houses.first(where: { $0.id == houseId }) {
+            return house.name
+        }
+        return "House"
     }
 
     // MARK: - Shared Content
