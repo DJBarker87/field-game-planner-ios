@@ -103,18 +103,26 @@ struct AsyncHouseCrestImage: View {
         }
     }
 
-    /// Extract image name from path like "/images/houses/angelos.png" -> "angelos"
+    /// Extract image name from path like "/images/houses/angelos.png" -> "houses/angelos"
     private func extractImageName(from path: String) -> String? {
         // Remove leading slash if present
         let cleanPath = path.hasPrefix("/") ? String(path.dropFirst()) : path
 
-        // Extract filename from path
+        // Extract filename and folder from path
         let components = cleanPath.components(separatedBy: "/")
-        guard let filename = components.last else { return nil }
 
-        // Remove file extension
+        // Get the last two components (folder and filename)
+        // e.g., "images/houses/keate-house.png" -> ["houses", "keate-house.png"]
+        guard components.count >= 2 else { return nil }
+        let folderName = components[components.count - 2]
+        let filename = components[components.count - 1]
+
+        // Remove file extension from filename
         let nameComponents = filename.components(separatedBy: ".")
-        return nameComponents.first
+        guard let name = nameComponents.first else { return nil }
+
+        // Return folder/name format for bundle resources
+        return "\(folderName)/\(name)"
     }
 }
 
