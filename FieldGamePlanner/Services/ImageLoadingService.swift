@@ -87,15 +87,23 @@ struct AsyncHouseCrestImage: View {
 
     var body: some View {
         Group {
-            if let imagePath = imagePath,
-               let uiImage = loadImage(from: imagePath) {
-                // Load from app bundle
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: size, height: size)
+            if let imagePath = imagePath {
+                print("🎨 AsyncHouseCrestImage: imagePath = \(imagePath)")
+                if let uiImage = loadImage(from: imagePath) {
+                    // Load from app bundle
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: size, height: size)
+                } else {
+                    // Image load failed, show fallback
+                    print("⚠️ Image load failed, showing fallback colors")
+                    KitColorIndicator(colors: fallbackColors)
+                        .frame(width: size * 0.5, height: size)
+                }
             } else {
-                // Fallback to color stripes
+                // No image path provided
+                print("⚠️ AsyncHouseCrestImage: imagePath is NIL, showing fallback colors")
                 KitColorIndicator(colors: fallbackColors)
                     .frame(width: size * 0.5, height: size)
             }
@@ -104,24 +112,32 @@ struct AsyncHouseCrestImage: View {
 
     /// Load image from bundle using multiple strategies
     private func loadImage(from path: String) -> UIImage? {
+        print("🖼️ Attempting to load image from path: \(path)")
+
         // Strategy 1: Try Asset Catalog with folder/name format
         if let imageName = extractImageName(from: path),
            let uiImage = UIImage(named: imageName) {
+            print("✅ Strategy 1 SUCCESS - Loaded: \(imageName)")
             return uiImage
         }
 
         // Strategy 2: Try direct filename without folder
         if let filename = path.components(separatedBy: "/").last,
-           let name = filename.components(separatedBy: ".").first,
-           let uiImage = UIImage(named: name) {
-            return uiImage
+           let name = filename.components(separatedBy: ".").first {
+            print("🔍 Strategy 2 - Trying: \(name)")
+            if let uiImage = UIImage(named: name) {
+                print("✅ Strategy 2 SUCCESS - Loaded: \(name)")
+                return uiImage
+            }
         }
 
         // Strategy 3: Try loading from bundle path
         if let bundleImage = loadFromBundle(path: path) {
+            print("✅ Strategy 3 SUCCESS")
             return bundleImage
         }
 
+        print("❌ FAILED to load image from: \(path)")
         return nil
     }
 
