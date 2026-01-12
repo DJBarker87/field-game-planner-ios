@@ -12,6 +12,8 @@ struct MatchCard: View {
     var showScoreEntry: Bool = false
     var onScoreSubmitted: (() -> Void)?
 
+    @State private var showingPitchMap = false
+
     private var accessibilityDescription: String {
         var description = "\(match.competitionType): \(match.homeTeamName) versus \(match.awayTeamDisplayName)"
         if match.isCompleted, let homeScore = match.homeScore, let awayScore = match.awayScore {
@@ -61,12 +63,21 @@ struct MatchCard: View {
                 Label(match.formattedTime, systemImage: "clock")
                 if let location = match.fullLocationString {
                     Spacer()
-                    Label(location, systemImage: "mappin.circle")
+                    Button {
+                        showingPitchMap = true
+                    } label: {
+                        Label(location, systemImage: "mappin.circle")
+                            .foregroundColor(.etonPrimary)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .font(.caption)
             .foregroundColor(.secondary)
             .accessibilityHidden(true)
+            .sheet(isPresented: $showingPitchMap) {
+                PitchMapSheet(highlightedPitch: match.fullLocationString)
+            }
 
             // Score entry (only for fixtures, not results)
             if showScoreEntry && !match.isCompleted {
