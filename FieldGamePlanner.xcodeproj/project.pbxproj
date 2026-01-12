@@ -19,6 +19,7 @@
 		MOD003 /* LeagueStanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC012 /* LeagueStanding.swift */; };
 		MOD004 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC013 /* House.swift */; };
 		MOD005 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC014 /* UserProfile.swift */; };
+		MOD006 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC015 /* Location.swift */; };
 
 		/* ViewModels */
 		VML001 /* FixturesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = SRC020 /* FixturesViewModel.swift */; };
@@ -117,6 +118,7 @@
 		SRC012 /* LeagueStanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueStanding.swift; sourceTree = "<group>"; };
 		SRC013 /* House.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = House.swift; sourceTree = "<group>"; };
 		SRC014 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		SRC015 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 
 		/* ViewModels */
 		SRC020 /* FixturesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixturesViewModel.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				SRC011 /* Enums.swift */,
 				SRC013 /* House.swift */,
 				SRC012 /* LeagueStanding.swift */,
+				SRC015 /* Location.swift */,
 				SRC010 /* Match.swift */,
 				SRC014 /* UserProfile.swift */,
 			);
@@ -541,6 +544,7 @@
 				MOD003 /* LeagueStanding.swift in Sources */,
 				MOD004 /* House.swift in Sources */,
 				MOD005 /* UserProfile.swift in Sources */,
+				MOD006 /* Location.swift in Sources */,
 				VML001 /* FixturesViewModel.swift in Sources */,
 				VML002 /* ResultsViewModel.swift in Sources */,
 				VML003 /* StandingsViewModel.swift in Sources */,
