@@ -49,8 +49,8 @@ struct StandingsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
 
-                                ForEach(viewModel.standings(for: competition)) { standing in
-                                    StandingRow(standing: standing)
+                                ForEach(Array(viewModel.standings(for: competition).enumerated()), id: \.element.id) { index, standing in
+                                    StandingRow(standing: standing, position: index + 1)
                                 }
                             } header: {
                                 Text(competition)

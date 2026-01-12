@@ -45,11 +45,11 @@ struct ScoreEntryView: View {
 
     // Check if within edit window (scheduled OR completed within 5 minutes)
     private var isWithinEditWindow: Bool {
-        if match.status == .scheduled {
+        if match.status == "scheduled" {
             return true
         }
 
-        if match.status == .completed {
+        if match.status == "completed" {
             // Allow edit within 5 minutes of score entry
             // For now, we assume recent completions are editable
             // In production, check match.scoreEnteredAt
