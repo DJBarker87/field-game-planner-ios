@@ -25,7 +25,21 @@ struct House: Identifiable, Codable, Equatable, Hashable {
 
     // MARK: - Computed Properties
 
-    /// URL to the house crest image on the server
+    /// Path to the house crest image (for bundle loading)
+    var crestImagePath: String? {
+        // Return the colours field which contains path like "/images/houses/angelos.png"
+        guard !colours.isEmpty else { return nil }
+
+        // If it's an image path (starting with / or containing "images"), return it
+        if colours.hasPrefix("/") || colours.contains("images") {
+            return colours
+        }
+
+        // Not an image path (legacy color codes)
+        return nil
+    }
+
+    /// URL to the house crest image on the server (legacy support for remote loading)
     var crestImageURL: URL? {
         // Assuming colours contains path like "/images/houses/angelos.png"
         guard !colours.isEmpty else { return nil }

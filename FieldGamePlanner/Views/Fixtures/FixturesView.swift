@@ -797,7 +797,7 @@ struct MyHouseSettingsSheet: View {
                                 Image(systemName: selectedHouseId == house.id ? "checkmark.circle.fill" : "circle")
                                     .foregroundColor(selectedHouseId == house.id ? .etonPrimary : .secondary)
                                 AsyncHouseCrestImage(
-                                    url: house.crestImageURL,
+                                    imagePath: house.crestImagePath,
                                     size: 24,
                                     fallbackColors: house.parsedColours
                                 )
