@@ -193,10 +193,10 @@ actor SupabaseService {
 
     /// Update the score for a match
     /// - Parameters:
-    ///   - matchId: The match UUID
+    ///   - matchId: The match ID string
     ///   - homeScore: The home team's score
     ///   - awayScore: The away team's score
-    func updateScore(matchId: UUID, homeScore: Int, awayScore: Int) async throws {
+    func updateScore(matchId: String, homeScore: Int, awayScore: Int) async throws {
         let update = ScoreUpdate(
             homeScore: homeScore,
             awayScore: awayScore,
@@ -206,13 +206,13 @@ actor SupabaseService {
         try await client
             .from("matches")
             .update(update)
-            .eq("id", value: matchId.uuidString)
+            .eq("id", value: matchId)
             .execute()
     }
 
     /// Clear the score for a match (revert to scheduled)
-    /// - Parameter matchId: The match UUID
-    func clearScore(matchId: UUID) async throws {
+    /// - Parameter matchId: The match ID string
+    func clearScore(matchId: String) async throws {
         let update = ScoreClear(
             status: MatchStatus.scheduled.rawValue,
             updatedAt: ISO8601DateFormatter().string(from: Date())
@@ -220,7 +220,7 @@ actor SupabaseService {
         try await client
             .from("matches")
             .update(update)
-            .eq("id", value: matchId.uuidString)
+            .eq("id", value: matchId)
             .execute()
     }
 
