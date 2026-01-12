@@ -9,7 +9,7 @@ import Foundation
 
 /// Represents a team's standing in a league table
 struct LeagueStanding: Identifiable, Codable, Equatable {
-    let teamId: UUID
+    let teamId: String
     let teamName: String
     let teamColours: String
     let played: Int
@@ -22,7 +22,7 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
     let points: Int
 
     // Computed id for Identifiable conformance
-    var id: UUID { teamId }
+    var id: String { teamId }
 
     // MARK: - Coding Keys
 
@@ -89,7 +89,7 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
 
     static var preview: LeagueStanding {
         LeagueStanding(
-            teamId: UUID(),
+            teamId: "1",
             teamName: "Keate",
             teamColours: "red/white",
             played: 10,
@@ -106,17 +106,17 @@ struct LeagueStanding: Identifiable, Codable, Equatable {
     static var previewList: [LeagueStanding] {
         [
             LeagueStanding(
-                teamId: UUID(), teamName: "Keate", teamColours: "red/white",
+                teamId: "1", teamName: "Keate", teamColours: "red/white",
                 played: 10, wins: 7, draws: 2, losses: 1,
                 goalsFor: 24, goalsAgainst: 8, goalDifference: 16, points: 23
             ),
             LeagueStanding(
-                teamId: UUID(), teamName: "Hawtrey", teamColours: "navy/gold",
+                teamId: "2", teamName: "Hawtrey", teamColours: "navy/gold",
                 played: 10, wins: 6, draws: 3, losses: 1,
                 goalsFor: 20, goalsAgainst: 10, goalDifference: 10, points: 21
             ),
             LeagueStanding(
-                teamId: UUID(), teamName: "Godolphin", teamColours: "maroon/sky",
+                teamId: "3", teamName: "Godolphin", teamColours: "maroon/sky",
                 played: 10, wins: 5, draws: 3, losses: 2,
                 goalsFor: 18, goalsAgainst: 12, goalDifference: 6, points: 18
             ),
@@ -142,7 +142,7 @@ extension Array where Element == LeagueStanding {
     }
 
     /// Get standing for a specific team
-    func standing(for teamId: UUID) -> LeagueStanding? {
+    func standing(for teamId: String) -> LeagueStanding? {
         first { $0.teamId == teamId }
     }
 }

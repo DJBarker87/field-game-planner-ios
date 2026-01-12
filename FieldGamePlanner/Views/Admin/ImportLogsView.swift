@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - Import Log Model
 
 struct ImportLog: Identifiable, Codable {
-    let id: UUID
+    let id: String
     let timestamp: Date
     let emailSubject: String
     let matchesImported: Int
@@ -36,7 +36,7 @@ struct ImportLog: Identifiable, Codable {
     static var previewList: [ImportLog] {
         [
             ImportLog(
-                id: UUID(),
+                id: "1",
                 timestamp: Date().addingTimeInterval(-3600),
                 emailSubject: "Field Game Fixtures - Week 1",
                 matchesImported: 12,
@@ -44,7 +44,7 @@ struct ImportLog: Identifiable, Codable {
                 errorMessage: nil
             ),
             ImportLog(
-                id: UUID(),
+                id: "2",
                 timestamp: Date().addingTimeInterval(-86400),
                 emailSubject: "Field Game Fixtures - Week 2",
                 matchesImported: 8,
@@ -52,7 +52,7 @@ struct ImportLog: Identifiable, Codable {
                 errorMessage: "4 matches had invalid dates"
             ),
             ImportLog(
-                id: UUID(),
+                id: "3",
                 timestamp: Date().addingTimeInterval(-172800),
                 emailSubject: "Field Game Fixtures - Week 3",
                 matchesImported: 0,

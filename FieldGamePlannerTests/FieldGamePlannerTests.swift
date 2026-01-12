@@ -128,24 +128,24 @@ final class FieldGamePlannerTests: XCTestCase {
     }
 
     func testHouseIsSchoolTeam() {
-        let houseTeam = House(id: UUID(), name: "Keate", colours: "red/white", createdAt: nil)
+        let houseTeam = House(id: "1", name: "Keate", colours: "red/white", createdAt: nil)
         XCTAssertFalse(houseTeam.isSchoolTeam)
 
-        let field = House(id: UUID(), name: "Field", colours: "eton/white", createdAt: nil)
+        let field = House(id: "2", name: "Field", colours: "eton/white", createdAt: nil)
         XCTAssertTrue(field.isSchoolTeam)
 
-        let firstField = House(id: UUID(), name: "1st Field", colours: "eton/white", createdAt: nil)
+        let firstField = House(id: "3", name: "1st Field", colours: "eton/white", createdAt: nil)
         XCTAssertTrue(firstField.isSchoolTeam)
 
-        let secondXI = House(id: UUID(), name: "2nd XI", colours: "eton/white", createdAt: nil)
+        let secondXI = House(id: "4", name: "2nd XI", colours: "eton/white", createdAt: nil)
         XCTAssertTrue(secondXI.isSchoolTeam)
     }
 
     func testHouseShortName() {
-        let keate = House(id: UUID(), name: "Keate", colours: "red/white", createdAt: nil)
+        let keate = House(id: "1", name: "Keate", colours: "red/white", createdAt: nil)
         XCTAssertEqual(keate.shortName, "KEA")
 
-        let baldwinsBec = House(id: UUID(), name: "Baldwin's Bec", colours: "navy/gold", createdAt: nil)
+        let baldwinsBec = House(id: "2", name: "Baldwin's Bec", colours: "navy/gold", createdAt: nil)
         XCTAssertEqual(baldwinsBec.shortName, "BB")
     }
 
@@ -317,13 +317,13 @@ final class FieldGamePlannerTests: XCTestCase {
         XCTAssertTrue(captainProfile.canEditScore(for: captainProfile.houseId!))
 
         // Captains cannot edit other houses
-        XCTAssertFalse(captainProfile.canEditScore(for: UUID()))
+        XCTAssertFalse(captainProfile.canEditScore(for: "other-house-id"))
 
         // Admins can edit any house
-        XCTAssertTrue(adminProfile.canEditScore(for: UUID()))
+        XCTAssertTrue(adminProfile.canEditScore(for: "any-house-id"))
 
         // Viewers cannot edit any house
-        XCTAssertFalse(viewerProfile.canEditScore(for: UUID()))
+        XCTAssertFalse(viewerProfile.canEditScore(for: "any-house-id"))
     }
 
     // MARK: - Enum Tests

@@ -214,7 +214,7 @@ class AuthService: ObservableObject {
         return profile.role.isAdmin
     }
 
-    func canEditScore(for teamId: UUID) -> Bool {
+    func canEditScore(for teamId: String) -> Bool {
         guard let profile = currentUserProfile else { return false }
         return profile.canEditScore(for: teamId)
     }

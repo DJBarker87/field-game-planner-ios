@@ -9,7 +9,7 @@ import Foundation
 
 /// Represents a pitch location
 struct Location: Identifiable, Codable, Equatable {
-    let id: UUID
+    let id: String
     let name: String
     let pitchName: String?
     let latitude: Double?
@@ -33,7 +33,7 @@ struct Location: Identifiable, Codable, Equatable {
 
     static var preview: Location {
         Location(
-            id: UUID(),
+            id: "1",
             name: "North Fields",
             pitchName: "Dutchman's 1",
             latitude: 51.4951,
@@ -43,9 +43,9 @@ struct Location: Identifiable, Codable, Equatable {
 
     static var previewList: [Location] {
         [
-            Location(id: UUID(), name: "North Fields", pitchName: "Dutchman's 1", latitude: 51.4951, longitude: -0.6071),
-            Location(id: UUID(), name: "North Fields", pitchName: "Dutchman's 2", latitude: 51.4952, longitude: -0.6072),
-            Location(id: UUID(), name: "Agar's Plough", pitchName: "Pitch 1", latitude: 51.4948, longitude: -0.6065),
+            Location(id: "1", name: "North Fields", pitchName: "Dutchman's 1", latitude: 51.4951, longitude: -0.6071),
+            Location(id: "2", name: "North Fields", pitchName: "Dutchman's 2", latitude: 51.4952, longitude: -0.6072),
+            Location(id: "3", name: "Agar's Plough", pitchName: "Pitch 1", latitude: 51.4948, longitude: -0.6065),
         ]
     }
 }

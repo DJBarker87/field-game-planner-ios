@@ -266,7 +266,7 @@ enum CacheKey {
         "standings_\(competition.lowercased().replacingOccurrences(of: " ", with: "_"))"
     }
 
-    static func team(_ teamId: UUID) -> String {
-        "team_\(teamId.uuidString)"
+    static func team(_ teamId: String) -> String {
+        "team_\(teamId)"
     }
 }

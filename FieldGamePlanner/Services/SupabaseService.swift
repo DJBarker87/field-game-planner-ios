@@ -37,13 +37,13 @@ actor SupabaseService {
     }
 
     /// Fetch a single house by ID
-    /// - Parameter id: The house UUID
+    /// - Parameter id: The house ID string
     /// - Returns: The House object or nil if not found
-    func fetchHouse(id: UUID) async throws -> House? {
+    func fetchHouse(id: String) async throws -> House? {
         let response: [House] = try await client
             .from("houses")
             .select()
-            .eq("id", value: id.uuidString)
+            .eq("id", value: id)
             .limit(1)
             .execute()
             .value
@@ -172,13 +172,13 @@ actor SupabaseService {
     }
 
     /// Fetch standings for a specific team
-    /// - Parameter teamId: The team UUID
+    /// - Parameter teamId: The team ID string
     /// - Returns: Array of LeagueStanding objects for that team
-    func fetchStandings(for teamId: UUID) async throws -> [LeagueStanding] {
+    func fetchStandings(for teamId: String) async throws -> [LeagueStanding] {
         let response: [LeagueStanding] = try await client
             .from("league_standings")
             .select()
-            .eq("team_id", value: teamId.uuidString)
+            .eq("team_id", value: teamId)
             .execute()
             .value
 
@@ -189,10 +189,10 @@ actor SupabaseService {
 
     /// Update the score for a match
     /// - Parameters:
-    ///   - matchId: The match UUID
+    ///   - matchId: The match ID string
     ///   - homeScore: The home team's score
     ///   - awayScore: The away team's score
-    func updateScore(matchId: UUID, homeScore: Int, awayScore: Int) async throws {
+    func updateScore(matchId: String, homeScore: Int, awayScore: Int) async throws {
         let update = ScoreUpdate(
             homeScore: homeScore,
             awayScore: awayScore,
@@ -202,13 +202,13 @@ actor SupabaseService {
         try await client
             .from("matches")
             .update(update)
-            .eq("id", value: matchId.uuidString)
+            .eq("id", value: matchId)
             .execute()
     }
 
     /// Clear the score for a match (revert to scheduled)
-    /// - Parameter matchId: The match UUID
-    func clearScore(matchId: UUID) async throws {
+    /// - Parameter matchId: The match ID string
+    func clearScore(matchId: String) async throws {
         let update = ScoreClear(
             status: MatchStatus.scheduled.rawValue,
             updatedAt: ISO8601DateFormatter().string(from: Date())
@@ -216,7 +216,7 @@ actor SupabaseService {
         try await client
             .from("matches")
             .update(update)
-            .eq("id", value: matchId.uuidString)
+            .eq("id", value: matchId)
             .execute()
     }
 
@@ -271,13 +271,13 @@ actor SupabaseService {
     }
 
     /// Fetch a user profile by ID
-    /// - Parameter userId: The user's UUID
+    /// - Parameter userId: The user's ID string
     /// - Returns: UserProfile object or nil
-    func fetchUserProfile(userId: UUID) async throws -> UserProfile? {
+    func fetchUserProfile(userId: String) async throws -> UserProfile? {
         let response: [UserProfile] = try await client
             .from("user_profiles")
             .select("*, houses(name)")
-            .eq("id", value: userId.uuidString)
+            .eq("id", value: userId)
             .limit(1)
             .execute()
             .value
