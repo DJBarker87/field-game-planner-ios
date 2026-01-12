@@ -119,12 +119,11 @@ struct PitchMapHelper {
             return true
         }
 
-        // Handle abbreviated forms
-        // e.g., "A5" matches "Agar's 5", "D12" matches "Dutchman's 12"
-        let abbreviated1 = abbreviatePitchName(normalized1)
-        let abbreviated2 = abbreviatePitchName(normalized2)
+        // Try expanding shortened forms to full names before comparing
+        let expanded1 = expandPitchName(normalized1)
+        let expanded2 = expandPitchName(normalized2)
 
-        if abbreviated1.caseInsensitiveCompare(abbreviated2) == .orderedSame {
+        if expanded1.caseInsensitiveCompare(expanded2) == .orderedSame {
             return true
         }
 
@@ -154,37 +153,37 @@ struct PitchMapHelper {
 
     // MARK: - Private Helpers
 
-    /// Abbreviate a pitch name for matching (e.g., "Agar's 5" -> "A5")
-    private static func abbreviatePitchName(_ name: String) -> String {
-        let lowercased = name.lowercased()
+    /// Expand abbreviated pitch names to full names for matching
+    /// e.g., "A5" -> "Agar's 5", "D12" -> "Dutchman's 12", "S3" -> "South Meadow 3"
+    private static func expandPitchName(_ name: String) -> String {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
 
-        // Agar's pattern
-        if lowercased.contains("agar") {
-            let numbers = name.components(separatedBy: CharacterSet.decimalDigits.inverted)
-                .joined()
-            if !numbers.isEmpty {
-                return "a\(numbers)"
+        // Try to match abbreviated patterns with exact regex
+        // Pattern: letter followed immediately by digits (e.g., "A5", "D12", "S3")
+        let pattern = "^([ADSads])(\\d+)$"
+
+        if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
+           let match = regex.firstMatch(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)) {
+
+            let letterRange = Range(match.range(at: 1), in: trimmed)!
+            let numberRange = Range(match.range(at: 2), in: trimmed)!
+
+            let letter = String(trimmed[letterRange]).uppercased()
+            let number = String(trimmed[numberRange])
+
+            switch letter {
+            case "A":
+                return "Agar's \(number)"
+            case "D":
+                return "Dutchman's \(number)"
+            case "S":
+                return "South Meadow \(number)"
+            default:
+                break
             }
         }
 
-        // Dutchman's pattern
-        if lowercased.contains("dutchman") {
-            let numbers = name.components(separatedBy: CharacterSet.decimalDigits.inverted)
-                .joined()
-            if !numbers.isEmpty {
-                return "d\(numbers)"
-            }
-        }
-
-        // South Meadow pattern
-        if lowercased.contains("south meadow") {
-            let numbers = name.components(separatedBy: CharacterSet.decimalDigits.inverted)
-                .joined()
-            if !numbers.isEmpty {
-                return "s\(numbers)"
-            }
-        }
-
-        return name
+        // If already in full form, return as-is
+        return trimmed
     }
 }
