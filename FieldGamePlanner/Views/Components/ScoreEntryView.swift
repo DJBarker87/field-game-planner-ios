@@ -88,6 +88,8 @@ struct ScoreEntryView: View {
                 .padding(.vertical, 8)
                 .background(Color.orange.opacity(0.1))
                 .cornerRadius(8)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Score entry unavailable. No internet connection.")
             } else {
                 // Normal button
                 Button {
@@ -107,6 +109,8 @@ struct ScoreEntryView: View {
                     .background(Color.etonPrimary)
                     .cornerRadius(8)
                 }
+                .accessibilityLabel("Enter score for \(match.homeTeamName) versus \(match.awayTeamName)")
+                .accessibilityHint("Tap to enter the final score")
             }
         }
     }
@@ -137,6 +141,7 @@ struct ScoreEntryView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
+                        .accessibilityHidden(true)
                     TextField("0", text: $homeScore)
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.center)
@@ -147,11 +152,14 @@ struct ScoreEntryView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                         .disabled(!networkMonitor.isConnected)
+                        .accessibilityLabel("\(match.homeTeamName) score")
+                        .accessibilityValue(homeScore.isEmpty ? "Not entered" : homeScore)
                 }
 
                 Text("-")
                     .font(.title2)
                     .fontWeight(.bold)
+                    .accessibilityHidden(true)
 
                 // Away team
                 VStack(spacing: 4) {
@@ -159,6 +167,7 @@ struct ScoreEntryView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
+                        .accessibilityHidden(true)
                     TextField("0", text: $awayScore)
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.center)
@@ -169,6 +178,8 @@ struct ScoreEntryView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                         .disabled(!networkMonitor.isConnected)
+                        .accessibilityLabel("\(match.awayTeamName) score")
+                        .accessibilityValue(awayScore.isEmpty ? "Not entered" : awayScore)
                 }
             }
 

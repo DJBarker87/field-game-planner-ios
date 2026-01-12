@@ -12,6 +12,14 @@ struct OfflineBanner: View {
     let lastUpdated: Date?
     @ObservedObject private var networkMonitor = NetworkMonitor.shared
 
+    private var accessibilityText: String {
+        var text = "You're offline. Showing cached data. Some features may be unavailable."
+        if let lastUpdated {
+            text += " Last updated \(lastUpdated.relativeDescription)."
+        }
+        return text
+    }
+
     var body: some View {
         if !networkMonitor.isConnected {
             VStack(spacing: 4) {
@@ -39,6 +47,9 @@ struct OfflineBanner: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(Color.orange)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(accessibilityText)
+            .accessibilityAddTraits(.isStaticText)
         }
     }
 }
@@ -55,6 +66,8 @@ struct OfflineIndicator: View {
             }
             .font(.caption)
             .foregroundColor(.orange)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Offline mode")
         }
     }
 }
