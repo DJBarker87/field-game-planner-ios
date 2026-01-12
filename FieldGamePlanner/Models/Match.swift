@@ -265,13 +265,13 @@ private extension DateFormatter {
 // MARK: - Array Extensions
 
 extension Array where Element == MatchWithHouses {
-    /// Filter matches by team
-    func matches(for teamId: String) -> [MatchWithHouses] {
+    /// Filter matches by team ID
+    func matchesForTeam(_ teamId: String) -> [MatchWithHouses] {
         filter { $0.involves(teamId: teamId) }
     }
 
-    /// Filter matches by competition
-    func matches(for competition: String) -> [MatchWithHouses] {
+    /// Filter matches by competition type
+    func matchesForCompetition(_ competition: String) -> [MatchWithHouses] {
         filter { $0.competitionType == competition }
     }
 
