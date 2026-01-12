@@ -71,14 +71,15 @@ actor SupabaseService {
         // Apply date filters (using YYYY-MM-DD format to match database)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
 
         if let start = startDate {
-            let dateString = ISO8601DateFormatter().string(from: start)
+            let dateString = dateFormatter.string(from: start)
             query = query.gte("date", value: dateString)
         }
 
         if let end = endDate {
-            let dateString = ISO8601DateFormatter().string(from: end)
+            let dateString = dateFormatter.string(from: end)
             query = query.lte("date", value: dateString)
         }
 

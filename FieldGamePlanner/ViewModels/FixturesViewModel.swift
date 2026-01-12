@@ -188,10 +188,22 @@ class FixturesViewModel: ObservableObject {
 
     private func refreshFromNetwork() async {
         do {
-            let range = selectedFilter.dateRange
+            // For "All" filter, don't apply date restrictions
+            let startDate: Date?
+            let endDate: Date?
+
+            if selectedFilter == .all {
+                startDate = nil
+                endDate = nil
+            } else {
+                let range = selectedFilter.dateRange
+                startDate = range.start
+                endDate = range.end
+            }
+
             let fetched = try await supabaseService.fetchUpcomingMatches(
-                startDate: range.start,
-                endDate: range.end,
+                startDate: startDate,
+                endDate: endDate,
                 teamId: activeTeamFilter
             )
 
@@ -202,8 +214,8 @@ class FixturesViewModel: ObservableObject {
             // Also fetch all matches (without team filter) for umpire extraction
             if activeTeamFilter != nil || selectedUmpire != nil {
                 let allFetched = try await supabaseService.fetchUpcomingMatches(
-                    startDate: range.start,
-                    endDate: range.end,
+                    startDate: startDate,
+                    endDate: endDate,
                     teamId: nil
                 )
                 allMatches = allFetched
